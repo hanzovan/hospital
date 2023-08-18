@@ -1,0 +1,106 @@
+// General setting
+$normal-text-color: blue;
+$big-text-color: brown;
+%normal-text {
+    font-family: sans-serif;
+    font-size: 22px;
+    font-style: normal;
+}
+%big-text {
+    font-family: sans-serif;
+    font-size: 28px;
+    font-style: bold;
+}
+body {
+    color: $normal-text-color;
+    @extend %normal-text;
+    background-color: bisque;
+}
+main {
+    min-height: 600px;
+}
+footer {
+    font-family: sans-serif;
+    font-size: 13px;
+    font-style: italic;
+    color: grey;
+}
+.navbar-custom {
+    padding: 0 30px;
+    background: #FAD6A5;
+    margin-bottom: 30px;
+}
+
+// Setting for form and page with 2 or 3 column
+%line {
+    clear: both;
+    vertical-align: baseline;
+    padding: 30px 0 30px 0;
+    margin: 20px 0 20px 150px;
+}
+%line-left {
+    float: left;
+    width: 26%;
+    height: 42px;
+    line-height: 45px;
+    vertical-align: middle;
+}
+%line-middle {
+    float: left;
+    display: block;
+    min-width: 167px;
+    min-height: 41px;
+    height: 5px;
+    margin-right: 50px;
+    width: 250px;
+}
+%line-right {
+    display: inline-block;
+    width: 35%;
+    height: 42px;
+    line-height: 45px;
+    vertical-align: middle;
+}
+.input-line {
+    @extend %line;
+}
+.input-left {
+    @extend %line-left;
+}
+.input-box {
+    @extend %line-middle;
+    border: 1px solid grey;
+    padding-left: 10px;
+}
+.input-right {
+    @extend %line-right;
+    font-family: sans-serif;
+    font-style: italic;
+    font-size: 14px;
+    color: grey;
+}
+header {
+    animation-name: hide;
+    animation-duration: 2s;
+    animation-fill-mode: forwards;
+    animation-play-state: paused;
+}
+@keyframes hide {
+    0% {
+        opacity: 1;
+        line-height: 1;
+        height: auto;
+    }
+    75% {
+        opacity: 0;
+        line-height: 1;
+        height: auto;
+    }
+    100% {
+        opacity: 0;
+        line-height: 0;
+        height: 0;
+    }
+}
+
+

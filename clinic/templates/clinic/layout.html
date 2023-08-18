@@ -1,0 +1,85 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="initial-scale=1, width=device-width">
+        <link rel="stylesheet" href="{% static 'clinic/bootstrap.css' %}">
+        <script src="{% static 'clinic/bootstrap.js' %}"></script>
+
+        <title>{% block title %}{% endblock %}</title>
+        <link rel="stylesheet" href="{% static 'clinic/styles.css' %}">        
+        {% block script %}{% endblock %}
+        <script src="{% static 'clinic/layout.js' %}"></script>
+    </head>
+    <body>
+        <nav class="navbar navbar-expand-lg navbar-custom border">
+            <a class="navbar-brand" href="{% url 'index' %}"><span><h1>Clinic</h1></span></a>
+            <div class="collapse navbar-collapse" id="navbar">
+                <ul class="navbar-nav me-auto mt-2">
+                    <li class="nav-item">
+                        <a class="nav-link active">
+                            All services
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active">
+                            Functional
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active">
+                            Add service
+                        </a>
+                    </li>
+                </ul>
+                <ul class="navbar-nav ms-auto mt-2">
+                    {% if user.is_authenticated %}
+                        <li class="nav-item">
+                            <a class="nav-link active" style="color: purple;">
+                                {{ user.username }}
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active" href="{% url 'logout' %}">
+                                log out
+                            </a>
+                        </li>
+                    {% else %}
+
+                        <li class="nav-item">
+                            <a class="nav-link active" href="{% url 'login' %}">
+                                Log in
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active" href="{% url 'register' %}">
+                                Register
+                            </a>
+                        </li>
+
+                    {% endif %}
+                    
+                </ul>
+            </div>
+        </nav>
+        <header class="text-center">
+            {% if yay_message %}
+                <div class="alert alert-success" role="alert">
+                    {{ yay_message }}
+                </div>
+            {% endif %}
+            {% if nay_message %}
+
+                <div class="alert alert-danger" role="alert">
+                    {{ nay_message }}
+                </div>
+
+            {% endif %}            
+        </header>
+        <main>{% block main %}{% endblock %}</main>
+        <footer class="text-center">
+            &#169;Nguyen Dinh Thi Van
+        </footer>
+    </body>
+</html>

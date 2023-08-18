@@ -1,0 +1,36 @@
+{% extends "clinic/layout.html" %}
+{% load static %}
+{% block title %}
+
+    log in
+
+{% endblock %}
+{% block main %}
+
+    <h1 class="text-center">Login</h1>
+    <div class="form-div">
+        <form action="{% url 'login' %}" method="post">
+            {% csrf_token %}
+            <div class="input-line">
+                <label class="input-left">
+                    Username
+                </label>
+                <input class="input-box" name="username" type="text" autofocus autocomplete="off">
+                <div class="input-right"></div>
+            </div>
+            <div class="input-line">
+                <label class="input-left">
+                    Password
+                </label>
+                <input class="input-box" name="password" type="password" autocomplete="off">
+                <div class="input-right"></div>
+            </div>
+            <div class="text-center">
+                <button class="btn btn-primary" id="login-btn">
+                    Log in
+                </button>
+            </div>
+        </form>
+    </div>
+
+{% endblock %}
