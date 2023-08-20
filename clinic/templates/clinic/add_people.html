@@ -1,0 +1,54 @@
+{% extends "clinic/layout.html" %}
+{% load static %}
+{% block title %}
+
+    add people
+
+{% endblock %}
+{% block main %}
+
+    <h1 class="text-center">Add people</h1>
+    <div class="form-div">
+        <form action="{% url 'add_people' %}" method="post">
+            {% csrf_token %}
+            <div class="input-line">
+                <label class="input-left">
+                    Name
+                </label>
+                <input class="input-box" name="name" type="text" autofocus autocomplete="off">
+                <div class="input-right"></div>
+            </div>
+            <div class="input-line">
+                <label class="input-left">
+                    Position
+                </label>
+                <input class="input-box" name="position" type="text" autocomplete="off">
+                <div class="input-right"></div>
+            </div>
+            <div class="input-line">
+                <label class="input-left">
+                    Email
+                </label>
+                <input class="input-box" name="email" type="email" autocomplete="off">
+                <div class="input-right"></div>
+            </div>
+            <div class="input-line">
+                <label class="input-left">
+                    Phone
+                </label>
+                <input class="input-box" name="phone" type="text" autocomplete="off">
+                <div class="input-right"></div>
+            </div>
+            <div class="input-line">
+                <label class="input-left">
+                    Note
+                </label>
+                <textarea class="input-area" name="note"></textarea>
+            </div>
+            <div class="text-center">
+                <button class="btn btn-primary" id="add_people-btn">Save</button>
+            </div>
+        </form>
+    </div>
+
+{% endblock %}

@@ -6,7 +6,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (yay_message || nay_message) {
             setTimeout(function() {
                 document.querySelector('header').style.animationPlayState = 'running';
-            }, 1000)            
+            }, 2000)            
             document.querySelector('header').addEventListener('animationend', function() {
                 document.querySelector('header').innerHTML = '';
             })

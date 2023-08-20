@@ -22,16 +22,25 @@
                             All services
                         </a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link active">
-                            Functional
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link active">
-                            Add service
-                        </a>
-                    </li>
+                    {% if user.is_authenticated %}
+
+                        <li class="nav-item">
+                            <a class="nav-link active">
+                                Functional
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active" href="{% url 'add_service' %}">
+                                Add service
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active" href="{% url 'add_people' %}">
+                                Add people
+                            </a>
+                        </li>
+
+                    {% endif %}                    
                 </ul>
                 <ul class="navbar-nav ms-auto mt-2">
                     {% if user.is_authenticated %}

@@ -1,0 +1,46 @@
+{% extends "clinic/layout.html" %}
+{% load static %}
+{% block title %}
+
+    add service
+
+{% endblock %}
+{% block main %}
+
+    <h1 class="text-center">Add service</h1>
+    <div class="form-div">
+        <form action="{% url 'add_service' %}" method="post">
+            {% csrf_token %}
+            <div class="input-line">
+                <label class="input-left">
+                    Name
+                </label>
+                <input class="input-box" name="name" type="text" autofocus autocomplete="off">
+                <div class="input-right"><p>Service's name or code</p></div>
+            </div>
+            <div class="input-line">
+                <label class="input-left">
+                    Male price
+                </label>
+                <input class="input-box" name="male_price" type="number" autocomplete="off">
+                <div class="input-right"></div>
+            </div>
+            <div class="input-line">
+                <label class="input-left">
+                    Female price
+                </label>
+                <input class="input-box" name="female_price" type="number" autocomplete="off">
+            </div>
+            <div class="input-line">
+                <label class="input-left">
+                    Benefit
+                </label>                
+                <textarea class="input-area" name="benefit" placeholder="What benefit the service bring to the client"></textarea>                            
+            </div>
+            <div class="text-center">
+                <button class="btn btn-primary" id="add_service-btn">Save</button> 
+            </div>
+        </form>
+    </div>
+
+{% endblock %}
