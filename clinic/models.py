@@ -3,7 +3,11 @@ from django.contrib.auth.models import AbstractUser
 
 # Create your models here.
 class User(AbstractUser):
-    pass
+    class Level(models.IntegerChoices):
+        LOW = 1
+        MIDDLE = 2
+        TOP = 3
+    management_right_level = models.IntegerField(choices=Level.choices, blank=True, null=True)
 
 
 class People(models.Model):

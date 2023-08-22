@@ -52,6 +52,9 @@
                                     {{ user.username }}
                                 </button>
                                 <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton2">
+                                    {% if user.management_right_level == 3 %}
+                                        <li><a class="dropdown-item" href="{% url 'authorize' %}">Manage users</a></li>
+                                    {% endif %}                                    
                                     <li><a class="dropdown-item" href="{% url 'logout' %}">Log out</a></li>
                                 </ul>
                             </div>

@@ -101,4 +101,13 @@ header {
 .no-bullet {
   list-style-type: none; }
 
+.user-info {
+  display: grid;
+  grid-template-columns: 40% auto;
+  margin-top: 25px;
+  margin-left: 100px;
+  padding-top: 25px;
+  border: 1px solid grey;
+  background-color: white; }
+
 /*# sourceMappingURL=styles.css.map */

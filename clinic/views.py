@@ -1,9 +1,11 @@
+import json
 from django.shortcuts import render
-from django.http import HttpResponseRedirect, HttpResponse
+from django.http import HttpResponseRedirect, HttpResponse, JsonResponse
 from django.db import IntegrityError
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse
+from django.views.decorators.csrf import csrf_exempt
 
 from .models import User, People, ContactDiary, Company, Service, Quotation, Contract, ContractPrice
 from .helpers import strong_password
@@ -55,7 +57,7 @@ def register(request):
 
         # If user input is okay, try to create a new account
         try:
-            user = User.objects.create_user(username=username, email=email, password=password)
+            user = User.objects.create_user(username=username, email=email, password=password, management_right_level=1)
             login(request, user)
             request.session['yay_message'] = 'Registered successfully'
             return HttpResponseRedirect(reverse('index'))
@@ -117,6 +119,38 @@ def logout_view(request):
     return HttpResponseRedirect(reverse('index'))
 
 
+# Allow top level admin to manage to list of users, and to apply management level for other users
+@login_required
+@csrf_exempt
+def authorize(request):
+    # if admin submitted form
+    if request.method == 'POST':
+        # User must have the right to submit form
+        if request.user.management_right_level != 3:
+            return JsonResponse({'error': "You do not have rights to change user's level"}, status=400)
+
+        data = json.loads(request.body)
+
+        if data.get('new_level') is not None and data.get('chosen_user_id') is not None:
+            # Get the user
+            user = User.objects.get(pk=data['chosen_user_id'])
+            user.management_right_level = data['new_level']
+            user.save()
+
+        return JsonResponse({'message': 'Level changed'})
+    
+    # if admin clicking link
+    else:
+        if request.user.management_right_level != 3:
+            request.session['nay_message'] = "You don't have the right to visit this page"
+            return HttpResponseRedirect(reverse('index'))
+        data_users = User.objects.all()
+        return render(request, "clinic/authorize.html", {
+            "data_users": data_users,
+            "levels": [1, 2, 3]
+        })
+
+
 # Allow user to add service
 @login_required
 def add_service(request):
@@ -159,6 +193,10 @@ def add_service(request):
     # If user clicked link
     else:
         return render(request, "clinic/add_service.html")
+
+
+# Allow user to edit the service, only admins can do this
+
 
 
 # Allow user to add people

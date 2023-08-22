@@ -1,0 +1,52 @@
+{% extends "clinic/layout.html" %}
+{% load static %}
+{% block title %}
+
+    authorize
+
+{% endblock %}
+{% block main %}
+
+    <h1 class="text-center">
+        All users
+    </h1>
+    <div class="container">
+        {% for data_user in data_users %}
+
+            <div class="user-info" id="user{{ data_user.id }}">
+                <div class="field-name">
+                    <ul class="no-bullet">
+                        <li><i class="i-left">Username</i></li>
+                        <li><i class="i-left">Current Management level</i></li>
+                        <li><i class="i-left">Set a new level</i></li>
+                    </ul>
+                </div>
+                <div class="field-value">
+                    <ul class="no-bullet">
+                        <li><strong>{{ data_user.username }}</strong></li>
+                        <li><strong class="current-level">{{ data_user.management_right_level }}</strong></li>
+                        <li>
+                            <select class="level">
+                                <option selected value="{{ data_user.management_right_level }}">{{ data_user.management_right_level }}</option>
+                                {% for level in levels %}
+
+                                    {% if level != data_user.management_right_level %}
+                                        <option value="{{ level }}">{{ level }}</option>
+                                    {% endif %}
+
+                                {% endfor %}
+                            </select>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+        {% endfor %}
+    </div>
+
+{% endblock %}
+{% block script %}
+
+    <script src="{% static 'clinic/authorize.js' %}"></script>
+
+{% endblock %}
