@@ -17,9 +17,13 @@ def index(request):
     request.session['yay_message'] = ''
     request.session['nay_message'] = ''
 
+    # Get all the service
+    services = Service.objects.all()
+
     return render(request, "clinic/index.html", {
         "yay_message": yay_message,
-        "nay_message": nay_message
+        "nay_message": nay_message,
+        "services": services
     })
 
 
@@ -120,14 +124,19 @@ def add_service(request):
     if request.method == 'POST':
         # Define variables
         name = request.POST['name'].lower()
-        male_price = request.POST['male_price']
-        female_price = request.POST['female_price']
+        male_price = request.POST.get('male_price')
+        female_price = request.POST.get('female_price')
         benefit = request.POST.get('benefit', '')
 
-        if not name or not male_price or not female_price:
+        if not name or (not male_price and not female_price):
             return render(request, "clinic/add_service.html", {
-                "nay_message": "Please fill at least name, price of the service"
+                "nay_message": "Please fill at least name, price of the service for male or female"
             })
+
+        if not male_price:
+            male_price = None
+        if not female_price:
+            female_price = None
 
         try:
             old_service = Service.objects.get(name=name)            

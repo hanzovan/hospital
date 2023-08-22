@@ -11,6 +11,7 @@ main {
   min-height: 600px; }
 
 footer {
+  margin-top: 150px;
   font-family: sans-serif;
   font-size: 13px;
   font-style: italic;
@@ -78,5 +79,26 @@ header {
     opacity: 1; }
   100% {
     opacity: 0; } }
+.container {
+  margin: 50px 0; }
+
+.my-service-info {
+  display: grid;
+  grid-template-columns: 30% auto;
+  margin-top: 25px;
+  margin-left: 100px;
+  padding-top: 25px !important;
+  border: 1px solid grey;
+  background-color: white; }
+
+.service-name {
+  text-decoration: none; }
+
+.i-left {
+  font-size: 18px;
+  margin: 10px 20px; }
+
+.no-bullet {
+  list-style-type: none; }
 
 /*# sourceMappingURL=styles.css.map */

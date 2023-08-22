@@ -30,30 +30,33 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link active" href="{% url 'add_service' %}">
-                                Add service
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link active" href="{% url 'add_people' %}">
-                                Add people
-                            </a>
+                            <div class="dropdown">
+                                <button class="nav-link active" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Add
+                                </button>
+                                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                                    <li><a class="dropdown-item" href="{% url 'add_service' %}">Add Service</a></li>
+                                    <li><a class="dropdown-item" href="{% url 'add_people' %}">Add People</a></li>
+                                </ul>
+                            </div>
                         </li>
 
                     {% endif %}                    
                 </ul>
                 <ul class="navbar-nav ms-auto mt-2">
                     {% if user.is_authenticated %}
+
                         <li class="nav-item">
-                            <a class="nav-link active" style="color: purple;">
-                                {{ user.username }}
-                            </a>
+                            <div class="dropdown">
+                                <button class="nav-link active" style="color: purple;" type="button" id="dropdownMenuButton2" data-bs-toggle="dropdown" aria-expanded="false">
+                                    {{ user.username }}
+                                </button>
+                                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton2">
+                                    <li><a class="dropdown-item" href="{% url 'logout' %}">Log out</a></li>
+                                </ul>
+                            </div>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link active" href="{% url 'logout' %}">
-                                log out
-                            </a>
-                        </li>
+    
                     {% else %}
 
                         <li class="nav-item">

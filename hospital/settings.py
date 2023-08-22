@@ -38,6 +38,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    # Import app that used to add thousand separator in HTML
+    'django.contrib.humanize'
 ]
 
 MIDDLEWARE = [
