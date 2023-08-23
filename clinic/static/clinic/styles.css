@@ -82,6 +82,9 @@ header {
 .container {
   margin: 50px 0; }
 
+.service-detail-link {
+  text-decoration: none; }
+
 .my-service-info {
   display: grid;
   grid-template-columns: 30% auto;
@@ -100,6 +103,22 @@ header {
 
 .no-bullet {
   list-style-type: none; }
+
+.my-edit-form, .my-service-detail-container {
+  display: grid;
+  grid-template-columns: 30% auto;
+  margin: 25px 50px 0 100px;
+  padding-top: 25px;
+  border: 1px solid grey;
+  background-color: #D3D3D3; }
+
+#edit-btn {
+  margin: 50px 0; }
+
+.service-input {
+  border: 1px solid grey;
+  padding-left: 5px;
+  width: 400px; }
 
 .user-info {
   display: grid;

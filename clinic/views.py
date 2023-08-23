@@ -162,6 +162,7 @@ def add_service(request):
         male_price = request.POST.get('male_price')
         female_price = request.POST.get('female_price')
         benefit = request.POST.get('benefit', '')
+        description = request.POST.get('description', '')
 
         if not name or (not male_price and not female_price):
             return render(request, "clinic/add_service.html", {
@@ -186,7 +187,8 @@ def add_service(request):
                 name = name,
                 male_price = male_price,
                 female_price = female_price,
-                benefit = benefit
+                benefit = benefit,
+                description = description
             )
             service.save()
             request.session['yay_message'] = 'Service added'
@@ -195,6 +197,42 @@ def add_service(request):
     # If user clicked link
     else:
         return render(request, "clinic/add_service.html")
+
+
+# Allow user to check the service's detail
+@login_required
+@csrf_exempt
+def service_detail(request, service_id):
+    # If user is admin and submited the form
+    if request.method == 'POST':
+        # If user does not have the right to edit
+        if request.user.management_right_level < 2:
+            request.session['nay_message'] = 'You do not have the right to edit'
+            return HttpResponseRedirect(reverse('index'))
+        data = json.loads(request.body)
+
+        if data.get('new-name') is not None:
+            try:
+                service = Service.objects.get(pk=service_id)
+                service.name = data['new-name']
+                service.male_price = data['new-male-price']
+                service.female_price = data['new-female-price']
+                service.benefit = data['new-benefit']
+                service.description = data['new-description']
+                service.save()
+                return JsonResponse({'message': 'Changes saved'}, status=200)
+            except Service.DoesNotExist:
+                return JsonResponse({'error': 'Service does not exist in database'}, status=400)
+
+    else:
+        try:
+            service = Service.objects.get(pk=service_id)
+            return render(request, "clinic/service_detail.html", {
+                "service": service
+            })
+        except Service.DoesNotExist:
+            request.session['nay_message'] = 'Service does not exist'
+            return HttpResponseRedirect(reverse('index'))
 
 
 # Allow user to edit the service, only admins can do this

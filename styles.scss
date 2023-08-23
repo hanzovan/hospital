@@ -118,6 +118,9 @@ header {
 .container {
     margin: 50px 0;
 }
+.service-detail-link {
+    text-decoration: none;
+}
 
 // this class is for more specificity to avoid conflicting with bootstrap's classes
 .my-service-info {
@@ -140,6 +143,24 @@ header {
     list-style-type: none;
 }
 
+// Service's detail container
+.my-edit-form, .my-service-detail-container {
+    display: grid;
+    grid-template-columns: 30% auto;
+    margin: 25px 50px 0 100px;
+    padding-top: 25px;
+    border: 1px solid grey;
+    background-color: #D3D3D3;
+}
+#edit-btn {
+    margin: 50px 0;
+}
+.service-input {
+    border: 1px solid grey;
+    padding-left: 5px;
+    width: 400px;
+}
+
 // Users management page
 .user-info {
     display: grid;
@@ -150,3 +171,4 @@ header {
     border: 1px solid grey;
     background-color: white;
 }
+

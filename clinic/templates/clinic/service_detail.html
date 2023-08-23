@@ -1,0 +1,45 @@
+{% extends "clinic/layout.html" %}
+{% load static %}
+{% block title %}
+
+    service detail
+
+{% endblock %}
+{% block main %}
+
+    <h1 class="text-center">{{ service.name }}</h1>
+    <div class="my-service-detail-container">
+        <div class="field-name">
+            <ul class="no-bullet">
+                <li><i class="i-left">Service's name</i></li>
+                <li><i class="i-left">Male price</i></li>
+                <li><i class="i-left">Female price</i></li>
+                <li><i class="i-left">Benefit</i></li>
+                <li><i class="i-left">Description</i></li>
+            </ul>
+        </div>
+        <div class="field-value" id="original-value" data-service_id="{{ service.id }}">
+            <ul class="no-bullet">
+                <li><i class="i-left" id="service-name" data-service_name="{{ service.name }}">{{ service.name }}</i></li>
+                <li><i class="i-left" id="service-male-price" data-service_male_price="{{ service.male_price }}">{{ service.male_price }}</i></li>
+                <li><i class="i-left" id="service-female-price" data-service_female_price="{{ service.female_price }}">{{ service.female_price }}</i></li>
+                <li><i class="i-left" id="service-benefit" data-service_benefit="{{ service.benefit }}">{{ service.benefit }}</i></li>
+                <li><i class="i-left" id="service-description" data-service_description="{{ service.description }}">{{ service.description }}</i></li>
+            </ul>
+        </div>
+    </div>
+    {% if user.management_right_level >= 2 %}
+        <div class="text-center">
+            <button class="btn btn-primary" id="edit-btn">
+                Edit
+            </button>
+        </div>
+        <div id="testing"></div>
+    {% endif %}
+
+{% endblock %}
+{% block script %}
+
+        <script src="{% static 'clinic/service_detail.js' %}"></script>
+
+{% endblock %}
