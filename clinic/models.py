@@ -48,6 +48,7 @@ class Service(models.Model):
     benefit = models.TextField(blank=True)
     male_price = models.IntegerField(blank=True, null=True)
     female_price = models.IntegerField(blank=True, null=True)
+    description = models.TextField(blank=True, null=True)
 
     def __str__(self):
         return f"{self.name} in order to {self.benefit} with the price of {self.male_price} for male and {self.female_price} for female"

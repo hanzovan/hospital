@@ -2,6 +2,7 @@ import json
 from django.shortcuts import render
 from django.http import HttpResponseRedirect, HttpResponse, JsonResponse
 from django.db import IntegrityError
+from django.db.models import Q
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse
@@ -157,7 +158,7 @@ def add_service(request):
     # If user submitted form
     if request.method == 'POST':
         # Define variables
-        name = request.POST['name'].lower()
+        name = request.POST['name']
         male_price = request.POST.get('male_price')
         female_price = request.POST.get('female_price')
         benefit = request.POST.get('benefit', '')
@@ -172,13 +173,14 @@ def add_service(request):
         if not female_price:
             female_price = None
 
-        try:
-            old_service = Service.objects.get(name=name)            
+        
+        old_services = Service.objects.filter(Q(name__icontains=name))            
+        if old_services.count() > 0:
             return render(request, "clinic/add_service.html", {
-                "nay_message": f"{old_service.name}already in database"
+                "nay_message": f"{name} already in database"
             })
 
-        except Service.DoesNotExist:
+        else:
             # if user input correct, add to the services
             service = Service(
                 name = name,
