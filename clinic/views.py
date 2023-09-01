@@ -235,10 +235,6 @@ def service_detail(request, service_id):
             return HttpResponseRedirect(reverse('index'))
 
 
-# Allow user to edit the service, only admins can do this
-
-
-
 # Allow user to add people
 @login_required
 def add_people(request):
@@ -271,3 +267,37 @@ def add_people(request):
     # If user clicked link:
     else:
         return render(request, "clinic/add_people.html")
+
+
+# Allow user to check all people relevant to the hospital, only level 2 or higher admin can check this
+@login_required
+def people(request):
+    if request.user.management_right_level < 2:
+        request.session['nay_message'] = 'You are not allow to enter this part'
+        return HttpResponseRedirect(reverse('index'))
+    people = People.objects.all()
+    return render(request, "clinic/people.html", {
+        "people": people
+    })
+
+
+# Allow admin to check people's information and modify it
+@login_required
+@csrf_exempt
+def person_detail(request, person_id):
+    # Admin has to get level 2 right to enter this page
+    if request.user.management_right_level < 2:
+        request.session['nay_message'] = 'You do not have right to enter this page'
+        return HttpResponseRedirect(reverse('index'))
+
+    # If user is admin and submited the form
+    if request.method == 'POST':
+        
+        return HttpResponse('Constructing')
+
+    # If admin clicked link or visit the correct url
+    else:
+        person = People.objects.get(pk=person_id)
+        return render(request, "clinic/person_detail.html", {
+            "person": person
+        })

@@ -6,6 +6,7 @@
         <meta name="viewport" content="initial-scale=1, width=device-width">
         <link rel="stylesheet" href="{% static 'clinic/bootstrap.css' %}">
         <script src="{% static 'clinic/bootstrap.js' %}"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 
         <title>{% block title %}{% endblock %}</title>
         <link rel="stylesheet" href="{% static 'clinic/styles.css' %}">        
@@ -18,9 +19,17 @@
             <div class="collapse navbar-collapse" id="navbar">
                 <ul class="navbar-nav me-auto mt-2">
                     <li class="nav-item">
-                        <a class="nav-link active">
-                            All services
-                        </a>
+                        <div class="dropdown">
+                            <button class="nav-link active" type="button" id="dropdownMenuButton3" data-bs-toggle="dropdown" aria-expanded="false">
+                                Lists
+                            </button>
+                            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton3">
+                                <li><a class="dropdown-item" href="{% url 'index' %}">Services</a></li>
+                                {% if user.management_right_level >= 2 %}
+                                    <li><a class="dropdown-item" href="{% url 'people' %}">People</a></li>
+                                {% endif %}
+                            </ul>
+                        </div>
                     </li>
                     {% if user.is_authenticated %}
 
@@ -65,11 +74,6 @@
                         <li class="nav-item">
                             <a class="nav-link active" href="{% url 'login' %}">
                                 Log in
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link active" href="{% url 'register' %}">
-                                Register
                             </a>
                         </li>
 

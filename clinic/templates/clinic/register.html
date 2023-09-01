@@ -1,4 +1,5 @@
 {% extends "clinic/layout.html" %}
+{% load static %}
 {% block title %}
 
     Register
@@ -6,50 +7,59 @@
 {% endblock %}
 {% block main %}
 
-    <h1 class="text-center">Register</h1>
-    <div class="form-div">
-        <form action="{% url 'register' %}" method="post">
+    <div class="form-container">
+        <form id="register-form" action="{% url 'register' %}" method="post">
             {% csrf_token %}
-            <div class="input-line">
-                <label class="input-left">
-                    Username
-                </label>
-                <input class="input-box" name="username" type="text" autofocus autocomplete="off">
-                <div class="input-right">
-                    <p>Choose your nick name or shortname, which required to be unique</p>
+            <div class="container">
+                <h1>Register</h1>
+                <div class="form-group">
+                    <label for="username" class="form-label">Your Username</label>
+                    <input type="text" class="form-control" name="username" id="username" autocomplete="off" autofocus placeholder="anthony" tabindex="1" required>
                 </div>
-            </div>
-            <div class="input-line">
-                <label class="input-left">
-                    Email
-                </label>
-                <input class="input-box" name="email" type="email" autocomplete="off">
-                <div class="input-right">
-                    <p>Your valid email</p>
+                <div class="form-group">
+                    <label for="email" class="form-label">Your Email</label>
+                    <input type="email" class="form-control" name="email" id="email" autocomplete="off" placeholder="anthony@gmail.com" tabindex="2" required>
                 </div>
-            </div>
-            <div class="input-line">
-                <label class="input-left">
-                    Password
-                </label>
-                <input class="input-box" name="password" type="password" autocomplete="off">
-                <div class="input-right">
-                    <p>Your password should have at least 6 characters, including alphabet, number, and special characters</p>
+                <div class="form-group">
+                    <label for="password" class="form-label">Your Password</label>
+                    <input type="password" class="form-control" name="password" id="password" autocomplete="off" tabindex="3" required>
                 </div>
-            </div>
-            <div class="input-line">
-                <label class="input-left">
-                    Confirm password
-                </label>
-                <input class="input-box" name="confirm" type="password" autocomplete="off">
-                <div class="input-right">
-                    <p>Confirm your password</p>
+                <div class="form-group">
+                    <label for="confirm" class="form-label">Retype Password</label>
+                    <input type="password" class="form-control" name="confirm" id="confirm" autocomplete="off" tabindex="4" required>
                 </div>
+                <button>Register</button>
             </div>
-            <div class="text-center">
-                <button class="btn btn-primary" id="register-btn">Register</button>
+            <div>
+                <p>Already have an account? <a href="{% url 'login' %}">Log in</a></p>
             </div>
         </form>
     </div>
+    
+    <!-- <form id="register-form2" action="{% url 'register' %}" method="post">
+        {% csrf_token %}
+        <div class="container">
+            <h1>Register</h1>
+            <p>Please fill this form to create your account</p>
+            <label for="username"><b>Username</b></label>
+            <input name="username" type="text" autofocus autocomplete="off">
+            <label for="email"><b>Email</b></label>
+            <input name="email" type="email" autocomplete="off">
+            <label for="password"><b>Password</b></label>
+            <input name="password" type="password" autocomplete="off">
+            <label for="confirm"><b>Retype password</b></label>
+            <input name="confirm" type="password" autocomplete="off">
+            <button>Register</button>
+        </div>
+        <div>
+            <p>Already have an account? <a href="{% url 'login' %}">Log in</a></p>
+        </div>
+        
+    </form> -->
+
+{% endblock %}
+{% block script %}
+
+    <script src="{% static 'clinic/register.js' %}"></script>
 
 {% endblock %}

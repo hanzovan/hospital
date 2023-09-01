@@ -1,0 +1,70 @@
+{% extends "clinic/layout.html" %}
+{% load static %}
+{% block title %}
+
+    people
+
+{% endblock %}
+{% block main %}
+
+    <h1 class="text-center">People</h1>
+    <div class="container" id="people-container">
+        {% for person in people %}
+            <a class="person-detail-link" href="{% url 'person_detail' person_id=person.id %}">
+                <div class="my-people-info">
+                    <div class="field-name">
+                        <ul class="no-bullet">
+                            <li><i class="i-left">Name</i></li>
+                            <li><i class="i-left">Position</i></li>
+                            <li><i class="i-left">Email</i></li>
+                            <li><i class="i-left">Phone</i></li>
+                            <li><i class="i-left">Note</i></li>
+                        </ul>
+                    </div>
+                    <div class="field-value">
+                        <ul class="no-bullet">
+                            <li><strong>{{ person.name }}</strong></li>
+                            <li>
+                                <strong>
+                                    {% if not person.position %}
+                                        N/A
+                                    {% else %}
+                                        {{ person.position }}
+                                    {% endif %}                                
+                                </strong>
+                            </li>
+                            <li>
+                                <strong>
+                                    {% if not person.email %}
+                                        N/A
+                                    {% else %}
+                                        {{ person.email }}
+                                    {% endif %}                            
+                                </strong>
+                            </li>
+                            <li>
+                                <strong>
+                                    {% if not person.phone %}
+                                        N/A
+                                    {% else %}
+                                        {{ person.phone }}
+                                    {% endif %}                                
+                                </strong>
+                            </li>
+                            <li>
+                                <strong>
+                                    {% if not person.note %}
+                                        N/A
+                                    {% else %}
+                                        {{ person.note }}
+                                    {% endif %}                                
+                                </strong>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </a>            
+        {% endfor %}
+    </div>
+
+{% endblock %}

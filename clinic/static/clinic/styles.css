@@ -1,14 +1,15 @@
 body {
-  font-family: sans-serif;
-  font-size: 22px;
-  font-style: normal; }
+  font-family: sans-serif; }
 
 body {
-  color: blue;
+  color: auto;
   background-color: bisque; }
 
 main {
-  min-height: 600px; }
+  min-height: 40vh;
+  display: flex;
+  justify-content: center;
+  align-items: center; }
 
 footer {
   margin-top: 150px;
@@ -17,58 +18,13 @@ footer {
   font-style: italic;
   color: grey; }
 
-textarea {
-  display: block;
-  width: 700px;
-  padding: 10px;
-  margin: 30px 0; }
-
 .navbar-custom {
   padding: 0 30px;
   background: #FAD6A5;
   margin-bottom: 30px; }
 
-.input-line {
-  clear: both;
-  vertical-align: baseline;
-  padding: 30px 0 30px 0;
-  margin: 20px 0 20px 150px; }
-
-.input-left {
-  float: left;
-  width: 26%;
-  height: 42px;
-  line-height: 45px;
-  vertical-align: middle; }
-
-.input-box {
-  float: left;
-  display: block;
-  min-width: 167px;
-  min-height: 41px;
-  height: 5px;
-  margin-right: 50px;
-  width: 250px; }
-
-.input-right {
-  display: inline-block;
-  width: 35%;
-  height: 42px;
-  line-height: 45px;
-  vertical-align: middle; }
-
-.input-box {
-  border: 1px solid grey;
-  padding-left: 10px; }
-
-.input-right {
-  font-family: sans-serif;
-  font-style: italic;
-  font-size: 14px;
-  color: grey; }
-
 header {
-  height: 100px;
+  height: 50px;
   animation-name: hide;
   animation-duration: 2s;
   animation-fill-mode: forwards;
@@ -85,7 +41,7 @@ header {
 .service-detail-link {
   text-decoration: none; }
 
-.my-service-info {
+.my-service-info, .my-people-info {
   display: grid;
   grid-template-columns: 30% auto;
   margin-top: 25px;
@@ -128,5 +84,177 @@ header {
   padding-top: 25px;
   border: 1px solid grey;
   background-color: white; }
+
+.person-detail-link {
+  text-decoration: none; }
+
+.my-person-detail-container {
+  display: grid;
+  grid-template-columns: 30% auto;
+  margin: 25px 50px 0 100px;
+  padding-top: 25px;
+  border: 1px solid grey;
+  background-color: #D3D3D3; }
+
+#edit-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center; }
+
+.form-container {
+  display: block;
+  background-color: #fff;
+  box-shadow: 0 15px 35px rgba(50, 50, 93, 0.1), 0 5px 15px rgba(0, 0, 0, 0.07);
+  transition: all 1s;
+  transform: translateY(-200px); }
+
+#register-form .container {
+  display: flex;
+  flex-direction: column;
+  width: 30vw;
+  padding: 2em; }
+#register-form h1, #register-form p {
+  text-align: center;
+  margin-bottom: 1.5em; }
+#register-form .form-group {
+  margin-bottom: 1.5em; }
+#register-form .form-group:focus-within {
+  transform: scale(1.1, 1.1);
+  transition: all .6s; }
+#register-form .form-label {
+  display: block;
+  font-size: 0.75em;
+  color: #555;
+  opacity: 0;
+  transition: all .3s;
+  transform: translateX(-100px); }
+#register-form .focused .form-label {
+  opacity: 1;
+  transform: translateX(0); }
+#register-form .form-control {
+  padding: 0.2em;
+  box-shadow: none;
+  border-radius: 0.25em;
+  border-color: #ccc;
+  border-style: none none solid none;
+  font-size: 1.5em;
+  transition: all .6s; }
+#register-form .form-control::placeholder {
+  color: #aaa; }
+#register-form .form-control:focus {
+  box-shadow: none;
+  border-color: orange;
+  outline: none; }
+#register-form .form-control:invalid:focus {
+  border-color: red; }
+#register-form .form-contro:valid {
+  border-color: green; }
+#register-form button {
+  padding: 0.75em;
+  outline: none;
+  border: none;
+  border-radius: 0.25em;
+  background-color: #4412e8;
+  font-size: 1em;
+  color: white; }
+#register-form button:hover {
+  cursor: pointer;
+  background-color: #2904a4; }
+
+#login-form .container {
+  display: flex;
+  flex-direction: column;
+  width: 30vw;
+  padding: 2em; }
+#login-form h1, #login-form p {
+  text-align: center;
+  margin-bottom: 1.5em; }
+#login-form .form-group {
+  margin-bottom: 1.5em; }
+#login-form .form-group:focus-within {
+  transform: scale(1.1, 1.1);
+  transition: all .6s; }
+#login-form .form-label {
+  display: block;
+  font-size: 0.75em;
+  color: #555;
+  opacity: 0;
+  transition: all .3s;
+  transform: translateX(-100px); }
+#login-form .focused .form-label {
+  opacity: 1;
+  transform: translateX(0); }
+#login-form .form-control {
+  padding: 0.5em;
+  box-shadow: none;
+  border-radius: 0.25em;
+  border-color: #ccc;
+  border-style: none none solid none;
+  font-size: 1.25em;
+  transition: all .6s; }
+#login-form .form-control::placeholder {
+  color: #aaa; }
+#login-form .form-control:focus {
+  box-shadow: none;
+  border-color: orange;
+  outline: none; }
+#login-form .form-control:invalid:focus {
+  border-color: red; }
+#login-form .form-control:valid {
+  border-color: green; }
+#login-form button {
+  padding: 0.75em;
+  outline: none;
+  border: none;
+  border-radius: 0.25em;
+  background-color: #4412e8;
+  font-size: 1em;
+  color: white; }
+#login-form button:hover {
+  cursor: pointer;
+  background-color: #2904a4; }
+
+.my-person-edit-container {
+  display: flex;
+  flex-direction: column;
+  width: 30vw; }
+
+.my-person-edit-container h1, .my-person-edit-container p {
+  text-align: center; }
+.my-person-edit-container input {
+  margin: 0.25em 0 1em 0;
+  border: 1px solid grey; }
+.my-person-edit-container textarea {
+  width: 28vw; }
+
+#register-form2 {
+  display: flex;
+  flex-direction: column;
+  align-items: center; }
+  #register-form2 .container {
+    display: flex;
+    flex-direction: column;
+    width: 25vw;
+    box-shadow: 0 15px 35px rgba(50, 50, 93, 0.1), 0 5px 15px rgba(0, 0, 0, 0.07);
+    padding: 1em; }
+    #register-form2 .container h1, #register-form2 .container p {
+      text-align: center; }
+    #register-form2 .container input {
+      margin: 0.25em 0 1em 0;
+      outline: none;
+      border: none;
+      background-color: #e1e1e1;
+      border-radius: 0.25em;
+      color: black; }
+    #register-form2 .container button {
+      padding: 0.75em;
+      border: none;
+      outline: none;
+      background-color: #4412e8;
+      color: white;
+      border-radius: 0.25em; }
+    #register-form2 .container button:hover {
+      cursor: pointer;
+      background-color: #2904a4; }
 
 /*# sourceMappingURL=styles.css.map */

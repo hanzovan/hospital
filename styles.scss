@@ -1,23 +1,24 @@
 // General setting
-$normal-text-color: blue;
+$normal-text-color: auto;
 $big-text-color: brown;
+$font-color: #555;
+$font-hover-color: orange;
 %normal-text {
     font-family: sans-serif;
-    font-size: 22px;
-    font-style: normal;
 }
 %big-text {
     font-family: sans-serif;
-    font-size: 28px;
-    font-style: bold;
 }
 body {
     color: $normal-text-color;
     @extend %normal-text;
-    background-color: bisque;
+    background-color: bisque;    
 }
 main {
-    min-height: 600px;
+    min-height: 40vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 footer {
     margin-top: 150px;
@@ -26,12 +27,6 @@ footer {
     font-style: italic;
     color: grey;
 }
-textarea {
-    display: block;
-    width: 700px;
-    padding: 10px;
-    margin: 30px 0;
-}
 
 .navbar-custom {
     padding: 0 30px;
@@ -39,56 +34,8 @@ textarea {
     margin-bottom: 30px;
 }
 
-// Setting for form and page with 2 or 3 column
-%line {
-    clear: both;
-    vertical-align: baseline;
-    padding: 30px 0 30px 0;
-    margin: 20px 0 20px 150px;
-}
-%line-left {
-    float: left;
-    width: 26%;
-    height: 42px;
-    line-height: 45px;
-    vertical-align: middle;
-}
-%line-middle {
-    float: left;
-    display: block;
-    min-width: 167px;
-    min-height: 41px;
-    height: 5px;
-    margin-right: 50px;
-    width: 250px;
-}
-%line-right {
-    display: inline-block;
-    width: 35%;
-    height: 42px;
-    line-height: 45px;
-    vertical-align: middle;
-}
-.input-line {
-    @extend %line;
-}
-.input-left {
-    @extend %line-left;
-}
-.input-box {
-    @extend %line-middle;
-    border: 1px solid grey;
-    padding-left: 10px;
-}
-.input-right {
-    @extend %line-right;
-    font-family: sans-serif;
-    font-style: italic;
-    font-size: 14px;
-    color: grey;
-}
 header {
-    height: 100px;
+    height: 50px;
     animation-name: hide;
     animation-duration: 2s;
     animation-fill-mode: forwards;
@@ -123,7 +70,7 @@ header {
 }
 
 // this class is for more specificity to avoid conflicting with bootstrap's classes
-.my-service-info {
+.my-service-info, .my-people-info {
     display: grid;
     grid-template-columns: 30% auto;
     margin-top: 25px;
@@ -172,3 +119,231 @@ header {
     background-color: white;
 }
 
+// People page
+.person-detail-link {
+    text-decoration: none;
+}
+.my-person-detail-container {
+    display: grid;
+    grid-template-columns: 30% auto;
+    margin: 25px 50px 0 100px;
+    padding-top: 25px;
+    border: 1px solid grey;
+    background-color: #D3D3D3;
+}
+
+#edit-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.form-container {
+    display: block;
+    background-color: #fff;
+    box-shadow: 0 15px 35px rgba(50, 50, 93, .1), 0 5px 15px rgba(0, 0, 0, .07);    
+    transition: all 1s;
+    transform: translateY(-200px);
+}
+#register-form {
+    .container {
+        display: flex;
+        flex-direction: column;
+        width: 30vw;
+        padding: 2em;
+    }
+    h1, p {
+        text-align: center;
+        margin-bottom: 1.5em;
+    }
+    .form-group {
+        margin-bottom: 1.5em;
+    }
+    .form-group:focus-within {
+        transform: scale(1.1, 1.1);
+        transition: all .6s;
+    }
+    .form-label {
+        display: block;
+
+        font-size: 0.75em;
+        color: $font-color;
+
+        opacity: 0;
+        transition: all .3s;
+        transform: translateX(-100px);
+    }
+    .focused {
+        .form-label {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+    .form-control {
+        padding: 0.2em;
+        box-shadow: none;
+        border-radius: 0.25em;
+        border-color: #ccc;
+        border-style: none none solid none;
+
+        font-size: 1.5em;
+        transition: all .6s;
+    }
+    .form-control::placeholder {
+        color: #aaa;
+    }
+    .form-control:focus {
+        box-shadow: none;
+        border-color: $font-hover-color;
+        outline: none;
+    }
+    .form-control:invalid:focus {
+        border-color: red;
+    }
+    .form-contro:valid {
+        border-color: green;
+    }
+    button {
+        padding: 0.75em;
+        outline: none;
+        border: none;
+        border-radius: 0.25em;
+        
+        background-color: rgb(68, 18, 232);
+
+        font-size: 1em;
+        color: white;
+    }
+    button:hover {
+        cursor: pointer;
+        background-color: rgb(41, 4, 164);
+    }
+}
+#login-form {
+    .container {
+        display: flex;
+        flex-direction: column;
+        width: 30vw;
+        padding: 2em;
+    }
+    h1, p {
+        text-align: center;
+        margin-bottom: 1.5em;
+    }
+    .form-group {
+        margin-bottom: 1.5em;
+    }
+    .form-group:focus-within {
+        transform: scale(1.1, 1.1);
+        transition: all .6s;
+    }
+
+    .form-label {
+        display: block;
+
+        font-size: 0.75em;
+        color: $font-color;
+
+        opacity: 0;
+        transition: all .3s;
+        transform: translateX(-100px);
+    }
+    .focused {
+        .form-label {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+
+    .form-control {
+        padding: 0.5em;
+        box-shadow: none;
+        border-radius: 0.25em;
+        border-color: #ccc;
+        border-style: none none solid none;
+
+        font-size: 1.25em;
+        transition: all .6s;
+    }
+    .form-control::placeholder {
+        color: #aaa;
+    }
+    .form-control:focus {
+        box-shadow: none;
+        border-color: $font-hover-color;
+        outline:none;
+    }
+    .form-control:invalid:focus {
+        border-color: red;
+    }
+    .form-control:valid {
+        border-color: green;
+    }
+    button {
+        padding: 0.75em;
+        outline: none;
+        border: none;
+        border-radius: 0.25em;
+
+        background-color: rgb(68, 18, 232);
+
+        font-size: 1em;
+        color: white;
+    }
+    button:hover {
+        cursor: pointer;
+        background-color: rgb(41, 4, 164);
+    }
+}
+
+.my-person-edit-container {
+    display: flex;
+    flex-direction: column;
+    width: 30vw;    
+}
+.my-person-edit-container {    
+    h1, p {
+        text-align: center;
+    }
+    input {
+        margin: 0.25em 0 1em 0;
+        border: 1px solid grey;
+    }
+    textarea {
+        width: 28vw;
+    }    
+}
+#register-form2 {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    .container {
+        display: flex;
+        flex-direction: column;
+        width: 25vw;
+        box-shadow: 0 15px 35px rgba(50, 50, 93, .1),0 5px 15px rgba(0, 0, 0, .07);
+        padding: 1em;
+        h1, p {
+            text-align: center;
+        }
+        input {
+            margin: 0.25em 0 1em 0;
+            outline: none;
+            border: none;
+            background-color: rgb(225, 225, 225);
+            border-radius: 0.25em;
+            color: black;
+        }
+        button {
+            padding: 0.75em;
+            border: none;
+            outline: none;
+            background-color: rgb(68, 18, 232);
+            color: white;
+            border-radius: 0.25em;
+        }
+        button:hover {
+            cursor: pointer;
+            background-color: rgb(41, 4, 164);
+        }
+    }
+}
