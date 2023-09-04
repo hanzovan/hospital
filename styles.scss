@@ -16,9 +16,6 @@ body {
 }
 main {
     min-height: 40vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
 }
 footer {
     margin-top: 150px;
@@ -137,14 +134,21 @@ header {
     flex-direction: column;
     align-items: center;
 }
+
+// Without this div, the form background will fill all the screen
+.general {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
 .form-container {
     display: block;
     background-color: #fff;
-    box-shadow: 0 15px 35px rgba(50, 50, 93, .1), 0 5px 15px rgba(0, 0, 0, .07);    
+    box-shadow: 0 15px 35px rgba(50, 50, 93, .1), 0 5px 15px rgba(0, 0, 0, .07);
     transition: all 1s;
     transform: translateY(-200px);
 }
-#register-form {
+#register-form, #login-form, #add-people-form, #add-service-form {
     .container {
         display: flex;
         flex-direction: column;
@@ -199,8 +203,11 @@ header {
     .form-control:invalid:focus {
         border-color: red;
     }
-    .form-contro:valid {
+    .form-control:valid {
         border-color: green;
+    }
+    textarea {
+        resize: none;
     }
     button {
         padding: 0.75em;
@@ -208,82 +215,6 @@ header {
         border: none;
         border-radius: 0.25em;
         
-        background-color: rgb(68, 18, 232);
-
-        font-size: 1em;
-        color: white;
-    }
-    button:hover {
-        cursor: pointer;
-        background-color: rgb(41, 4, 164);
-    }
-}
-#login-form {
-    .container {
-        display: flex;
-        flex-direction: column;
-        width: 30vw;
-        padding: 2em;
-    }
-    h1, p {
-        text-align: center;
-        margin-bottom: 1.5em;
-    }
-    .form-group {
-        margin-bottom: 1.5em;
-    }
-    .form-group:focus-within {
-        transform: scale(1.1, 1.1);
-        transition: all .6s;
-    }
-
-    .form-label {
-        display: block;
-
-        font-size: 0.75em;
-        color: $font-color;
-
-        opacity: 0;
-        transition: all .3s;
-        transform: translateX(-100px);
-    }
-    .focused {
-        .form-label {
-            opacity: 1;
-            transform: translateX(0);
-        }
-    }
-
-    .form-control {
-        padding: 0.5em;
-        box-shadow: none;
-        border-radius: 0.25em;
-        border-color: #ccc;
-        border-style: none none solid none;
-
-        font-size: 1.25em;
-        transition: all .6s;
-    }
-    .form-control::placeholder {
-        color: #aaa;
-    }
-    .form-control:focus {
-        box-shadow: none;
-        border-color: $font-hover-color;
-        outline:none;
-    }
-    .form-control:invalid:focus {
-        border-color: red;
-    }
-    .form-control:valid {
-        border-color: green;
-    }
-    button {
-        padding: 0.75em;
-        outline: none;
-        border: none;
-        border-radius: 0.25em;
-
         background-color: rgb(68, 18, 232);
 
         font-size: 1em;
@@ -311,39 +242,4 @@ header {
     textarea {
         width: 28vw;
     }    
-}
-#register-form2 {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    .container {
-        display: flex;
-        flex-direction: column;
-        width: 25vw;
-        box-shadow: 0 15px 35px rgba(50, 50, 93, .1),0 5px 15px rgba(0, 0, 0, .07);
-        padding: 1em;
-        h1, p {
-            text-align: center;
-        }
-        input {
-            margin: 0.25em 0 1em 0;
-            outline: none;
-            border: none;
-            background-color: rgb(225, 225, 225);
-            border-radius: 0.25em;
-            color: black;
-        }
-        button {
-            padding: 0.75em;
-            border: none;
-            outline: none;
-            background-color: rgb(68, 18, 232);
-            color: white;
-            border-radius: 0.25em;
-        }
-        button:hover {
-            cursor: pointer;
-            background-color: rgb(41, 4, 164);
-        }
-    }
 }

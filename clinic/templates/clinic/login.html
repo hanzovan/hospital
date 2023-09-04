@@ -6,26 +6,28 @@
 
 {% endblock %}
 {% block main %}
-    <div class="form-container">
-        <form id="login-form" action="{% url 'login' %}" method="post">
-            {% csrf_token %}            
-            <div class="container">
-                <h1>Log in</h1>
-                <div class="form-group">
-                    <label for="username" class="form-label">Your Username</label>
-                    <input type="text" class="form-control" id="username" name="username" tabindex="1" required autocomplete="off" autofocus>
+    <div class="general">
+        <div class="form-container">
+            <form id="login-form" action="{% url 'login' %}" method="post">
+                {% csrf_token %}            
+                <div class="container">
+                    <h1>Log in</h1>
+                    <div class="form-group">
+                        <label for="username" class="form-label">Your Username</label>
+                        <input type="text" class="form-control" id="username" name="username" tabindex="1" required autocomplete="off" autofocus>
+                    </div>
+                    <div class="form-group">
+                        <label for="password" class="form-label">Your Password</label>
+                        <input type="password" class="form-control" name="password" id="password" autocomplete="off" tabindex="2" required>
+                    </div>
+                    <button>Log in</button>
                 </div>
-                <div class="form-group">
-                    <label for="password" class="form-label">Your Password</label>
-                    <input type="password" class="form-control" name="password" id="password" autocomplete="off" tabindex="2" required>
+                <div>
+                    <p>Not have an account? <a href="{% url 'register' %}">Register</a></p>
                 </div>
-                <button>Log in</button>
-            </div>
-            <div>
-                <p>Not have an account? <a href="{% url 'register' %}">Register</a></p>
-            </div>
-        </form>
-    </div>
+            </form>
+        </div>
+    </div>    
 {% endblock %}
 {% block script %}
 

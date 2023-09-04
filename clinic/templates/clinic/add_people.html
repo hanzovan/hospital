@@ -6,49 +6,42 @@
 
 {% endblock %}
 {% block main %}
-
-    <h1 class="text-center">Add people</h1>
-    <div class="form-div">
-        <form action="{% url 'add_people' %}" method="post">
-            {% csrf_token %}
-            <div class="input-line">
-                <label class="input-left">
-                    Name
-                </label>
-                <input class="input-box" name="name" type="text" autofocus autocomplete="off">
-                <div class="input-right"></div>
-            </div>
-            <div class="input-line">
-                <label class="input-left">
-                    Position
-                </label>
-                <input class="input-box" name="position" type="text" autocomplete="off">
-                <div class="input-right"></div>
-            </div>
-            <div class="input-line">
-                <label class="input-left">
-                    Email
-                </label>
-                <input class="input-box" name="email" type="email" autocomplete="off">
-                <div class="input-right"></div>
-            </div>
-            <div class="input-line">
-                <label class="input-left">
-                    Phone
-                </label>
-                <input class="input-box" name="phone" type="text" autocomplete="off">
-                <div class="input-right"></div>
-            </div>
-            <div class="input-line">
-                <label class="input-left">
-                    Note
-                </label>
-                <textarea class="input-area" name="note"></textarea>
-            </div>
-            <div class="text-center">
-                <button class="btn btn-primary" id="add_people-btn">Save</button>
-            </div>
-        </form>
+    <div class="general">
+        <div class="form-container">
+            <form action="{% url 'add_people' %}" method="post" id="add-people-form">
+                {% csrf_token %}
+                <div class="container">
+                    <h1>Add people</h1>
+                    <p>Please fill person's information</p>
+                    <div class="form-group">
+                        <label for="name" class="form-label">Name</label>
+                        <input type="text" class="form-control" name="name" id="name" autocomplete="off" tabindex="1" placeholder="Anthony" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="position" class="form-label">Position</label>
+                        <input type="text" class="form-control" name="position" id="position" autocomplete="off" placeholder="Manager" tabindex="2">
+                    </div>
+                    <div class="form-group">
+                        <label for="email" class="form-label">Email</label>
+                        <input type="email" class="form-control" name="email" id="email" autocomplete="off" placeholder="anthony@gmail.com" tabindex="3">
+                    </div>
+                    <div class="form-group">
+                        <label for="phone" class="form-label">Phone</label>
+                        <input type="text" class="form-control" name="phone" id="phone" autocomplete="off" placeholder="0912345678" tabindex="4">
+                    </div>
+                    <div class="form-group">
+                        <label for="note" class="form-label">Note</label>
+                        <textarea rows="5" cols="40" class="form-control" id="note" name="note" placeholder="Enter note..."></textarea>
+                    </div>
+                    <button>Save</button>
+                </div>
+            </form>
+        </div>
     </div>
+
+{% endblock %}
+{% block script %}
+
+    <script src="{% static 'clinic/add_people.js' %}"></script>
 
 {% endblock %}

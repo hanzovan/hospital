@@ -16,6 +16,7 @@ class People(models.Model):
     email = models.CharField(max_length=255)
     phone = models.CharField(max_length=255)
     note = models.TextField(blank=True)
+    add_by = models.ForeignKey(User, blank=True, null=True, on_delete=models.CASCADE, related_name='add_people')
 
     def __str__(self):
         return f"{self.name} working in {self.position}"
@@ -33,8 +34,8 @@ class ContactDiary(models.Model):
 class Company(models.Model):
     name = models.CharField(max_length=255)
     industry = models.CharField(max_length=255)
-    manager = models.ForeignKey(People, on_delete=models.CASCADE, related_name='companies')
-    contact_person = models.ForeignKey(People, on_delete=models.CASCADE, related_name='company')
+    manager = models.ForeignKey(People, on_delete=models.CASCADE, related_name='manage_companies')
+    contact_person = models.ForeignKey(People, on_delete=models.CASCADE, related_name='contact_companies')
     address = models.TextField()
     male_headcount = models.IntegerField()
     female_headcount = models.IntegerField()

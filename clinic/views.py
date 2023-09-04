@@ -157,6 +157,11 @@ def authorize(request):
 def add_service(request):
     # If user submitted form
     if request.method == 'POST':
+        # If user level is not 2 or higher, raise error
+        if request.user.management_right_level < 2:
+            request.session['nay_message'] = 'You do not have right to do this'
+            return HttpResponseRedirect(reverse('index'))
+
         # Define variables
         name = request.POST['name']
         male_price = request.POST.get('male_price')
@@ -196,6 +201,11 @@ def add_service(request):
 
     # If user clicked link
     else:
+        # Only allow user with management level higher or equal to lv2
+        if request.user.management_right_level < 2:
+            request.session['nay_message'] = 'You do not have right to access this part'
+            return HttpResponseRedirect(reverse('index'))
+        
         return render(request, "clinic/add_service.html")
 
 
@@ -240,6 +250,11 @@ def service_detail(request, service_id):
 def add_people(request):
     # If user submitted form
     if request.method == 'POST':
+        # If user does not have right, raise error and redirect back to homepage
+        if request.user.management_right_level < 2:
+            request.session['nay_message'] = 'Sorry, you do not have right to do this'
+            return HttpResponseRedirect(reverse('index'))
+
         # Handle user input
         name = request.POST['name']
         position = request.POST.get('position', '')
@@ -262,10 +277,14 @@ def add_people(request):
         )
         people.save()
         request.session['yay_message'] = 'People saved'
-        return HttpResponseRedirect(reverse('index'))        
+        return HttpResponseRedirect(reverse('people'))        
 
     # If user clicked link:
     else:
+        # Only allow user with level 2 or higher
+        if request.user.management_right_level < 2:
+            request.session['nay_message'] = 'You do not have right to access this part'
+            return HttpResponseRedirect(reverse('index'))
         return render(request, "clinic/add_people.html")
 
 
@@ -275,9 +294,18 @@ def people(request):
     if request.user.management_right_level < 2:
         request.session['nay_message'] = 'You are not allow to enter this part'
         return HttpResponseRedirect(reverse('index'))
+
+    nay_message = request.session.get('nay_message', '')
+    yay_message = request.session.get('yay_message', '')
+
+    request.session['nay_message'] = ''    
+    request.session['yay_message'] = ''
+
     people = People.objects.all()
     return render(request, "clinic/people.html", {
-        "people": people
+        "people": people,
+        "nay_message": nay_message,
+        "yay_message": yay_message
     })
 
 
@@ -297,7 +325,11 @@ def person_detail(request, person_id):
 
     # If admin clicked link or visit the correct url
     else:
-        person = People.objects.get(pk=person_id)
-        return render(request, "clinic/person_detail.html", {
-            "person": person
-        })
+        try:
+            person = People.objects.get(pk=person_id)
+            return render(request, "clinic/person_detail.html", {
+                "person": person
+            })
+        except People.DoesNotExist:
+            request.session['nay_message'] = 'That person does not exist'
+            return HttpResponseRedirect(reverse('people'))
