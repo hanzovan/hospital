@@ -47,6 +47,9 @@
 {% endblock %}
 {% block script %}
 
+    <script>
+        var modify_right = {{ modify_right | lower }}
+    </script>
     <script src="{% static 'clinic/authorize.js' %}"></script>
 
 {% endblock %}

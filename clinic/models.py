@@ -4,8 +4,14 @@ from django.contrib.auth.models import AbstractUser
 # Create your models here.
 class User(AbstractUser):
     class Level(models.IntegerChoices):
+
+        # Level 1: add people, check people they added, check all services
         LOW = 1
+
+        # Level 2: add, modified all people, check all people, services
         MIDDLE = 2
+
+        # Level 3: add, modified all people, services, check all people, authorize admins
         TOP = 3
     management_right_level = models.IntegerField(choices=Level.choices, blank=True, null=True)
 
@@ -16,7 +22,8 @@ class People(models.Model):
     email = models.CharField(max_length=255)
     phone = models.CharField(max_length=255)
     note = models.TextField(blank=True)
-    add_by = models.ForeignKey(User, blank=True, null=True, on_delete=models.CASCADE, related_name='add_people')
+    created_by = models.ForeignKey(User, blank=True, null=True, on_delete=models.CASCADE, related_name='add_people')
+    modified_by = models.ForeignKey(User, blank=True, null=True, on_delete=models.CASCADE, related_name='modified_people')
 
     def __str__(self):
         return f"{self.name} working in {self.position}"
@@ -50,6 +57,8 @@ class Service(models.Model):
     male_price = models.IntegerField(blank=True, null=True)
     female_price = models.IntegerField(blank=True, null=True)
     description = models.TextField(blank=True, null=True)
+    created_by = models.ForeignKey(User, blank=True, null=True, on_delete=models.CASCADE, related_name='add_services')
+    modified_by = models.ForeignKey(User, blank=True, null=True, on_delete=models.CASCADE, related_name='modified_services')
 
     def __str__(self):
         return f"{self.name} in order to {self.benefit} with the price of {self.male_price} for male and {self.female_price} for female"

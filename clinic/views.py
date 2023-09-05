@@ -9,7 +9,13 @@ from django.urls import reverse
 from django.views.decorators.csrf import csrf_exempt
 
 from .models import User, People, ContactDiary, Company, Service, Quotation, Contract, ContractPrice
-from .helpers import strong_password
+from .helpers import strong_password, user_right
+
+# Define management level right
+level_1 = ['add_people', 'check_people_self_add', 'check_service']
+
+           
+# Create a python file that return right
 
 # Create your views here.
 @login_required
@@ -127,7 +133,7 @@ def authorize(request):
     # if admin submitted form
     if request.method == 'POST':
         # User must have the right to submit form
-        if request.user.management_right_level != 3:
+        if 'modify_user_right' not in user_right(request.user.management_right_level):
             return JsonResponse({'error': "You do not have rights to change user's level"}, status=400)
 
         data = json.loads(request.body)
@@ -142,13 +148,16 @@ def authorize(request):
     
     # if admin clicking link
     else:
-        if request.user.management_right_level != 3:
+        # if user does not have right to access this page
+        if 'read_user_right' not in user_right(request.user.management_right_level):            
             request.session['nay_message'] = "You don't have the right to visit this page"
             return HttpResponseRedirect(reverse('index'))
+        modify_right = 'modify_user_right' in user_right(request.user.management_right_level)
         data_users = User.objects.all()
         return render(request, "clinic/authorize.html", {
             "data_users": data_users,
-            "levels": [1, 2, 3]
+            "levels": [1, 2, 3],
+            "modify_right": modify_right
         })
 
 
@@ -158,7 +167,7 @@ def add_service(request):
     # If user submitted form
     if request.method == 'POST':
         # If user level is not 2 or higher, raise error
-        if request.user.management_right_level < 2:
+        if request.user.management_right_level < 3:
             request.session['nay_message'] = 'You do not have right to do this'
             return HttpResponseRedirect(reverse('index'))
 
@@ -193,7 +202,8 @@ def add_service(request):
                 male_price = male_price,
                 female_price = female_price,
                 benefit = benefit,
-                description = description
+                description = description,
+                created_by = request.user
             )
             service.save()
             request.session['yay_message'] = 'Service added'
@@ -202,7 +212,7 @@ def add_service(request):
     # If user clicked link
     else:
         # Only allow user with management level higher or equal to lv2
-        if request.user.management_right_level < 2:
+        if request.user.management_right_level < 3:
             request.session['nay_message'] = 'You do not have right to access this part'
             return HttpResponseRedirect(reverse('index'))
         
@@ -216,7 +226,7 @@ def service_detail(request, service_id):
     # If user is admin and submited the form
     if request.method == 'POST':
         # If user does not have the right to edit
-        if request.user.management_right_level < 2:
+        if request.user.management_right_level < 3:
             request.session['nay_message'] = 'You do not have the right to edit'
             return HttpResponseRedirect(reverse('index'))
         data = json.loads(request.body)
@@ -229,6 +239,7 @@ def service_detail(request, service_id):
                 service.female_price = data['new-female-price']
                 service.benefit = data['new-benefit']
                 service.description = data['new-description']
+                service.modified_by = request.user
                 service.save()
                 return JsonResponse({'message': 'Changes saved'}, status=200)
             except Service.DoesNotExist:
@@ -250,11 +261,6 @@ def service_detail(request, service_id):
 def add_people(request):
     # If user submitted form
     if request.method == 'POST':
-        # If user does not have right, raise error and redirect back to homepage
-        if request.user.management_right_level < 2:
-            request.session['nay_message'] = 'Sorry, you do not have right to do this'
-            return HttpResponseRedirect(reverse('index'))
-
         # Handle user input
         name = request.POST['name']
         position = request.POST.get('position', '')
@@ -273,7 +279,8 @@ def add_people(request):
             position = position,
             email = email,
             phone = phone,
-            note = note
+            note = note,
+            created_by = request.user
         )
         people.save()
         request.session['yay_message'] = 'People saved'
@@ -281,10 +288,6 @@ def add_people(request):
 
     # If user clicked link:
     else:
-        # Only allow user with level 2 or higher
-        if request.user.management_right_level < 2:
-            request.session['nay_message'] = 'You do not have right to access this part'
-            return HttpResponseRedirect(reverse('index'))
         return render(request, "clinic/add_people.html")
 
 
