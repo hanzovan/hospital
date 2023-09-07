@@ -179,6 +179,7 @@ def authorize(request):
     
 
 # Allow user to add service
+# Check if user have right to add service or not
 @login_required
 def add_service(request):
     # If user submitted form
