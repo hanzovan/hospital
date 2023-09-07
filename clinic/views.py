@@ -184,8 +184,8 @@ def authorize(request):
 def add_service(request):
     # If user submitted form
     if request.method == 'POST':
-        # If user level is not 2 or higher, raise error
-        if request.user.management_right_level < 3:
+        # If user do not have right, raise error
+        if 'modify_service_info' not in user_right(request.user.management_right_level):
             request.session['nay_message'] = 'You do not have right to do this'
             return HttpResponseRedirect(reverse('index'))
 
@@ -205,7 +205,6 @@ def add_service(request):
             male_price = None
         if not female_price:
             female_price = None
-
         
         old_services = Service.objects.filter(Q(name__icontains=name))            
         if old_services.count() > 0:
@@ -229,8 +228,8 @@ def add_service(request):
 
     # If user clicked link
     else:
-        # Only allow user with management level higher or equal to lv2
-        if request.user.management_right_level < 3:
+        # Only user with the modify service right can visit this page
+        if 'modify_service_info' not in user_right(request.user.management_right_level):
             request.session['nay_message'] = 'You do not have right to access this part'
             return HttpResponseRedirect(reverse('index'))
         
