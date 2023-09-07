@@ -166,9 +166,9 @@ def authorize(request):
     # if admin clicking link
     else:
         # if user does not have right to access this page
-        # if 'read_user_right' not in user_right(request.user.management_right_level):            
-        #     request.session['nay_message'] = "You don't have the right to visit this page"
-        #     return HttpResponseRedirect(reverse('index'))
+        if 'read_user_right' not in user_right(request.user.management_right_level):            
+            request.session['nay_message'] = "You don't have the right to visit this page"
+            return HttpResponseRedirect(reverse('index'))
         modify_right = 'modify_user_right' in user_right(request.user.management_right_level)
         data_users = User.objects.all()
         return render(request, "clinic/authorize.html", {
