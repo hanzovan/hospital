@@ -11,5 +11,6 @@ urlpatterns = [
     path('authorize', views.authorize, name='authorize'),
     path('service_detail/<int:service_id>', views.service_detail, name='service_detail'),
     path('people', views.people, name='people'),
-    path('person/<int:person_id>', views.person_detail, name='person_detail')
+    path('person/<int:person_id>', views.person_detail, name='person_detail'),
+    path('check_right', views.check_right, name='check_right')
 ]

@@ -126,6 +126,21 @@ def logout_view(request):
     return HttpResponseRedirect(reverse('index'))
 
 
+# Allow client side to check the user right
+@login_required
+@csrf_exempt
+def check_right(request):
+    if request.method != 'POST':
+        return JsonResponse({'error':'POST method required'}, status=400)
+    data = json.loads(request.body)
+    if data.get('right') is not None:
+        right = data['right']
+        check_result = (right in user_right(request.user.management_right_level))
+        return JsonResponse({'check_result': check_result}, safe=False)
+
+    else:
+        return JsonResponse({'message': 'no info'})
+
 # Allow top level admin to manage to list of users, and to apply management level for other users
 @login_required
 @csrf_exempt
@@ -142,16 +157,18 @@ def authorize(request):
             # Get the user
             user = User.objects.get(pk=data['chosen_user_id'])
             user.management_right_level = data['new_level']
-            user.save()
-
-        return JsonResponse({'message': 'Level changed'})
+            user.save()            
+            
+            return JsonResponse({'message': 'Level changed'})
+        else:
+            return JsonResponse({'message': 'Nothing changed'})
     
     # if admin clicking link
     else:
         # if user does not have right to access this page
-        if 'read_user_right' not in user_right(request.user.management_right_level):            
-            request.session['nay_message'] = "You don't have the right to visit this page"
-            return HttpResponseRedirect(reverse('index'))
+        # if 'read_user_right' not in user_right(request.user.management_right_level):            
+        #     request.session['nay_message'] = "You don't have the right to visit this page"
+        #     return HttpResponseRedirect(reverse('index'))
         modify_right = 'modify_user_right' in user_right(request.user.management_right_level)
         data_users = User.objects.all()
         return render(request, "clinic/authorize.html", {
@@ -159,7 +176,7 @@ def authorize(request):
             "levels": [1, 2, 3],
             "modify_right": modify_right
         })
-
+    
 
 # Allow user to add service
 @login_required

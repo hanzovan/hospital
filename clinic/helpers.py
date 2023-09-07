@@ -19,6 +19,7 @@ def strong_password(e):
 
 
 def user_right(level):
+    level = int(level)
     all_rights = [
         'read_all_service_info',
         'add_people_info',
