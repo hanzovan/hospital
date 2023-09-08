@@ -63,10 +63,7 @@
                                 <button class="nav-link active" style="color: purple;" type="button" id="dropdownMenuButton2" data-bs-toggle="dropdown" aria-expanded="false">
                                     {{ user.username }}
                                 </button>
-                                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton2">
-                                    {% if user.management_right_level == 3 %}
-                                        <li><a class="dropdown-item" href="{% url 'authorize' %}">Manage users</a></li>
-                                    {% endif %}                                    
+                                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton2" id="user-dropdown-menu">                                  
                                     <li><a class="dropdown-item" href="{% url 'logout' %}">Log out</a></li>
                                 </ul>
                             </div>

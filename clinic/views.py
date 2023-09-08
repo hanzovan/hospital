@@ -11,11 +11,6 @@ from django.views.decorators.csrf import csrf_exempt
 from .models import User, People, ContactDiary, Company, Service, Quotation, Contract, ContractPrice
 from .helpers import strong_password, user_right
 
-# Define management level right
-level_1 = ['add_people', 'check_people_self_add', 'check_service']
-
-           
-# Create a python file that return right
 
 # Create your views here.
 @login_required
