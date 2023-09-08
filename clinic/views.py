@@ -59,7 +59,7 @@ def register(request):
 
         # If user input is okay, try to create a new account
         try:
-            user = User.objects.create_user(username=username, email=email, password=password, management_right_level=1)
+            user = User.objects.create_user(username=username, email=email, password=password, management_right_level=0)
             login(request, user)
             request.session['yay_message'] = 'Registered successfully'
             return HttpResponseRedirect(reverse('index'))
@@ -237,10 +237,10 @@ def add_service(request):
 def service_detail(request, service_id):
     # If user is admin and submited the form
     if request.method == 'POST':
-        # If user does not have the right to edit
-        if request.user.management_right_level < 3:
-            request.session['nay_message'] = 'You do not have the right to edit'
-            return HttpResponseRedirect(reverse('index'))
+        # If user does not have the right to edit, response error by json, then use JS to redirect user to index page
+        if 'modify_service_info' not in user_right(request.user.management_right_level):
+            request.session['nay_message'] = 'You do not have the right to modify this information'
+            return JsonResponse({'error':'You do not have the right to edit'}, status=403)
         data = json.loads(request.body)
 
         if data.get('new-name') is not None:
@@ -258,6 +258,9 @@ def service_detail(request, service_id):
                 return JsonResponse({'error': 'Service does not exist in database'}, status=400)
 
     else:
+        if 'read_all_service_info' not in user_right(request.user.management_right_level):
+            request.session['nay_message'] = "You do not have the right to check service's detail"
+            return HttpResponseRedirect(reverse('index'))
         try:
             service = Service.objects.get(pk=service_id)
             return render(request, "clinic/service_detail.html", {

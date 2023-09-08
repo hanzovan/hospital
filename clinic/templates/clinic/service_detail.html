@@ -28,14 +28,11 @@
             </ul>
         </div>
     </div>
-    {% if user.management_right_level >= 2 %}
-        <div class="text-center">
-            <button class="btn btn-primary" id="edit-btn">
-                Edit
-            </button>
-        </div>
-        <div id="testing"></div>
-    {% endif %}
+    <div class="text-center" id="edit-btn-container">
+        <button class="btn btn-primary" id="edit-btn">
+            Edit
+        </button>
+    </div>
 
 {% endblock %}
 {% block script %}

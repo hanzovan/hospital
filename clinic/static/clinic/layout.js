@@ -30,7 +30,7 @@ document.addEventListener('DOMContentLoaded', function() {
             let j = document.createElement('a');
             j.className = 'dropdown-item';
             j.onclick = function() {
-                window.location.href = 'authorize';
+                window.location.href = '/authorize';
             }
             j.style.cursor = 'pointer';
             j.innerHTML = 'Manage users';

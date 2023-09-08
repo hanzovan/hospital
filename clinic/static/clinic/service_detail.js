@@ -1,5 +1,33 @@
 document.addEventListener('DOMContentLoaded', function() {
-    document.querySelector('#edit-btn').onclick = function() {
+    const editBtn = document.querySelector('#edit-btn');
+    const editBtnContainer = document.querySelector('#edit-btn-container');
+
+    // by default hide the editBtn
+    editBtnContainer.style.display = 'none';
+
+    // User an HTTP request to check if user is valid for edit service
+    fetch('/check_right', {
+        method: 'POST',
+        body: JSON.stringify({
+            'right': 'modify_service_info'
+        })        
+    })
+    .then(response => response.json())
+    .then(data => {
+        const result = data.check_result;
+        
+        // If user does not have right, hide the button 
+        if (result) {
+            editBtnContainer.style.display = 'block';
+        } else {
+            editBtnContainer.style.display = 'none';
+        }
+    })
+    .catch(error => {
+        console.log(error);
+    })
+
+    editBtn.onclick = function() {
         if (document.querySelector('.edit-container')) {
             document.querySelector('.edit-container').remove();
         } else {
@@ -79,22 +107,27 @@ document.addEventListener('DOMContentLoaded', function() {
                         'new-description': newDescription
                     })
                 })
-                .then(response => response.json())
-                .then(() => {
-                    // Modify value field in the original div as well as the appropriate data-information
-                    oriName.innerHTML = newName;
-                    oriMalePrice.innerHTML = newMalePrice;
-                    oriFemalePrice.innerHTML = newFemalePrice;
-                    oriBenefit.innerHTML = newBenefit;
-                    oriDescription.innerHTML = newDescription;
+                .then(response => {
+                    if (response.status === 200) {
+                        // Modify value field in the original div as well as the appropriate data-information
+                        oriName.innerHTML = newName;
+                        oriMalePrice.innerHTML = newMalePrice;
+                        oriFemalePrice.innerHTML = newFemalePrice;
+                        oriBenefit.innerHTML = newBenefit;
+                        oriDescription.innerHTML = newDescription;
 
-                    oriName.setAttribute('data-service_name', newName);
-                    oriMalePrice.setAttribute('data-service_male_price', newMalePrice);
-                    oriFemalePrice.setAttribute('data-service_female_price', newFemalePrice);
-                    oriBenefit.setAttribute('data-service_benefit', newBenefit);
-                    oriDescription.setAttribute('data-service_description', newDescription);
+                        oriName.setAttribute('data-service_name', newName);
+                        oriMalePrice.setAttribute('data-service_male_price', newMalePrice);
+                        oriFemalePrice.setAttribute('data-service_female_price', newFemalePrice);
+                        oriBenefit.setAttribute('data-service_benefit', newBenefit);
+                        oriDescription.setAttribute('data-service_description', newDescription);
 
-                    editContainer.remove();
+                        editContainer.remove();
+                    } else if (response.status === 403) {
+                        window.location.href = '/';
+                    } else {
+                        console.error(error);
+                    }
                 })
                 .catch(error => {
                     console.log(error);
