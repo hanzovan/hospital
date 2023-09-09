@@ -276,6 +276,11 @@ def service_detail(request, service_id):
 def add_people(request):
     # If user submitted form
     if request.method == 'POST':
+        # Check if user have the right, it no, redirect to index, if yes then continue
+        if 'add_people_info' not in user_right(request.user.management_right_level):
+            request.session['nay_message'] = "You do not have the right to add person's information"
+            return HttpResponseRedirect(reverse('index'))
+
         # Handle user input
         name = request.POST['name']
         position = request.POST.get('position', '')
@@ -303,6 +308,9 @@ def add_people(request):
 
     # If user clicked link:
     else:
+        if 'add_people_info' not in user_right(request.user.management_right_level):
+            request.session['nay_message'] = 'You do not have the right to add person information'
+            return HttpResponseRedirect(reverse('index'))
         return render(request, "clinic/add_people.html")
 
 
@@ -310,7 +318,7 @@ def add_people(request):
 @login_required
 def people(request):
     if request.user.management_right_level < 2:
-        request.session['nay_message'] = 'You are not allow to enter this part'
+        request.session['nay_message'] = 'You are not allowed to enter this part'
         return HttpResponseRedirect(reverse('index'))
 
     nay_message = request.session.get('nay_message', '')
