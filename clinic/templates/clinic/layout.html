@@ -25,6 +25,7 @@
                             </button>
                             <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton3">
                                 <li><a class="dropdown-item" href="{% url 'index' %}">Services</a></li>
+                                <li><a class="dropdown-item" href="{% url 'my_people' %}">People added by me</a></li>
                                 {% if user.management_right_level >= 2 %}
                                     <li><a class="dropdown-item" href="{% url 'people' %}">People</a></li>
                                 {% endif %}

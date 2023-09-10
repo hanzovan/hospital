@@ -314,10 +314,24 @@ def add_people(request):
         return render(request, "clinic/add_people.html")
 
 
+# Allow user to check people added by current user
+@login_required
+def my_people(request):
+    if "read_self_add_people_info" not in user_right(request.user.management_right_level):
+        request.session['nay_message'] = "You're not allow to check this info"
+        return HttpResponseRedirect(reverse('index'))
+    
+    people = People.objects.filter(created_by=request.user)
+
+    return render(request, "clinic/my_people.html", {
+        "people": people
+    })
+
+
 # Allow user to check all people relevant to the hospital, only level 2 or higher admin can check this
 @login_required
 def people(request):
-    if request.user.management_right_level < 2:
+    if "read_all_people_info" not in user_right(request.user.management_right_level):
         request.session['nay_message'] = 'You are not allowed to enter this part'
         return HttpResponseRedirect(reverse('index'))
 

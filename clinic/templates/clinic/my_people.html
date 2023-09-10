@@ -1,0 +1,19 @@
+{% extends "clinic/layout.html" %}
+{% load static %}
+{% block title %}
+
+    my people
+
+{% endblock %}
+{% block main %}
+
+    <h1 class="text-center">The people I added</h1>
+    {% for person in people %}
+        <p>{{ person.name }}</p>
+    {% empty %}
+
+        <p>No person</p>
+
+    {% endfor %}
+
+{% endblock %}
