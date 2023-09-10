@@ -38,19 +38,17 @@
                                 Functional
                             </a>
                         </li>
-                        {% if user.management_right_level >= 2 %}
-                        <li class="nav-item">
+                        <li class="nav-item" id="adding-items">
                             <div class="dropdown">
                                 <button class="nav-link active" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
                                     Add
                                 </button>
                                 <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                                    <li><a class="dropdown-item" href="{% url 'add_service' %}">Add Service</a></li>
-                                    <li><a class="dropdown-item" href="{% url 'add_people' %}">Add People</a></li>
+                                    <li id="add-service-list-item"><a class="dropdown-item" href="{% url 'add_service' %}">Add Service</a></li>
+                                    <li id="add-people-list-item"><a class="dropdown-item" href="{% url 'add_people' %}">Add People</a></li>
                                 </ul>
                             </div>
                         </li>
-                        {% endif %}
                         
 
                     {% endif %}                    
