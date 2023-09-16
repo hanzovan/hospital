@@ -110,30 +110,30 @@ header {
   transition: all 1s;
   transform: translateY(-200px); }
 
-#register-form .container, #login-form .container, #add-people-form .container, #add-service-form .container {
+#register-form .container, #login-form .container, #add-people-form .container, #add-service-form .container, #add-company-form .container {
   display: flex;
   flex-direction: column;
   width: 30vw;
   padding: 2em; }
-#register-form h1, #register-form p, #login-form h1, #login-form p, #add-people-form h1, #add-people-form p, #add-service-form h1, #add-service-form p {
+#register-form h1, #register-form p, #login-form h1, #login-form p, #add-people-form h1, #add-people-form p, #add-service-form h1, #add-service-form p, #add-company-form h1, #add-company-form p {
   text-align: center;
   margin-bottom: 1.5em; }
-#register-form .form-group, #login-form .form-group, #add-people-form .form-group, #add-service-form .form-group {
+#register-form .form-group, #login-form .form-group, #add-people-form .form-group, #add-service-form .form-group, #add-company-form .form-group {
   margin-bottom: 1.5em; }
-#register-form .form-group:focus-within, #login-form .form-group:focus-within, #add-people-form .form-group:focus-within, #add-service-form .form-group:focus-within {
+#register-form .form-group:focus-within, #login-form .form-group:focus-within, #add-people-form .form-group:focus-within, #add-service-form .form-group:focus-within, #add-company-form .form-group:focus-within {
   transform: scale(1.1, 1.1);
   transition: all .6s; }
-#register-form .form-label, #login-form .form-label, #add-people-form .form-label, #add-service-form .form-label {
+#register-form .form-label, #login-form .form-label, #add-people-form .form-label, #add-service-form .form-label, #add-company-form .form-label {
   display: block;
   font-size: 0.75em;
   color: #555;
   opacity: 0;
   transition: all .3s;
   transform: translateX(-100px); }
-#register-form .focused .form-label, #login-form .focused .form-label, #add-people-form .focused .form-label, #add-service-form .focused .form-label {
+#register-form .focused .form-label, #login-form .focused .form-label, #add-people-form .focused .form-label, #add-service-form .focused .form-label, #add-company-form .focused .form-label {
   opacity: 1;
   transform: translateX(0); }
-#register-form .form-control, #login-form .form-control, #add-people-form .form-control, #add-service-form .form-control {
+#register-form .form-control, #login-form .form-control, #add-people-form .form-control, #add-service-form .form-control, #add-company-form .form-control {
   padding: 0.2em;
   box-shadow: none;
   border-radius: 0.25em;
@@ -141,19 +141,19 @@ header {
   border-style: none none solid none;
   font-size: 1.5em;
   transition: all .6s; }
-#register-form .form-control::placeholder, #login-form .form-control::placeholder, #add-people-form .form-control::placeholder, #add-service-form .form-control::placeholder {
+#register-form .form-control::placeholder, #login-form .form-control::placeholder, #add-people-form .form-control::placeholder, #add-service-form .form-control::placeholder, #add-company-form .form-control::placeholder {
   color: #aaa; }
-#register-form .form-control:focus, #login-form .form-control:focus, #add-people-form .form-control:focus, #add-service-form .form-control:focus {
+#register-form .form-control:focus, #login-form .form-control:focus, #add-people-form .form-control:focus, #add-service-form .form-control:focus, #add-company-form .form-control:focus {
   box-shadow: none;
   border-color: orange;
   outline: none; }
-#register-form .form-control:invalid:focus, #login-form .form-control:invalid:focus, #add-people-form .form-control:invalid:focus, #add-service-form .form-control:invalid:focus {
+#register-form .form-control:invalid:focus, #login-form .form-control:invalid:focus, #add-people-form .form-control:invalid:focus, #add-service-form .form-control:invalid:focus, #add-company-form .form-control:invalid:focus {
   border-color: red; }
-#register-form .form-control:valid, #login-form .form-control:valid, #add-people-form .form-control:valid, #add-service-form .form-control:valid {
+#register-form .form-control:valid, #login-form .form-control:valid, #add-people-form .form-control:valid, #add-service-form .form-control:valid, #add-company-form .form-control:valid {
   border-color: green; }
-#register-form textarea, #login-form textarea, #add-people-form textarea, #add-service-form textarea {
+#register-form textarea, #login-form textarea, #add-people-form textarea, #add-service-form textarea, #add-company-form textarea {
   resize: none; }
-#register-form button, #login-form button, #add-people-form button, #add-service-form button {
+#register-form button, #login-form button, #add-people-form button, #add-service-form button, #add-company-form button {
   padding: 0.75em;
   outline: none;
   border: none;
@@ -161,7 +161,7 @@ header {
   background-color: #4412e8;
   font-size: 1em;
   color: white; }
-#register-form button:hover, #login-form button:hover, #add-people-form button:hover, #add-service-form button:hover {
+#register-form button:hover, #login-form button:hover, #add-people-form button:hover, #add-service-form button:hover, #add-company-form button:hover {
   cursor: pointer;
   background-color: #2904a4; }
 

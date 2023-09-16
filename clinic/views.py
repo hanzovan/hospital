@@ -353,18 +353,47 @@ def people(request):
 @login_required
 @csrf_exempt
 def person_detail(request, person_id):
-    # Admin has to get level 2 right to enter this page
-    if request.user.management_right_level < 2:
-        request.session['nay_message'] = 'You do not have right to enter this page'
-        return HttpResponseRedirect(reverse('index'))
-
-    # If user is admin and submited the form
+    # If user submited the form
     if request.method == 'POST':
+        # Check if user have the right to modify person's info
+        if "modify_people_info" not in user_right(request.user.management_right_level):
+            request.session['nay_message'] = "You do not have the right to modify this information"
+            return JsonResponse({'error': 'You do not have the right to modify this info'}, status=403)
         
-        return HttpResponse('Constructing')
+        # Get variables
+        data = json.loads(request.body)
+
+        # If user do not leave empty name for person, update new information
+        if data.get('new_name') is not None:
+            try:
+                person = People.objects.get(pk=person_id)
+                person.name = data['new_name']
+                person.position = data['new_position']
+                person.email = data['new_email']
+                person.phone = data['new_phone']
+                person.note = data['new_note']
+                
+                person.save()
+
+                return JsonResponse({'message': 'New info saved'}, status=200)
+
+            except People.DoesNotExist:
+                request.session['nay_message'] = 'That person does not exist in database'
+                return JsonResponse({'error': 'Person does not exist'}, status=400)
+
+        # If user leave empty name, return error
+        else:
+            request.session['nay_message'] = "Don't leave empty name"
+            return JsonResponse({'error': "Don't leave empty name"}, status=401)
 
     # If admin clicked link or visit the correct url
     else:
+        # Check if current user has the right to visit page, if not redirect user to index page
+        if "read_all_people_info" not in user_right(request.user.management_right_level):
+            request.session['nay_message'] = 'You do not have the right to visit this page'
+            return HttpResponseRedirect(reverse('index'))
+        
+        # If user is valid for the right, continue
         try:
             person = People.objects.get(pk=person_id)
             return render(request, "clinic/person_detail.html", {
@@ -373,3 +402,66 @@ def person_detail(request, person_id):
         except People.DoesNotExist:
             request.session['nay_message'] = 'That person does not exist'
             return HttpResponseRedirect(reverse('people'))
+        
+
+# Add company
+@login_required
+def add_company(request):
+    # If user submit form
+    if request.method == 'POST':
+        # Check if user have right
+        if "add_company_info" not in user_right(request.user.management_right_level):
+            request.session['nay_message'] = "You don't have the right to add company"
+            return HttpResponseRedirect(reverse('index'))
+
+        # If user have right, continue to check user input
+        name = request.POST['name']
+        industry = request.POST['industry']
+        address = request.POST['address']
+        male_headcount = request.POST['male_headcount']
+        female_headcount = request.POST['female_headcount']
+
+        if not name or not industry or not address or not male_headcount or not female_headcount:
+            return render(request, "clinic/add_company.html", {
+                "nay_message": "All fields required"
+            })
+        
+        if int(male_headcount) < 0 or int(female_headcount) < 0:
+            nay_message = "Please enter positive number"
+            return render(request, "clinic/add_company.html", {
+                "nay_message": nay_message
+            })
+        
+        # Save the company
+        try:
+            company = Company.objects.get(name=name)
+            return render(request, "clinic/add_company.html", {
+                "nay_message": "Company name already exist"
+            })
+        except Company.DoesNotExist:
+            new_company = Company(
+                name = name,
+                industry = industry,
+                address = address,
+                male_headcount = male_headcount,
+                female_headcount = female_headcount
+            )
+            new_company.save()
+            request.session['yay_message'] = "Company added"
+            return HttpResponseRedirect(reverse('index'))
+    
+    # If user clicking link or being redirected
+    else:
+        return render(request, "clinic/add_company.html")
+
+
+# Add message
+
+
+# Add contract
+
+
+# Add quote price
+
+
+# Retrieve contract information

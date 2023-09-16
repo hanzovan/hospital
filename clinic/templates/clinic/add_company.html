@@ -1,0 +1,47 @@
+{% extends "clinic/layout.html" %}
+{% load static %}
+{% block title %}
+
+    add company
+
+{% endblock %}
+{% block main %}
+
+    <div class="general">
+        <div class="form-container">
+            <form action="{% url 'add_company' %}" method="post" id="add-company-form">
+                {% csrf_token %}
+                <div class="container">
+                    <h1>Add Company</h1>
+                    <div class="form-group">
+                        <label for="name" class="form-label">Company's name</label>
+                        <input name="name" type="text" required class="form-control" autocomplete="off" placeholder="ABC Company" autofocus>
+                    </div>
+                    <div class="form-group">
+                        <label for="industry" class="form-label">Industry</label>
+                        <input name="industry" type="text" required class="form-control" autocomplete="off" placeholder="education">
+                    </div>
+                    <div class="form-group">
+                        <label for="address" class="form-label">Address</label>
+                        <input name="address" type="text" required class="form-control" autocomplete="off" placeholder="123 ABCD street">
+                    </div>
+                    <div class="form-group">
+                        <label for="male_headcount" class="form-label">Male Headcount</label>
+                        <input name="male_headcount" type="number" required min="0" class="form-control" autocomplete="off" placeholder="100">
+                    </div>
+                    <div class="form-group">
+                        <label for="female_headcount" class="form-label">Female Headcount</label>
+                        <input name="female_headcount" type="number" required min="0" class="form-control" autocomplete="off" placeholder="100">
+                    </div>
+                    <button>Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+{% endblock %}
+{% block script %}
+
+    <script src="{% static 'clinic/add_company.js' %}"></script>
+
+{% endblock %}

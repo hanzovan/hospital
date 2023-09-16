@@ -49,80 +49,81 @@ document.addEventListener('DOMContentLoaded', function() {
     })
 
     // CHECK RIGHTS FOR ADD PEOPLE AND ADD SERVICE, WHEN BOTH WERE CHECKED, COUNT THE RIGHTS, THEN IF THE RIGHT = 0, HIDE THE 'ADD' BUTTON ON NAVIGATION BAR
-    const checkAddPeopleRight = fetch('/check_right', {
-        method: 'POST',
-        body: JSON.stringify({
-            'right': 'add_people_info'
-    
+    // only check if user logged in
+    if (isAuthenticated) {
+        const checkAddPeopleRight = fetch('/check_right', {
+            method: 'POST',
+            body: JSON.stringify({
+                'right': 'add_people_info'        
+            })
         })
-    })
-    .then(response => response.json())
-    .then(data => data.check_result)
-    .catch(error => {
-        console.log(error);
-    })    
-
-    const checkAddServiceRight = fetch('check_right', {
-        method: 'POST',
-        body: JSON.stringify({
-            'right': 'add_service_info'
+        .then(response => response.json())
+        .then(data => data.check_result)
+        .catch(error => {
+            console.log(error);
+        })    
     
+        const checkAddServiceRight = fetch('/check_right', {
+            method: 'POST',
+            body: JSON.stringify({
+                'right': 'add_service_info'        
+            })
         })
-    })
-    .then(response => response.json())
-    .then(data => data.check_result)
-    .catch(error => {
-        console.log(error);
-    })
-
-    // Get the adding list item
-    const adding = document.querySelector('#adding-items');
-
-    // Get the adding people item
-    const addPpListItem = document.querySelector('#add-people-list-item');
-
-    // Get the adding service item
-    const addSvListItem = document.querySelector('#add-service-list-item');
-
-    // IMPORTANT-LEVEL-S: Wait for both promise to resolve, then count
-    Promise.all([checkAddPeopleRight, checkAddServiceRight])
-
-    // Hide or show the list items
-    .then(results => {
-        const [addPeopleResult, addServiceResult] = results;       
-
-        // Decide to show or hide list item depending on whether user have right to add people or not
-        if (addPeopleResult) {
-            addPpListItem.style.display = 'block';
-        } else {
-            addPpListItem.style.display = 'none';
-        }
-        
-        // Similarly, decide for right to add service
-        if (addServiceResult) {
-            addSvListItem.style.display = 'block';
-        } else {
-            addSvListItem.style.display = 'none';
-        }
-    })
-
-    // then count the visible list items
-    .then(() => {
-        // get the dropdown menu ul
-        const dropDown = adding.querySelector('.dropdown-menu');
-        
-        // get all li inside that dropdown
-        const AllLi = dropDown.querySelectorAll('li');
-
-        // IMPORTANT-LEVEL-B: Get the lis that are visible
-        const visibleLi = Array.from(AllLi).filter(li => li.style.display !== 'none');
-
-        // Get the count
-        const liNum = visibleLi.length;
-
-        // If the count was 0, hide the whole button in navigation bar
-        if (liNum === 0) {
-            adding.style.display = 'none';
-        }
-    })
+        .then(response => response.json())
+        .then(data => data.check_result)
+        .catch(error => {
+            console.log(error);
+        })
+    
+        // Get the adding list item
+        const adding = document.querySelector('#adding-items');
+    
+        // Get the adding people item
+        const addPpListItem = document.querySelector('#add-people-list-item');
+    
+        // Get the adding service item
+        const addSvListItem = document.querySelector('#add-service-list-item');
+    
+        // IMPORTANT-LEVEL-S: Wait for both promise to resolve, then count
+        Promise.all([checkAddPeopleRight, checkAddServiceRight])
+    
+        // Hide or show the list items
+        .then(results => {
+            const [addPeopleResult, addServiceResult] = results;       
+    
+            // Decide to show or hide list item depending on whether user have right to add people or not
+            if (addPeopleResult) {
+                addPpListItem.style.display = 'block';
+            } else {
+                addPpListItem.style.display = 'none';
+            }
+            
+            // Similarly, decide for right to add service
+            if (addServiceResult) {
+                addSvListItem.style.display = 'block';
+            } else {
+                addSvListItem.style.display = 'none';
+            }
+        })
+    
+        // then count the visible list items
+        .then(() => {
+            // get the dropdown menu ul
+            const dropDown = adding.querySelector('.dropdown-menu');
+            
+            // get all li inside that dropdown
+            const AllLi = dropDown.querySelectorAll('li');
+    
+            // IMPORTANT-LEVEL-B: Get the lis that are visible
+            const visibleLi = Array.from(AllLi).filter(li => li.style.display !== 'none');
+    
+            // Get the count
+            const liNum = visibleLi.length;
+    
+            // If the count was 0, hide the whole button in navigation bar
+            if (liNum === 0) {
+                adding.style.display = 'none';
+            }
+        })
+    }    
 })

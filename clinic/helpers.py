@@ -24,6 +24,7 @@ def user_right(level):
         'read_all_service_info',
         'add_people_info',
         'read_self_add_people_info',
+        'add_company_info',
         'modify_people_info',
         'read_all_people_info',
         'add_service_info',
@@ -37,19 +38,20 @@ def user_right(level):
         user_rights.extend([
             all_rights[0],
             all_rights[1],
-            all_rights[2]
+            all_rights[2],
+            all_rights[3]
             ])
         if level > 1:
             user_rights.extend([
-                all_rights[3],
-                all_rights[4]
+                all_rights[4],
+                all_rights[5]
             ])
             if level > 2:
                 user_rights.extend([
-                    all_rights[5],
                     all_rights[6],
                     all_rights[7],
-                    all_rights[8]
+                    all_rights[8],
+                    all_rights[9]
                 ])
     
     return user_rights

@@ -17,8 +17,20 @@ class User(AbstractUser):
     management_right_level = models.IntegerField(choices=Level.choices, blank=True, null=True)
 
 
+class Company(models.Model):
+    name = models.CharField(max_length=255)
+    industry = models.CharField(max_length=255)
+    address = models.TextField()
+    male_headcount = models.IntegerField()
+    female_headcount = models.IntegerField()
+
+    def __str__(self):
+        return f"{self.name} company"
+
+
 class People(models.Model):
     name = models.CharField(max_length=255)
+    company = models.ManyToManyField(Company,related_name="contact")
     position = models.TextField(blank=True)
     email = models.CharField(max_length=255)
     phone = models.CharField(max_length=255)
@@ -37,19 +49,6 @@ class ContactDiary(models.Model):
 
     def __str__(self):
         return f"{self.name} have conversation with me: {self.content} at {self.date}"
-
-
-class Company(models.Model):
-    name = models.CharField(max_length=255)
-    industry = models.CharField(max_length=255)
-    manager = models.ForeignKey(People, on_delete=models.CASCADE, related_name='manage_companies')
-    contact_person = models.ForeignKey(People, on_delete=models.CASCADE, related_name='contact_companies')
-    address = models.TextField()
-    male_headcount = models.IntegerField()
-    female_headcount = models.IntegerField()
-
-    def __str__(self):
-        return f"{self.name} company"
 
 
 class Service(models.Model):

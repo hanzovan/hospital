@@ -12,6 +12,17 @@
         <link rel="stylesheet" href="{% static 'clinic/styles.css' %}">        
         {% block script %}{% endblock %}
         <script src="{% static 'clinic/layout.js' %}"></script>
+
+        <!-- Send checking whether user logged in or not -->
+        <script>
+            var isAuthenticated = {{ user.is_authenticated | lower }};
+            {% if user.is_authenticated %}
+
+                var user_id = {{ user.id }};
+                var username = "{{ user.username }}";
+
+            {% endif %}
+        </script>
     </head>
     <body>
         <nav class="navbar navbar-expand-lg navbar-custom border">

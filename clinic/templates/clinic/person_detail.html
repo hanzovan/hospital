@@ -13,13 +13,15 @@
             <tbody>
                 <tr>
                     <td>Name</td>
-                    <td>
-                        {{ person.name }}
+                    <td id="original-name">
+                        <strong>
+                            {{ person.name }}
+                        </strong>                        
                     </td>
                 </tr>
                 <tr>
                     <td>Position</td>
-                    <td>
+                    <td id="original-position">
                         <strong>
                             {% if not person.position %}
 
@@ -35,7 +37,7 @@
                 </tr>
                 <tr>
                     <td>Email</td>
-                    <td>
+                    <td id="original-email">
                         <strong>
                             {% if not person.email %}
 
@@ -51,7 +53,7 @@
                 </tr>
                 <tr>
                     <td>Phone</td>
-                    <td>
+                    <td id="original-phone">
                         <strong>
                             {% if not person.phone %}
 
@@ -67,7 +69,7 @@
                 </tr>        
                 <tr>
                     <td>Note</td>
-                    <td>
+                    <td id="original-note">
                         <strong>
                             {% if not person.note %}
 
@@ -83,7 +85,8 @@
                 </tr>
             </tbody>
         </table>
-    </div>    
+    </div>
+    <div id="testing"></div>
     <div class="text-center">
         <button class="btn btn-primary" id="edit-btn">
             Update
@@ -96,19 +99,28 @@
                 <p>Please enter person's information as follow</p>
                 
                 <label for="name">Name</label>
-                <input id="name" type="text">                             
+                <input id="name" type="text" value="{{ person.name }}">                             
                 <label for="position">Position</label>
-                <input id="position" type="text">                        
+                <input id="position" type="text" value="{{ person.position }}">                        
                 <label for="email">Email</label>
-                <input id="email" type="email">            
+                <input id="email" type="email" value="{{ person.email }}">            
                 <label for="phone">Phone</label>
-                <input id="phone" type="text">            
+                <input id="phone" type="text" value="{{ person.phone }}">            
                 <label for="note">Note</label>
-                <textarea id="note"></textarea>
+                <textarea id="note">{{ person.note }}</textarea>
             
                 <button>Save</button>                
             </div>
                       
         </form>
     </div>
+{% endblock %}
+{% block script %}
+
+    <script>
+        // pass the person id to JavaScript
+        var person_id = {{ person.id }}
+    </script>
+    <script src="{% static 'clinic/person_detail.js' %}"></script>
+
 {% endblock %}
