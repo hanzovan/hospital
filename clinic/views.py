@@ -283,6 +283,7 @@ def add_people(request):
 
         # Handle user input
         name = request.POST['name']
+        company_id = request.POST.get('company', '')
         position = request.POST.get('position', '')
         email = request.POST.get('email', '')
         phone = request.POST.get('phone', '')
@@ -303,6 +304,14 @@ def add_people(request):
             created_by = request.user
         )
         people.save()
+
+        if company_id:
+            try:
+                company = Company.objects.get(pk=company_id)
+                people.company.add(company)
+            except Company.DoesNotExist:
+                request.session['nay_message'] = "Company does not exist"
+
         request.session['yay_message'] = 'People saved'
         return HttpResponseRedirect(reverse('people'))        
 
@@ -311,7 +320,12 @@ def add_people(request):
         if 'add_people_info' not in user_right(request.user.management_right_level):
             request.session['nay_message'] = 'You do not have the right to add person information'
             return HttpResponseRedirect(reverse('index'))
-        return render(request, "clinic/add_people.html")
+
+        # Get the companies
+        companies = Company.objects.all()
+        return render(request, "clinic/add_people.html",{
+            "companies": companies
+        })
 
 
 # Allow user to check people added by current user
@@ -449,13 +463,82 @@ def add_company(request):
             new_company.save()
             request.session['yay_message'] = "Company added"
             return HttpResponseRedirect(reverse('index'))
+        
     
     # If user clicking link or being redirected
     else:
+        if "add_company_info" not in user_right(request.user.management_right_level):
+            request.session['nay_message'] = "You do not have the right to visit this part"
+            return HttpResponseRedirect(reverse('index'))
         return render(request, "clinic/add_company.html")
 
 
-# Add message
+# Allow user to add company's information
+@login_required
+def companies(request):
+    # Only user with the right to check company info can go to this route
+    if "read_company_info" not in user_right(request.user.management_right_level):
+        request.session['nay_message'] = "You do not have the right to access this page"
+        return HttpResponseRedirect(reverse('index'))
+    # If user right satisfied condition, show all companies
+    companies = Company.objects.all()
+
+    return render(request, "clinic/companies.html", {
+        "companies": companies
+    })
+
+
+# Allow user to add important message or request from a contact person of a company or the manager
+# All user can add message from a person
+@login_required
+def add_message(request):
+    # If user submiting form
+    if request.method == 'POST':
+        # Get data from the form
+        person_id = request.POST.get('person_id', '')
+        content = request.POST.get('content', '')
+
+        if person_id and content:
+            # try to get the person, add the message
+            try:
+                person = People.objects.get(pk=person_id)
+                message = ContactDiary(
+                    name = person,
+                    content = content
+                )
+                message.save()
+                request.session['yay_message'] = "Message added"
+                return HttpResponseRedirect(reverse('index'))
+            
+            except People.DoesNotExist:
+                people = People.objects.all()
+                return render(request, "clinic/add_message.html", {
+                    "people": people,
+                    "nay_message": "Person does not exist in database"
+                })
+            
+        else:
+            people = People.objects.all()
+            return render(request, "clinic/add_message.html", {
+                "people": people,
+                "nay_message": "Not enough data, please check again"
+            })
+
+    # If user clicking link or being redirect
+    else:
+        people = People.objects.all()
+        return render(request, "clinic/add_message.html", {
+            "people": people
+        })
+
+
+# Modify all people page that every person have the latest message displayed
+
+
+# Modify person_detail page that contain all the message from that person
+
+
+# Allow add message from person_detail page
 
 
 # Add contract

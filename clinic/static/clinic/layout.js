@@ -13,44 +13,10 @@ document.addEventListener('DOMContentLoaded', function() {
             })
         }
     }
-
-
-    // Check the user right, if he/she is legit for read user management page, create a link in the dropdown menu
-    fetch('/check_right', {
-        method: 'POST',
-        body: JSON.stringify({
-            'right': 'read_user_right'
-        })
-    })
-    .then(response => response.json())
-    .then(data => {
-        const result = data.check_result;
-
-        // If user has the right, create the link
-        if (result) {
-            let i = document.createElement('li');
-            let j = document.createElement('a');
-            j.className = 'dropdown-item';
-            j.onclick = function() {
-                // IMPORTANT-LEVEL-C: create link to other route in JS
-                window.location.href = '/authorize';
-            }
-            j.style.cursor = 'pointer';
-            j.innerHTML = 'Manage users';
-            i.append(j);
-
-            // Insert to the first row inside of the menu
-            const menu = document.querySelector('#user-dropdown-menu');
-            menu.insertBefore(i, menu.firstChild);
-        }
-    })
-    .catch(error => {
-        console.log(error);
-    })
-
-    // CHECK RIGHTS FOR ADD PEOPLE AND ADD SERVICE, WHEN BOTH WERE CHECKED, COUNT THE RIGHTS, THEN IF THE RIGHT = 0, HIDE THE 'ADD' BUTTON ON NAVIGATION BAR
+    
     // only check if user logged in
     if (isAuthenticated) {
+        // CHECK RIGHTS FOR ADD PEOPLE, ADD SERVICE, AND ADD COMPANY, WHEN BOTH WERE CHECKED, COUNT THE RIGHTS, THEN IF THE RIGHT = 0, HIDE THE 'ADD' BUTTON ON NAVIGATION BAR
         const checkAddPeopleRight = fetch('/check_right', {
             method: 'POST',
             body: JSON.stringify({
@@ -74,6 +40,18 @@ document.addEventListener('DOMContentLoaded', function() {
         .catch(error => {
             console.log(error);
         })
+
+        const checkAddCompanyRight = fetch('/check_right', {
+            method: 'POST',
+            body: JSON.stringify ({
+                'right': 'add_company_info'
+            })
+        })
+        .then(response => response.json())
+        .then(data => data.check_result)
+        .catch(error => {
+            console.log(error);
+        })
     
         // Get the adding list item
         const adding = document.querySelector('#adding-items');
@@ -83,13 +61,16 @@ document.addEventListener('DOMContentLoaded', function() {
     
         // Get the adding service item
         const addSvListItem = document.querySelector('#add-service-list-item');
+
+        // Get the adding company item
+        const addCoListItem = document.querySelector('#add-company-list-item');
     
         // IMPORTANT-LEVEL-S: Wait for both promise to resolve, then count
-        Promise.all([checkAddPeopleRight, checkAddServiceRight])
+        Promise.all([checkAddPeopleRight, checkAddServiceRight, checkAddCompanyRight])
     
         // Hide or show the list items
         .then(results => {
-            const [addPeopleResult, addServiceResult] = results;       
+            const [addPeopleResult, addServiceResult, addCompanyResult] = results;       
     
             // Decide to show or hide list item depending on whether user have right to add people or not
             if (addPeopleResult) {
@@ -103,6 +84,13 @@ document.addEventListener('DOMContentLoaded', function() {
                 addSvListItem.style.display = 'block';
             } else {
                 addSvListItem.style.display = 'none';
+            }
+
+            // Similarly, decide for right to add company
+            if (addCompanyResult) {
+                addCoListItem.style.display = 'block';
+            } else {
+                addCoListItem.style.display = 'none';
             }
         })
     
@@ -124,6 +112,82 @@ document.addEventListener('DOMContentLoaded', function() {
             if (liNum === 0) {
                 adding.style.display = 'none';
             }
+        })
+
+        // Check the user right, if he/she is legit for read user management page, create a link in the dropdown menu
+        fetch('/check_right', {
+            method: 'POST',
+            body: JSON.stringify({
+                'right': 'read_user_right'
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            const result = data.check_result;
+
+            // If user has the right, create the link
+            if (result) {
+                let i = document.createElement('li');
+                let j = document.createElement('a');
+                j.className = 'dropdown-item';
+                j.onclick = function() {
+                    // IMPORTANT-LEVEL-C: create link to other route in JS
+                    window.location.href = '/authorize';
+                }
+                j.style.cursor = 'pointer';
+                j.innerHTML = 'Manage users';
+                i.append(j);
+
+                // Insert to the first row inside of the menu
+                const menu = document.querySelector('#user-dropdown-menu');
+                menu.insertBefore(i, menu.firstChild);
+            }
+        })
+        .catch(error => {
+            console.log(error);
+        })
+
+        // CHECK RIGHTS FOR SHOW PEOPLE, COMPANY
+        fetch('check_right', {
+            method: 'POST',
+            body: JSON.stringify({
+                'right': "read_all_people_info"
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            const result = data.check_result;
+
+            // If user have right
+            if (result) {
+                document.querySelector('#all-people-list-item').style.display = 'block';
+            } else {
+                document.querySelector('#all-people-list-item').style.display = 'none';
+            }
+        })
+        .catch(error => {
+            console.log(error);
+        })
+
+        fetch('check_right', {
+            method: 'POST',
+            body: JSON.stringify({
+                'right': "read_company_info"
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            const result = data.check_result;
+
+            // If user have right
+            if (result) {
+                document.querySelector('#all-companies-list-item').style.display = 'block';
+            } else {
+                document.querySelector('#all-companies-list-item').style.display = 'none';
+            }
+        })
+        .catch(error => {
+            console.log(error);
         })
     }    
 })

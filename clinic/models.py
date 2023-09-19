@@ -23,6 +23,8 @@ class Company(models.Model):
     address = models.TextField()
     male_headcount = models.IntegerField()
     female_headcount = models.IntegerField()
+    created_by = models.ForeignKey(User, on_delete=models.SET_NULL, blank=True, null=True, related_name="add_companies")
+    modified_by = models.ForeignKey(User, on_delete=models.SET_NULL, blank=True, null=True, related_name="modified_companies")
 
     def __str__(self):
         return f"{self.name} company"
@@ -35,8 +37,8 @@ class People(models.Model):
     email = models.CharField(max_length=255)
     phone = models.CharField(max_length=255)
     note = models.TextField(blank=True)
-    created_by = models.ForeignKey(User, blank=True, null=True, on_delete=models.CASCADE, related_name='add_people')
-    modified_by = models.ForeignKey(User, blank=True, null=True, on_delete=models.CASCADE, related_name='modified_people')
+    created_by = models.ForeignKey(User, on_delete=models.SET_NULL, blank=True, null=True, related_name='add_people')
+    modified_by = models.ForeignKey(User, on_delete=models.SET_NULL, blank=True, null=True, related_name='modified_person')
 
     def __str__(self):
         return f"{self.name} working in {self.position}"
@@ -57,8 +59,8 @@ class Service(models.Model):
     male_price = models.IntegerField(blank=True, null=True)
     female_price = models.IntegerField(blank=True, null=True)
     description = models.TextField(blank=True, null=True)
-    created_by = models.ForeignKey(User, blank=True, null=True, on_delete=models.CASCADE, related_name='add_services')
-    modified_by = models.ForeignKey(User, blank=True, null=True, on_delete=models.CASCADE, related_name='modified_services')
+    created_by = models.ForeignKey(User, blank=True, null=True, on_delete=models.SET_NULL, related_name='add_services')
+    modified_by = models.ForeignKey(User, blank=True, null=True, on_delete=models.SET_NULL, related_name='modified_services')
 
     def __str__(self):
         return f"{self.name} in order to {self.benefit} with the price of {self.male_price} for male and {self.female_price} for female"

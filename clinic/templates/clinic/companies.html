@@ -1,0 +1,23 @@
+{% extends "clinic/layout.html" %}
+{% load static %}
+{% block title %}
+
+    companies
+
+{% endblock %}
+{% block main %}
+
+    <h1 class="text-center">Company list</h1>
+    <ul>
+        {% for company in companies %}
+
+            <li>{{ company.name }}</li>
+
+        {% empty %}
+
+            <li>No company yet</li>
+
+        {% endfor %}
+    </ul>
+
+{% endblock %}
