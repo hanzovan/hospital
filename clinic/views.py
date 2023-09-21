@@ -410,8 +410,17 @@ def person_detail(request, person_id):
         # If user is valid for the right, continue
         try:
             person = People.objects.get(pk=person_id)
+
+            # Get the company
+            companies = person.company.all()
+
+            # Get the message from this person
+            messages = person.talks.all().order_by("-date")
+
             return render(request, "clinic/person_detail.html", {
-                "person": person
+                "person": person,
+                "messages": messages,
+                "companies": companies
             })
         except People.DoesNotExist:
             request.session['nay_message'] = 'That person does not exist'
@@ -548,3 +557,9 @@ def add_message(request):
 
 
 # Retrieve contract information
+
+
+# This app will focus only use for clinic sales team
+
+
+# Allow team to manage timeline, schedule, meeting to meet up with clients

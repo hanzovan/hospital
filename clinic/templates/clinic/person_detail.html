@@ -9,13 +9,30 @@
 
     <h1 class="text-center">{{ person.name }}</h1>
     <div class="container-fluid">
-        <table class="table table-borderless">
+        <table class="table table-borderless table-info table-striped align-middle caption-top person-info-table">
+            <caption>Person's information</caption>
             <tbody>
                 <tr>
-                    <td>Name</td>
-                    <td id="original-name">
+                    <td>Companies</td>
+                    <td>
                         <strong>
-                            {{ person.name }}
+                            {% for company in person.company.all.values %}
+
+                                {% if not forloop.last %}
+
+                                    {{ company.name }},
+
+                                {% else %}
+
+                                    {{ company.name }}
+
+                                {% endif %}
+
+                            {% empty %}
+
+                                N/A
+
+                            {% endfor %}
                         </strong>                        
                     </td>
                 </tr>
@@ -66,7 +83,7 @@
                             {% endif %}
                         </strong>
                     </td>
-                </tr>        
+                </tr>
                 <tr>
                     <td>Note</td>
                     <td id="original-note">
@@ -82,14 +99,13 @@
                             {% endif %}
                         </strong>
                     </td>
-                </tr>
+                </tr>                
             </tbody>
         </table>
     </div>
-    <div id="testing"></div>
     <div class="text-center">
         <button class="btn btn-primary" id="edit-btn">
-            Update
+            Update person info
         </button>
     </div>
     <div class="edit-div">
@@ -113,6 +129,35 @@
             </div>
                       
         </form>
+    </div>
+
+    <div class="container-fluid">
+        <table class="table table-borderless table-hover align-middle caption-top message-table">
+            <caption>Messages from this person</caption>
+            <thead class="table-dark">
+                <tr>
+                    <th width="70%">Message</th>
+                    <th width="30%">Sent at</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for message in messages %}
+
+                    <tr>                        
+                        <td>{{ message.content }}</td>
+                        <td>{{ message.date }}</td>
+                    </tr>
+
+                {% empty %}
+
+                    <tr>
+                        <td>N/A</td>
+                        <td>N/A</td>
+                    </tr>
+
+                {% endfor %}
+            </tbody>
+        </table>
     </div>
 {% endblock %}
 {% block script %}

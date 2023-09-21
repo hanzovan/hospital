@@ -178,4 +178,20 @@ header {
 .my-person-edit-container textarea {
   width: 28vw; }
 
+.person-info-table {
+  width: 40%;
+  background-color: transparent !important; }
+
+.message-table {
+  width: 80%; }
+
+.container-fluid {
+  display: flex;
+  justify-content: center;
+  align-items: center; }
+
+td {
+  padding: .5em;
+  color: orange; }
+
 /*# sourceMappingURL=styles.css.map */
