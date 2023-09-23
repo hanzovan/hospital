@@ -156,8 +156,26 @@
                     </tr>
 
                 {% endfor %}
+                <tr>
+                    <td colspan="2"><button id="new-message-show">+</button></td>                    
+                </tr>
             </tbody>
         </table>
+    </div>
+    <div class="general">
+        <div class="form-container" id="new-message">
+            <form action="{% url 'message' person_id=person.id %}" method="post" id="message-form">
+                {% csrf_token %}
+                <div class="container">
+                    <h1>New Message</h1>
+                    <div class="form-group">
+                        <label for="content" class="form-label">Content</label>
+                        <textarea name="content" id="content" cols="40" rows="5" class="form-control" placeholder="Enter message..."></textarea>
+                    </div>
+                    <button>Save</button>
+                </div>
+            </form>
+        </div>
     </div>
 {% endblock %}
 {% block script %}

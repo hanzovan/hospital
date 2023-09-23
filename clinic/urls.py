@@ -16,5 +16,6 @@ urlpatterns = [
     path('my_people', views.my_people, name="my_people"),
     path('add_company', views.add_company, name="add_company"),
     path('companies', views.companies, name="companies"),
-    path('add_message', views.add_message, name="add_message")
+    path('add_message', views.add_message, name="add_message"),
+    path('message/<int:person_id>', views.message, name="message")
 ]

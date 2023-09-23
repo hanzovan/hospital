@@ -1,7 +1,10 @@
 document.addEventListener('DOMContentLoaded', function() {
+    // Define elements
     const editDiv = document.querySelector('.edit-div');
     const showBtn = document.querySelector('#edit-btn');
     const editForm = editDiv.querySelector('#edit-form');
+    const showNewMessageBtn = document.querySelector('#new-message-show');
+    const newMessageDiv = document.querySelector('#new-message');
 
     editForm.onsubmit = function() {
         // Get the value from the form
@@ -52,8 +55,9 @@ document.addEventListener('DOMContentLoaded', function() {
         return false;
     }
 
-    // By default editDiv will be hidden
+    // By default editDiv and newMessageDiv will be hidden
     editDiv.style.display = 'none';
+    newMessageDiv.style.opacity = '0';
 
     // When user click the button, show the editDiv
     showBtn.onclick = function() {
@@ -64,5 +68,22 @@ document.addEventListener('DOMContentLoaded', function() {
         }        
     }
 
+    showNewMessageBtn.onclick = function() {
+        if (newMessageDiv.style.opacity === '0') {
+            newMessageDiv.style.opacity = '1';
+            newMessageDiv.style.transform = 'translateY(0)';
+        } else {
+            newMessageDiv.style.opacity = '0';
+            newMessageDiv.style.transform = 'translateY(-200px)';
+        }
+    }
+    const messageContent = document.querySelector('#message-form').querySelector('.form-control');
+    messageContent.onfocus = function() {
+        this.closest('.form-group').classList.add('focused');
+    }
+    messageContent.onblur = function() {
+        this.closest('.form-group').classList.remove('focused');
+    }
 
+    
 })

@@ -1,5 +1,5 @@
 import json
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponseRedirect, HttpResponse, JsonResponse
 from django.db import IntegrityError
 from django.db.models import Q
@@ -356,8 +356,20 @@ def people(request):
     request.session['yay_message'] = ''
 
     people = People.objects.all()
+
+    # Create a list of dictionary of people with their latest message
+    people_with_latest_message = []
+
+    for person in people:
+        latest_message = person.talks.order_by("-date").first()
+        people_with_latest_message.append({
+            'person': person,
+            'latest_message': latest_message
+        })
+
     return render(request, "clinic/people.html", {
         "people": people,
+        "people_with_latest_message": people_with_latest_message,
         "nay_message": nay_message,
         "yay_message": yay_message
     })
@@ -417,10 +429,18 @@ def person_detail(request, person_id):
             # Get the message from this person
             messages = person.talks.all().order_by("-date")
 
+            # Get messages from session
+            yay_message = request.session.get('yay_message', '')
+            nay_message = request.session.get('nay_message', '')
+            request.session['yay_message'] = ''
+            request.session['nay_message'] = ''
+
             return render(request, "clinic/person_detail.html", {
                 "person": person,
                 "messages": messages,
-                "companies": companies
+                "companies": companies,
+                'yay_message': yay_message,
+                'nay_message': nay_message
             })
         except People.DoesNotExist:
             request.session['nay_message'] = 'That person does not exist'
@@ -541,13 +561,19 @@ def add_message(request):
         })
 
 
-# Modify all people page that every person have the latest message displayed
-
-
-# Modify person_detail page that contain all the message from that person
-
-
 # Allow add message from person_detail page
+def message(request, person_id):
+    if request.method == 'POST':
+        content = request.POST['content']
+        person = People.objects.get(pk=person_id)
+        
+        message = ContactDiary(
+            name = person,
+            content = content
+        )
+        message.save()
+        request.session['yay_message'] = "Message saved"
+        return redirect('person_detail', person_id=person.id)
 
 
 # Add contract
