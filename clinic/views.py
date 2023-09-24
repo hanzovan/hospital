@@ -517,49 +517,6 @@ def companies(request):
     })
 
 
-# Allow user to add important message or request from a contact person of a company or the manager
-# All user can add message from a person
-@login_required
-def add_message(request):
-    # If user submiting form
-    if request.method == 'POST':
-        # Get data from the form
-        person_id = request.POST.get('person_id', '')
-        content = request.POST.get('content', '')
-
-        if person_id and content:
-            # try to get the person, add the message
-            try:
-                person = People.objects.get(pk=person_id)
-                message = ContactDiary(
-                    name = person,
-                    content = content
-                )
-                message.save()
-                request.session['yay_message'] = "Message added"
-                return HttpResponseRedirect(reverse('index'))
-            
-            except People.DoesNotExist:
-                people = People.objects.all()
-                return render(request, "clinic/add_message.html", {
-                    "people": people,
-                    "nay_message": "Person does not exist in database"
-                })
-            
-        else:
-            people = People.objects.all()
-            return render(request, "clinic/add_message.html", {
-                "people": people,
-                "nay_message": "Not enough data, please check again"
-            })
-
-    # If user clicking link or being redirect
-    else:
-        people = People.objects.all()
-        return render(request, "clinic/add_message.html", {
-            "people": people
-        })
-
 
 # Allow add message from person_detail page
 def message(request, person_id):
