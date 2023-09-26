@@ -16,6 +16,7 @@
                     <th>Company</th>
                     <th>Latest message</th>
                     <th>Sent at</th>
+                    <th>New Message</th>
                 </tr>
             </thead>
             <tbody>
@@ -42,7 +43,8 @@
                         </td>
                         <td>{{ item.latest_message.content }}</td>
                         <td>{{ item.latest_message.date }}</td>
-                    </tr>
+                        <td style="text-align: center;"><a href="{% url 'add_message_from_all_people_page' person_id=item.person.id %}" style="text-decoration: none;">+</a></td>                        
+                    </tr>                    
 
                 {% empty %}
 
@@ -55,5 +57,10 @@
             </tbody>
         </table>
     </div>
+
+{% endblock %}
+{% block script %}
+
+    <script src="{% static 'clinic/people.js' %}"></script>
 
 {% endblock %}

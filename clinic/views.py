@@ -532,8 +532,71 @@ def message(request, person_id):
         request.session['yay_message'] = "Message saved"
         return redirect('person_detail', person_id=person.id)
 
+    else:
+        request.session['nay_message'] = "POST request required"
+        return HttpResponseRedirect(reverse('index'))
+
+# Add message from all people page, with symbol for better visual
+def add_message_from_all_people_page(request, person_id):
+    # If user submitted form
+    if request.method == 'POST':
+        person = People.objects.get(pk=person_id)
+        content = request.POST.get('content', '')
+        
+        # save the new message
+        new_message = ContactDiary(
+            name = person,
+            content = content
+        )
+        new_message.save()
+        request.session['yay_message'] = "Message saved"
+        return HttpResponseRedirect(reverse('people'))
+    
+    # If user clicked link
+    else:
+        person = People.objects.get(pk=person_id)
+        return render(request, "clinic/add_message_from_all_people_page.html", {
+            "person": person
+        })
+
 
 # Add contract
+@login_required
+def add_contract(request):
+    # If user submitting form
+    if request.method == 'POST':
+        client_id = request.POST.get('client_id', '')
+        client = Company.objects.get(pk=client_id)
+        service_ids = request.POST.getlist('chosen_services')
+        services = []
+        for i in service_ids:
+            service = Service.objects.get(pk=i)
+            services.append(service)
+        male_headcount = request.POST.get('male_headcount', '')
+        female_headcount = request.POST.get('female_headcount', '')
+
+        new_contract = Contract(
+            client = client,
+            male_headcount = male_headcount,
+            female_headcount = female_headcount
+        )
+        new_contract.save()
+        new_contract.services.set(services)
+        new_contract.save()
+
+        request.session['yay_message'] = "Contract added"
+
+        return HttpResponseRedirect(reverse('index'))
+    
+    # If user clicked link or being redirect
+    else:
+        companies = Company.objects.all()
+        services = Service.objects.all()
+        return render(request, "clinic/add_contract.html", {
+            "services": services,
+            "companies": companies
+        })
+
 
 
 # Add quote price

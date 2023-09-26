@@ -1,0 +1,25 @@
+{% extends "clinic/layout.html" %}
+{% load static %}
+{% block title %}
+
+    add message from all people page
+
+{% endblock %}
+{% block main %}
+
+    <div class="general">
+        <div class="form-container">
+            <form action="{% url 'add_message_from_all_people_page' person_id=person.id %}" method="post" id="add-message-form">
+                {% csrf_token %}
+                <div class="container">
+                    <h1>Add Message</h1>
+                    <div class="form-group">
+                        <textarea name="content" id="content" cols="40" rows="5" class="form-control" placeholder="Enter message ..." autofocus></textarea>
+                    </div>
+                    <button>Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+{% endblock %}
