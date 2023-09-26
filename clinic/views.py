@@ -565,15 +565,56 @@ def add_message_from_all_people_page(request, person_id):
 def add_contract(request):
     # If user submitting form
     if request.method == 'POST':
+        # Get the client id
         client_id = request.POST.get('client_id', '')
-        client = Company.objects.get(pk=client_id)
+
+        # Try to get the company, if there ain't that company, raise error
+        try:
+            client = Company.objects.get(pk=client_id)
+        except Company.DoesNotExist:
+            request.session['nay_message'] = "Company does not exist"
+            companies = Company.objects.all()
+            services = Service.objects.all()
+            return render(request, "clinic/add_contract.html", {
+                "services": services,
+                "companies": companies
+            })
+        
+        # Get service id
         service_ids = request.POST.getlist('chosen_services')
+
+        # Try to get the service, if there ain't that service, ignore that
         services = []
         for i in service_ids:
-            service = Service.objects.get(pk=i)
-            services.append(service)
+            try:
+                service = Service.objects.get(pk=i)            
+                services.append(service)
+            except Service.DoesNotExist:
+                request.session['nay_message'] = f"service with id {i} does not exist"
+
+        # Get headcount, but checked if they're positive integer        
         male_headcount = request.POST.get('male_headcount', '')
         female_headcount = request.POST.get('female_headcount', '')
+
+        try:
+            male_number = int(male_headcount)
+            female_number = int(female_headcount)
+            if male_number < 0 or female_number < 0:
+                request.session['nay_message'] = "headcount has to be positive integer, not negative"
+                companies = Company.objects.all()
+                services = Service.objects.all()
+                return render(request, "clinic/add_contract.html", {
+                    "services": services,
+                    "companies": companies
+                })
+        except ValueError:
+            request.session['nay_message'] = 'headcount has to be positive integer, not a float'
+            companies = Company.objects.all()
+            services = Service.objects.all()
+            return render(request, "clinic/add_contract.html", {
+                "services": services,
+                "companies": companies
+            })
 
         new_contract = Contract(
             client = client,
