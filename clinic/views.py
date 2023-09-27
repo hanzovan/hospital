@@ -639,8 +639,22 @@ def add_contract(request):
         })
 
 
-
 # Add quote price
+@login_required
+def add_quote_price(request):
+    # if user submitted form
+    if request.method == 'POST':
+        return HttpResponse('Constructing')
+    
+    # If user clicked link
+    else:
+        companies = Company.objects.all()
+        services = Service.objects.all()
+        return render(request, "clinic/add_quote_price.html", {
+            "services": services,
+            "companies": companies
+        })
+
 
 
 # Retrieve contract information

@@ -1,0 +1,50 @@
+{% extends "clinic/layout.html" %}
+{% load static %}
+{% block title %}
+
+    add quote price
+
+{% endblock %}
+{% block main %}
+
+    <div class="general">
+        <div class="form-container">
+            <form action="{% url 'add_quote_price' %}" method="post" id="add-quote-price-form">
+                {% csrf_token %}
+                <div class="container">
+                    <h1>Add quote price</h1>
+                    <div class="form-group">
+                        <label for="company_id" class="form-label">Company</label>
+                        <select name="company_id" class="form-control">
+                            <option selected disabled>Choose Company</option>
+                            {% for company in companies %}
+
+                                <option value="{{ company.id }}">{{ company.name }}</option>
+
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="service_id" class="form-label">Service</label>
+                        <select name="service_id" class="form-control">
+                            <option selected disabled>Choose service</option>
+                            {% for service in services %}
+                                <option value="{{ service.id }}">{{ service.name }}</option>
+                            {% endfor %}                            
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="male_price" class="form-label">Male Price</label>
+                        <input name="male_price" type="number" min="0" class="form-control" autocomplete="off">
+                    </div>
+                    <div class="form-group">
+                        <label for="female_price" class="form-label">Female Price</label>
+                        <input name="female_price" type="number" min="0" class="form-control" autocomplete="off">
+                    </div>
+                    <button>Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+{% endblock %}
