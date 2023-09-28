@@ -708,8 +708,13 @@ def add_quote_price(request):
         })
 
 
-
 # Retrieve contract information
+@login_required
+def all_contracts(request):
+    contracts = Contract.objects.all()
+    return render(request, "clinic/contracts.html", {
+        "contracts": contracts
+    })
 
 
 # This app will focus only use for clinic sales team

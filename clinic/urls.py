@@ -19,5 +19,6 @@ urlpatterns = [
     path('message/<int:person_id>', views.message, name="message"),
     path('add_message_from_all_people_page/<int:person_id>', views.add_message_from_all_people_page, name="add_message_from_all_people_page"),
     path('add_contract', views.add_contract, name="add_contract"),
-    path('add_quote_price', views.add_quote_price, name='add_quote_price')
+    path('add_quote_price', views.add_quote_price, name='add_quote_price'),
+    path('all_contracts', views.all_contracts, name="all_contracts")
 ]
