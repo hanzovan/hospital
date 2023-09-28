@@ -644,15 +644,67 @@ def add_contract(request):
 def add_quote_price(request):
     # if user submitted form
     if request.method == 'POST':
-        return HttpResponse('Constructing')
+        # Get the variables from user input
+        company_id = request.POST.get('company_id')
+        service_id = request.POST.get('service_id')
+        male_price = request.POST.get('male_price')
+        female_price = request.POST.get('female_price')
+
+        # If any of the input field was empty, raise error and redirect user back to the add quote price route
+        if not company_id or not service_id or not male_price or not female_price:
+            request.session['nay_message'] = "Missing credential"
+            return HttpResponseRedirect(reverse('add_quote_price'))
+        
+        # Get company and service
+        try:
+            company = Company.objects.get(pk=company_id)
+        except Company.DoesNotExist:
+            request.session['nay_message'] = "Can't find the company with that id"
+            return HttpResponseRedirect(reverse('add_quote_price'))
+        
+        try: 
+            service = Service.objects.get(pk=service_id)
+        except Service.DoesNotExist:
+            request.session['nay_message'] = "can't find the service with that id"
+            return HttpResponseRedirect(reverse('add_quote_price'))
+
+        # Check male and female headcount
+        try:
+            male_price = int(male_price)
+            female_price = int(female_price)
+            if male_price < 0 or female_price < 0:
+                request.session['nay_message'] = "The price has to be positive"
+                return HttpResponseRedirect(reverse("add_quote_price"))
+
+        except ValueError:
+            request.session['nay_message'] = "The price should be positive integer, not a float"
+            return HttpResponseRedirect(reverse("add_quote_price"))
+        
+        new_quote_price = Quotation(
+            service = service,
+            client = company,
+            male_quote_price = male_price,
+            female_quote_price = female_price
+        )
+        new_quote_price.save()
+        request.session['yay_message'] = "quote price saved successfully"
+        
+        return HttpResponseRedirect(reverse('add_quote_price'))
     
     # If user clicked link
     else:
+        yay_message = request.session.get('yay_message', '')
+        nay_message = request.session.get('nay_message', '')
+        request.session['yay_message'] = ''
+        request.session['nay_message'] = ''
+
         companies = Company.objects.all()
         services = Service.objects.all()
         return render(request, "clinic/add_quote_price.html", {
             "services": services,
-            "companies": companies
+            "companies": companies,
+            "yay_message": yay_message,
+            "nay_message": nay_message
         })
 
 
