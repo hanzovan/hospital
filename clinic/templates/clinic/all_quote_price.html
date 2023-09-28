@@ -1,0 +1,40 @@
+{% extends "clinic/layout.html" %}
+{% load static %}
+{% block title %}
+
+    all quote price
+
+{% endblock %}
+{% block main %}
+
+    <h1 class="text-center">All Quote Price</h1>
+    <div class="container-fluid">
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>No.</th>
+                    <th>Service</th>
+                    <th>Company</th>
+                    <th>Male Price</th>
+                    <th>Female Price</th>
+                    <th>Date quoted</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for price in prices %}
+
+                    <tr>
+                        <td>{{ price.id }}</td>
+                        <td>{{ price.service.name }}</td>
+                        <td>{{ price.client.name }}</td>
+                        <td>{{ price.male_quote_price }}</td>
+                        <td>{{ price.female_quote_price }}</td>
+                        <td>{{ price.date }}</td>
+                    </tr>
+
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+{% endblock %}

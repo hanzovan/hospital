@@ -717,7 +717,14 @@ def all_contracts(request):
     })
 
 
-# This app will focus only use for clinic sales team
+# Allow user to access quote price to companies
+@login_required
+def all_quote_price(request):
+    prices = Quotation.objects.all()
+
+    return render(request, "clinic/all_quote_price.html", {
+        "prices": prices
+    })
 
 
 # Allow team to manage timeline, schedule, meeting to meet up with clients

@@ -20,5 +20,6 @@ urlpatterns = [
     path('add_message_from_all_people_page/<int:person_id>', views.add_message_from_all_people_page, name="add_message_from_all_people_page"),
     path('add_contract', views.add_contract, name="add_contract"),
     path('add_quote_price', views.add_quote_price, name='add_quote_price'),
-    path('all_contracts', views.all_contracts, name="all_contracts")
+    path('all_contracts', views.all_contracts, name="all_contracts"),
+    path('all_quote_price', views.all_quote_price, name="all_quote_price")
 ]
