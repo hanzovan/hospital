@@ -615,11 +615,15 @@ def add_contract(request):
                 "services": services,
                 "companies": companies
             })
+        
+        # Get the initiation date
+        initiation_date = request.POST.get('initiation_date', '')
 
         new_contract = Contract(
             client = client,
             male_headcount = male_headcount,
-            female_headcount = female_headcount
+            female_headcount = female_headcount,
+            initiation_date = initiation_date
         )
         new_contract.save()
         new_contract.services.set(services)

@@ -12,7 +12,9 @@
 {% block main %}
 
     <h1 class="text-center">All services</h1>
-    <div class="text-center">
+
+    <!-- This part was disable due to the exchange rate API was not accessible anymore -->
+    <!-- <div class="text-center">
         <p>Currency</p>
         <select id="currency">
             <option selected value="VND">VND</option>
@@ -25,7 +27,7 @@
             <option value="CAD">CAD</option>
             <option value="GBP">GBP</option>
         </select>
-    </div>
+    </div> -->
 
     <div class="container" id="services-container">
         {% for service in services %}

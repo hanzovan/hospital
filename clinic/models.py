@@ -80,12 +80,13 @@ class Quotation(models.Model):
 class Contract(models.Model):
     client = models.ForeignKey(Company, on_delete=models.CASCADE, related_name='contracts')
     services = models.ManyToManyField(Service, related_name='contracts')
-    date = models.DateTimeField(auto_now_add=True)
     male_headcount = models.IntegerField()
     female_headcount = models.IntegerField()
+    initiation_date = models.DateField(blank=True, null=True)
+    created = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"{self.client} signed a contract in {self.date}"
+        return f"{self.client} signed a contract in {self.created}"
 
 
 class ContractPrice(models.Model):

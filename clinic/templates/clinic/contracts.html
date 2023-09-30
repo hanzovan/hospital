@@ -25,7 +25,10 @@
                         Female headcount
                     </th>
                     <th>
-                        Date added
+                        Initiation Date
+                    </th>
+                    <th>
+                        Created Date
                     </th>
                 </tr>
             </thead>
@@ -37,7 +40,8 @@
                         <td>{{ contract.client }}</td>
                         <td>{{ contract.male_headcount }}</td>
                         <td>{{ contract.female_headcount }}</td>
-                        <td>{{ contract.date }}</td>
+                        <td>{{ contract.initiation_date }}</td>
+                        <td>{{ contract.created }}</td>
                     </tr>
 
                 {% endfor %}
