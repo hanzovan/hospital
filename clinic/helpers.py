@@ -1,3 +1,6 @@
+from datetime import datetime, timedelta, date
+
+# return if the password has at least 1 special character, 1 number, 1 alphabet, and at least 6 characters in total
 def strong_password(e):
     special_list = [
         "~", "!", "@", "#", "$", "%", "^", "&", "*", "(", ")", "_", "+", "[", "]", "{", "}", "?"
@@ -18,6 +21,7 @@ def strong_password(e):
     return False
 
 
+# Manage right for each user level
 def user_right(level):
     level = int(level)
     all_rights = [
@@ -57,3 +61,12 @@ def user_right(level):
                 ])
     
     return user_rights
+
+
+# Return number of days between 2 date
+def days_between(d1, d2):
+    d1 = datetime.strptime(d1, '%Y-%m-%d')
+    d2 = datetime.strptime(d2, '%Y-%m-%d')
+
+    # Return normal value
+    return (d2 - d1).days

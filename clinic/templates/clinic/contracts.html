@@ -40,7 +40,7 @@
                         <td>{{ contract.client }}</td>
                         <td>{{ contract.male_headcount }}</td>
                         <td>{{ contract.female_headcount }}</td>
-                        <td>{{ contract.initiation_date }}</td>
+                        <td class="{% if contract.in_within_10_days %} text-danger {% else %} text-success {% endif %}">{{ contract.initiation_date }}</td>
                         <td>{{ contract.created }}</td>
                     </tr>
 

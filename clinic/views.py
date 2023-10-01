@@ -7,9 +7,10 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse
 from django.views.decorators.csrf import csrf_exempt
+from datetime import datetime, timedelta, date
 
 from .models import User, People, ContactDiary, Company, Service, Quotation, Contract, ContractPrice
-from .helpers import strong_password, user_right
+from .helpers import strong_password, user_right, days_between
 
 
 # Create your views here.
@@ -715,9 +716,21 @@ def add_quote_price(request):
 # Retrieve contract information
 @login_required
 def all_contracts(request):
-    contracts = Contract.objects.all()
+    contracts = Contract.objects.all().order_by('initiation_date')
+
+    # Get today
+    today = date.today()
+
+    # Add a field to each contract to confirm if the initiation date is near within 10 days
+    for contract in contracts:
+        if days_between(str(today), str(contract.initiation_date)) <= 10:
+            contract.in_within_10_days = True
+        else:
+            contract.in_within_10_days = False
+
     return render(request, "clinic/contracts.html", {
-        "contracts": contracts
+        "contracts": contracts,
+        "today": today
     })
 
 
@@ -730,5 +743,9 @@ def all_quote_price(request):
         "prices": prices
     })
 
+
+# When the initiation date was in 7 days, change color to red
+
+# Allow user to change contracts from activation to finish
 
 # Allow team to manage timeline, schedule, meeting to meet up with clients
