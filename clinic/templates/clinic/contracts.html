@@ -13,7 +13,7 @@
             <thead>
                 <tr>
                     <th>
-                        No.
+                        Contract ID
                     </th>
                     <th>
                         Company
@@ -28,20 +28,24 @@
                         Initiation Date
                     </th>
                     <th>
-                        Created Date
+                        Created
                     </th>
                 </tr>
             </thead>
             <tbody>
                 {% for contract in contracts %}
 
-                    <tr>
-                        <td>{{ contract.id }}</td>
+                    <tr>                        
+                        <td class="text-end">
+                            <a class="no-underline" href="{% url 'contract_detail' contract_id=contract.id %}">
+                                {{ contract.id }}
+                            </a>                            
+                        </td>
                         <td>{{ contract.client }}</td>
-                        <td>{{ contract.male_headcount }}</td>
-                        <td>{{ contract.female_headcount }}</td>
-                        <td class="{% if contract.in_within_10_days %} text-danger {% else %} text-success {% endif %}">{{ contract.initiation_date }}</td>
-                        <td>{{ contract.created }}</td>
+                        <td class="text-end">{{ contract.male_headcount }}</td>
+                        <td class="text-end">{{ contract.female_headcount }}</td>
+                        <td class="text-end {% if contract.in_within_10_days %} text-danger {% endif %}">{{ contract.initiation_date }}</td>
+                        <td class="text-end">{{ contract.created }}</td>
                     </tr>
 
                 {% endfor %}

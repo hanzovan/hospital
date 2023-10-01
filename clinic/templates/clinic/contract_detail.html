@@ -1,0 +1,61 @@
+{% extends "clinic/layout.html" %}
+{% load static %}
+{% block title %}
+
+    contract detail
+
+{% endblock %}
+{% block main %}
+
+    <h1 class="text-center">Contract Detail</h1>
+    <table class="table table-hover">
+        <tr>
+            <th>Contract ID</th>
+            <td>{{ contract.id }}</td>
+        </tr>
+        <tr>
+            <th>Client</th>
+            <td>{{ contract.client.name }}</td>
+        </tr>
+        <tr>
+            <th>Services</th>
+            <td>
+                {% for service in contract.services.all.values %}
+
+                    {% if not forloop.last %}
+
+                        {{ service.name }},
+
+                    {% else %}
+
+                        {{ service.name }}
+
+                    {% endif %}
+
+                {% endfor %}
+            </td>
+        </tr>
+        <tr>
+            <th>Male Headcount</th>
+            <td>{{ contract.male_headcount }}</td>
+        </tr>
+        <tr>
+            <th>Female Headcount</th>
+            <td>{{ contract.female_headcount }}</td>
+        </tr>
+        <tr>
+            <th>Initiation Date</th>
+            <td>{{ contract.initiation_date }}</td>
+        </tr>
+        <tr>
+            <th>Date Created</th>
+            <td>{{ contract.created }}</td>
+        </tr>
+        <tr>
+            <th>Created by</th>
+            <td>{{ contract.created_by.username }}</td>
+        </tr>
+        
+    </table>
+
+{% endblock %}

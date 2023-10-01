@@ -624,7 +624,8 @@ def add_contract(request):
             client = client,
             male_headcount = male_headcount,
             female_headcount = female_headcount,
-            initiation_date = initiation_date
+            initiation_date = initiation_date,
+            created_by = request.user
         )
         new_contract.save()
         new_contract.services.set(services)
@@ -744,7 +745,19 @@ def all_quote_price(request):
     })
 
 
-# When the initiation date was in 7 days, change color to red
+# Allow user to access contract detail, and archive the contract
+@login_required
+def contract_detail(request, contract_id):
+    try:
+        contract = Contract.objects.get(pk=contract_id)
+    except Contract.DoesNotExist:
+        request.session['nay_message'] = "Invalid contract ID"
+        return HttpResponseRedirect(reverse('all_contracts'))
+
+    return render(request, "clinic/contract_detail.html", {
+        "contract": contract
+    })
+
 
 # Allow user to change contracts from activation to finish
 
