@@ -1,5 +1,11 @@
 from django.urls import path
+
+# Import these to store and serve media file
+from django.conf import settings
+from django.conf.urls.static import static
+
 from . import views
+
 
 urlpatterns = [
     path('', views.index, name='index'),
@@ -24,3 +30,7 @@ urlpatterns = [
     path('all_quote_price', views.all_quote_price, name="all_quote_price"),
     path('contract/<int:contract_id>', views.contract_detail, name="contract_detail")
 ]
+
+# Serve media files during development
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

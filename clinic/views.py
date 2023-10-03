@@ -569,6 +569,10 @@ def add_contract(request):
         # Get the client id
         client_id = request.POST.get('client_id', '')
 
+        if not client_id:
+            request.session['nay_message'] = "Choose a company"
+            return HttpResponseRedirect(reverse('add_contract'))
+
         # Try to get the company, if there ain't that company, raise error
         try:
             client = Company.objects.get(pk=client_id)
@@ -618,8 +622,7 @@ def add_contract(request):
             })
         
         # Get the initiation date
-        initiation_date = request.POST.get('initiation_date', '')
-
+        initiation_date = request.POST.get('initiation_date', '')   
         new_contract = Contract(
             client = client,
             male_headcount = male_headcount,
@@ -630,6 +633,13 @@ def add_contract(request):
         new_contract.save()
         new_contract.services.set(services)
         new_contract.save()
+
+        # Get the contract file
+        pdf_file = request.FILES.get('contract_file')
+        if pdf_file:
+            # Create a new Contract instance with the uploaded file
+            new_contract.pdf_file = pdf_file
+            new_contract.save()
 
         request.session['yay_message'] = "Contract added"
 
@@ -758,6 +768,8 @@ def contract_detail(request, contract_id):
         "contract": contract
     })
 
+
+# Retrieve and display file in contract page
 
 # Allow user to change contracts from activation to finish
 

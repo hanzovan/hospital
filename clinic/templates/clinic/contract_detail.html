@@ -55,6 +55,20 @@
             <th>Created by</th>
             <td>{{ contract.created_by.username }}</td>
         </tr>
+        <tr>
+            <th>Contract file</th>
+            <td>
+                {% if contract.pdf_file %}
+
+                    <a href="{{ contract.pdf_file.url }}" target="_blank">View file</a>
+
+                {% else %}
+
+                    N/A
+
+                {% endif %}
+            </td>
+        </tr>
         
     </table>
 

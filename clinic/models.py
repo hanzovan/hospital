@@ -85,6 +85,7 @@ class Contract(models.Model):
     initiation_date = models.DateField(blank=True, null=True)
     created = models.DateTimeField(auto_now_add=True)
     created_by = models.ForeignKey(User, on_delete=models.SET_NULL, blank=True, null=True, related_name='contracts_added')
+    pdf_file = models.FileField(upload_to='uploaded_files/', blank=True, null=True)
 
     def __str__(self):
         return f"{self.client} signed a contract in {self.created}"
