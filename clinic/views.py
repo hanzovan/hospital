@@ -769,8 +769,6 @@ def contract_detail(request, contract_id):
     })
 
 
-# Retrieve and display file in contract page
-
 # Allow user to change contracts from activation to finish
 
 # Allow team to manage timeline, schedule, meeting to meet up with clients
