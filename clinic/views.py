@@ -8,6 +8,7 @@ from django.contrib.auth.decorators import login_required
 from django.urls import reverse
 from django.views.decorators.csrf import csrf_exempt
 from datetime import datetime, timedelta, date
+from django.utils import timezone
 
 from .models import User, People, ContactDiary, Company, Service, Quotation, Contract, ContractPrice
 from .helpers import strong_password, user_right, days_between
@@ -778,15 +779,18 @@ def archive_contract(request):
             try:
                 contract = Contract.objects.get(pk=contract_id)
                 contract.archived = True
+                contract.archived_date = timezone.now()
+                contract.archived_by = request.user
                 contract.save()
             except Contract.DoesNotExist:
                 request.session['nay_message'] = "Contract with that id does not exist"
-                return HttpResponseRedirect(reverse('index'))
+                return HttpResponseRedirect(reverse('all_contracts'))
 
         return redirect('contract_detail', contract_id = contract_id)
     
     else:
-        return HttpResponse("POST method required")
+        request.session['nay_message'] = "POST method required"
+        return HttpResponseRedirect(reverse('all_contracts'))
 
 
 # Allow user to visit all archived contracts
@@ -799,7 +803,5 @@ def all_archived_contracts(request):
         "contracts": contracts
     })
 
-
-# add date archive and user that archive the contract
 
 # Allow team to manage timeline, schedule, meeting to meet up with clients

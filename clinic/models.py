@@ -87,6 +87,8 @@ class Contract(models.Model):
     created_by = models.ForeignKey(User, on_delete=models.SET_NULL, blank=True, null=True, related_name='contracts_added')
     pdf_file = models.FileField(upload_to='uploaded_files/', blank=True, null=True)
     archived = models.BooleanField(default=False)
+    archived_date = models.DateTimeField(blank=True, null=True)
+    archived_by = models.ForeignKey(User, on_delete=models.SET_NULL, blank=True, null=True, related_name="archived_contracts")
 
     def __str__(self):
         return f"{self.client} signed a contract in {self.created}"
