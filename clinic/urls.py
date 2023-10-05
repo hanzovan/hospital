@@ -28,7 +28,9 @@ urlpatterns = [
     path('add_quote_price', views.add_quote_price, name='add_quote_price'),
     path('all_contracts', views.all_contracts, name="all_contracts"),
     path('all_quote_price', views.all_quote_price, name="all_quote_price"),
-    path('contract/<int:contract_id>', views.contract_detail, name="contract_detail")
+    path('contract/<int:contract_id>', views.contract_detail, name="contract_detail"),
+    path('archive_contract', views.archive_contract, name='archive_contract'),
+    path('archived_contracts', views.all_archived_contracts, name="all_archived_contracts")
 ]
 
 # Serve media files during development

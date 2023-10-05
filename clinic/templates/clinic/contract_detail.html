@@ -69,7 +69,30 @@
                 {% endif %}
             </td>
         </tr>
+        <tr>
+            <th>Status</th>
+            <td>
+                {% if contract.archived %}
+
+                    Archived
+
+                {% else %}
+
+                    Active
+
+                {% endif %}
+            </td>
+        </tr>
         
     </table>
+    {% if not contract.archived %}
+
+        <form action="{% url 'archive_contract' %}" method="post">
+            {% csrf_token %}
+            <input name="contract_id" value="{{ contract.id }}" type="hidden">
+            <button>Archive this contract</button>
+        </form>
+    
+    {% endif %}
 
 {% endblock %}

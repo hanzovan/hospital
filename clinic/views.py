@@ -724,10 +724,10 @@ def add_quote_price(request):
         })
 
 
-# Retrieve contract information
+# Retrieve all contracts that are not archived
 @login_required
 def all_contracts(request):
-    contracts = Contract.objects.all().order_by('initiation_date')
+    contracts = Contract.objects.filter(archived=False).order_by('initiation_date')
 
     # Get today
     today = date.today()
@@ -769,6 +769,37 @@ def contract_detail(request, contract_id):
     })
 
 
-# Allow user to change contracts from activation to finish
+# Allow user to change contracts from activation to finish or archived
+@login_required
+def archive_contract(request):
+    if request.method == 'POST':
+        contract_id = request.POST.get('contract_id')
+        if contract_id:
+            try:
+                contract = Contract.objects.get(pk=contract_id)
+                contract.archived = True
+                contract.save()
+            except Contract.DoesNotExist:
+                request.session['nay_message'] = "Contract with that id does not exist"
+                return HttpResponseRedirect(reverse('index'))
+
+        return redirect('contract_detail', contract_id = contract_id)
+    
+    else:
+        return HttpResponse("POST method required")
+
+
+# Allow user to visit all archived contracts
+@login_required
+def all_archived_contracts(request):
+    # Get all archived contracts
+    contracts = Contract.objects.filter(archived=True).order_by("initiation_date")
+
+    return render(request, "clinic/all_archived_contracts.html",{
+        "contracts": contracts
+    })
+
+
+# add date archive and user that archive the contract
 
 # Allow team to manage timeline, schedule, meeting to meet up with clients
