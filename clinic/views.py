@@ -804,4 +804,6 @@ def all_archived_contracts(request):
     })
 
 
+# Estimate contract value
+
 # Allow team to manage timeline, schedule, meeting to meet up with clients
