@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+from decimal import Decimal
 
 
 # Create your models here.
@@ -71,6 +72,9 @@ class Contract(models.Model):
     services = models.ManyToManyField(Service, related_name='contracts')
     male_headcount = models.IntegerField()
     female_headcount = models.IntegerField()
+    total_value = models.IntegerField(blank=True, null=True)
+    discount = models.DecimalField(max_digits=5, decimal_places=2, default=0.00)
+    revenue = models.IntegerField(blank=True, null=True)
     initiation_date = models.DateField(blank=True, null=True)
     created = models.DateTimeField(auto_now_add=True)
     created_by = models.ForeignKey(User, on_delete=models.SET_NULL, blank=True, null=True, related_name='contracts_added')

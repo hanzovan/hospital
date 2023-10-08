@@ -622,12 +622,37 @@ def add_contract(request):
                 "companies": companies
             })
         
+        # Get the total value
+        total_value = 0
+        for service in services:
+            if service.male_price:
+                service_value_for_male = int(service.male_price)*male_number
+            else:
+                service_value_for_male = 0
+            
+            if service.female_price:
+                service_value_for_female = int(service.female_price)*female_number
+            else:
+                service_value_for_female = 0
+            total_value += (service_value_for_male + service_value_for_female)
+        
+        # Get the discount
+        discount = request.POST.get('discount')
+        if discount:
+            discount = round(float(discount), 2)        
+
+        # Get the total revenue
+        revenue = round(float(total_value*(100 - discount)/100))
+
         # Get the initiation date
         initiation_date = request.POST.get('initiation_date', '')   
         new_contract = Contract(
             client = client,
             male_headcount = male_headcount,
             female_headcount = female_headcount,
+            total_value = total_value,
+            discount = discount,
+            revenue = revenue,
             initiation_date = initiation_date,
             created_by = request.user
         )
@@ -725,6 +750,12 @@ def all_archived_contracts(request):
     })
 
 
+# Allow user to enter discount for contract
+
+# Calculate value of contract
+
 # Estimate contract value
+
+# Prepare a contract in word ready for printing
 
 # Allow team to manage timeline, schedule, meeting to meet up with clients

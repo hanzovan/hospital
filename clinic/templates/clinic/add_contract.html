@@ -36,6 +36,10 @@
                         {% endfor %}
                     </div>
                     <div class="form-group">
+                        <label for="discount" class="form-label">Discount</label>
+                        <input name="discount" type="text" pattern="\d+(\.\d{2})?" title="Enter a valid discount with 2 decimal places" autocomplete="off" placeholder="10.00" required>
+                    </div>
+                    <div class="form-group">
                         <label for="male_headcount" class="form-label">Male Headcount</label>
                         <input name="male_headcount" type="number" min="0" class="form-control" autocomplete="off" placeholder="100">
                     </div>
