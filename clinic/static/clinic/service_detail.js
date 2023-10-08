@@ -92,6 +92,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 const newFemalePrice = fieldValueList.querySelector('#new-service-female-price').value;
                 const newDescription = fieldValueList.querySelector('#new-service-description').value;
                 
+                // Check if newMalePrice is empty and set it to 'None' if true
+                const displayMalePrice = newMalePrice === '' ? 'None' : newMalePrice;
+                const displayFemalePrice = newFemalePrice === '' ? 'None' : newFemalePrice;
+                const displayDescription = newDescription === '' ? 'None' : newDescription;
+
                 // send user input to the server
                 fetch(`/service_detail/${document.querySelector('#original-value').getAttribute('data-service_id')}`, {
                     method: 'POST',
@@ -106,9 +111,12 @@ document.addEventListener('DOMContentLoaded', function() {
                     if (response.status === 200) {
                         // Modify value field in the original div as well as the appropriate data-information
                         oriName.innerHTML = newName;
-                        oriMalePrice.innerHTML = newMalePrice;
-                        oriFemalePrice.innerHTML = newFemalePrice;
-                        oriDescription.innerHTML = newDescription;
+                        
+                        oriMalePrice.innerHTML = displayMalePrice;                       
+                        
+                        oriFemalePrice.innerHTML = displayFemalePrice;
+                                                
+                        oriDescription.innerHTML = displayDescription;                            
 
                         oriName.setAttribute('data-service_name', newName);
                         oriMalePrice.setAttribute('data-service_male_price', newMalePrice);

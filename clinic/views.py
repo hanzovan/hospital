@@ -249,9 +249,17 @@ def service_detail(request, service_id):
             try:
                 service = Service.objects.get(pk=service_id)
                 service.name = data['new-name']
-                service.male_price = data['new-male-price']
-                service.female_price = data['new-female-price']
-                service.benefit = data['new-benefit']
+
+                if not data.get('new-male-price'):
+                    service.male_price = None
+                else:
+                    service.male_price = data['new-male-price']
+
+                if not data.get('new-female-price'):
+                    service.female_price = None
+                else:
+                    service.female_price = data['new-female-price']
+                
                 service.description = data['new-description']
                 service.modified_by = request.user
                 service.save()
@@ -750,6 +758,8 @@ def all_archived_contracts(request):
     })
 
 
+# Fixing service_detail can not edit
+
 # Allow user to enter discount for contract
 
 # Calculate value of contract
@@ -759,3 +769,5 @@ def all_archived_contracts(request):
 # Prepare a contract in word ready for printing
 
 # Allow team to manage timeline, schedule, meeting to meet up with clients
+
+# Implement search function
