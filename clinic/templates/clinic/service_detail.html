@@ -8,13 +8,36 @@
 {% block main %}
 
     <h1 class="text-center">{{ service.name }}</h1>
+
+    <div class="container-fluid">
+        <table class="table table-hover">
+            <tbody class="field-value" id="original-value" data-service_id="{{ service.id }}">
+                <tr>
+                    <td>Service</td>
+                    <td id="service-name" data-service_name="{{ service.name }}">{{ service.name }}</td>
+                </tr>
+                <tr>
+                    <td>Male Price</td>
+                    <td id="service-male-price" data-service_male_price="{{ service.male_price }}">{{ service.male_price }}</td>
+                </tr>
+                <tr>
+                    <td>Female Price</td>
+                    <td id="service-female-price" data-service_female_price="{{ service.female_price }}">{{ service.female_price }}</td>
+                </tr>
+                <tr>
+                    <td>Description</td>
+                    <td id="service-description" data-service_description="{{ service.description }}">{{ service.description }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
     <div class="my-service-detail-container">
         <div class="field-name">
             <ul class="no-bullet">
                 <li><i class="i-left">Service's name</i></li>
                 <li><i class="i-left">Male price</i></li>
                 <li><i class="i-left">Female price</i></li>
-                <li><i class="i-left">Benefit</i></li>
                 <li><i class="i-left">Description</i></li>
             </ul>
         </div>
@@ -23,7 +46,6 @@
                 <li><i class="i-left" id="service-name" data-service_name="{{ service.name }}">{{ service.name }}</i></li>
                 <li><i class="i-left" id="service-male-price" data-service_male_price="{{ service.male_price }}">{{ service.male_price }}</i></li>
                 <li><i class="i-left" id="service-female-price" data-service_female_price="{{ service.female_price }}">{{ service.female_price }}</i></li>
-                <li><i class="i-left" id="service-benefit" data-service_benefit="{{ service.benefit }}">{{ service.benefit }}</i></li>
                 <li><i class="i-left" id="service-description" data-service_description="{{ service.description }}">{{ service.description }}</i></li>
             </ul>
         </div>

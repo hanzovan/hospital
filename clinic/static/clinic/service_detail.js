@@ -58,7 +58,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 <li><i class="i-left">Service's name</i></li>
                 <li><i class="i-left">Male price</i></li>
                 <li><i class="i-left">Female price</i></li>
-                <li><i class="i-left">Benefit</i></li>
                 <li><i class="i-left">Description</i></li>
             `
             fieldNameDiv.appendChild(fieldNameList);
@@ -67,7 +66,6 @@ document.addEventListener('DOMContentLoaded', function() {
             const oriName = document.querySelector('#service-name');
             const oriMalePrice = document.querySelector('#service-male-price');
             const oriFemalePrice = document.querySelector('#service-female-price');
-            const oriBenefit = document.querySelector('#service-benefit');
             const oriDescription = document.querySelector('#service-description');
 
             const fieldValueList = document.createElement('ul');
@@ -76,7 +74,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 <li><input class="service-input" id="new-service-name" type="text" value="${oriName.getAttribute('data-service_name')}"></li>
                 <li><input class="service-input" id="new-service-male-price" type="number" value="${oriMalePrice.getAttribute('data-service_male_price')}"></li>
                 <li><input class="service-input" id="new-service-female-price" type="number" value="${oriFemalePrice.getAttribute('data-service_female_price')}"></li>
-                <li><input class="service-input" id="new-service-benefit" value="${oriBenefit.getAttribute('data-service_benefit')}"></li>
                 <li><input class="service-input" id="new-service-description" value="${oriDescription.getAttribute('data-service_description')}"></li>
             `;
             fieldValueDiv.appendChild(fieldValueList);
@@ -93,7 +90,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 const newName = fieldValueList.querySelector('#new-service-name').value;
                 const newMalePrice = fieldValueList.querySelector('#new-service-male-price').value;
                 const newFemalePrice = fieldValueList.querySelector('#new-service-female-price').value;
-                const newBenefit = fieldValueList.querySelector('#new-service-benefit').value;
                 const newDescription = fieldValueList.querySelector('#new-service-description').value;
                 
                 // send user input to the server
@@ -103,7 +99,6 @@ document.addEventListener('DOMContentLoaded', function() {
                         'new-name': newName,
                         'new-male-price': newMalePrice,
                         'new-female-price': newFemalePrice,
-                        'new-benefit': newBenefit,
                         'new-description': newDescription
                     })
                 })
@@ -113,13 +108,11 @@ document.addEventListener('DOMContentLoaded', function() {
                         oriName.innerHTML = newName;
                         oriMalePrice.innerHTML = newMalePrice;
                         oriFemalePrice.innerHTML = newFemalePrice;
-                        oriBenefit.innerHTML = newBenefit;
                         oriDescription.innerHTML = newDescription;
 
                         oriName.setAttribute('data-service_name', newName);
                         oriMalePrice.setAttribute('data-service_male_price', newMalePrice);
                         oriFemalePrice.setAttribute('data-service_female_price', newFemalePrice);
-                        oriBenefit.setAttribute('data-service_benefit', newBenefit);
                         oriDescription.setAttribute('data-service_description', newDescription);
 
                         editContainer.remove();

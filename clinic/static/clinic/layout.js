@@ -148,7 +148,7 @@ document.addEventListener('DOMContentLoaded', function() {
         })
 
         // CHECK RIGHTS FOR SHOW PEOPLE, COMPANY
-        fetch('check_right', {
+        fetch('/check_right', {
             method: 'POST',
             body: JSON.stringify({
                 'right': "read_all_people_info"
@@ -169,7 +169,7 @@ document.addEventListener('DOMContentLoaded', function() {
             console.log(error);
         })
 
-        fetch('check_right', {
+        fetch('/check_right', {
             method: 'POST',
             body: JSON.stringify({
                 'right': "read_company_info"
