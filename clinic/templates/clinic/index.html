@@ -29,58 +29,53 @@
         </select>
     </div> -->
 
-    <div class="container" id="services-container">
-        {% for service in services %}
-            <a class="service-detail-link" href="{% url 'service_detail' service_id=service.id %}">
-                <div class="service-info my-service-info">
-                    <div class="field-name">
-                        <ul class="no-bullet">
-                            <li><i class="i-left">Service's name</i></li>
-                            <li><i class="i-left">Male Price</i></li>
-                            <li><i class="i-left">Female Price</i></li>
-                            <li><i class="i-left">Function</i></li>
-                        </ul>
-                    </div>
-                    <div class="field-value">
-                        <ul class="no-bullet">
-                            <li><strong><a>{{ service.name }}</a></strong></li>
-                            <li>
-                                
-                                    {% if service.male_price == None %}
-        
-                                        <strong>N/A</strong>
-        
-                                    {% else %}
-        
-                                        <strong class="price" data-price="{{ service.male_price }}">{{ service.male_price|intcomma }}</strong> <strong class="price-currency">VND</strong>
-        
-                                    {% endif %}                            
-                                
-                            </li>
-                            <li>
-                                
-                                    {% if service.female_price == None %}
-        
-                                        <strong>N/A</strong>
-        
-                                    {% else %}
-        
-                                        <strong class="price" data-price="{{ service.female_price }}">{{ service.female_price|intcomma }}</strong> <strong class="price-currency">VND</strong>
-        
-                                    {% endif %}                            
-                                
-                            </li>
-                            <li><strong>{{ service.benefit }}</strong></li>
-                        </ul>
-                    </div>           
-                </div>
-            </a>            
+    <div class="container-fluid">
+        <table class="table table-hover">
+            <thead class="table-dark">
+                <tr>
+                    <th style="text-align: start;">Exam or Test</th>
+                    <th style="text-align: end;">Male Price</th>
+                    <th style="text-align: end;">Female Price</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for service in services %}
 
-        {% empty %}
+                    <tr>
+                        <td>
+                            <strong><a class="service-detail-link" href="{% url 'service_detail' service_id=service.id %}">{{ service.name }}</a></strong>
+                        </td>
+                        <td style="text-align: end;">
+                            {% if service.male_price == None %}
+        
+                                <strong>N/A</strong>
 
-            <p>No service yet</p>
+                            {% else %}
 
-        {% endfor %}
+                                <strong class="price" data-price="{{ service.male_price }}">{{ service.male_price|intcomma }}</strong> <strong class="price-currency">VND</strong>
+
+                            {% endif %}     
+                        </td>
+                        <td style="text-align: end;">
+                            {% if service.female_price == None %}
+        
+                                <strong>N/A</strong>
+
+                            {% else %}
+
+                                <strong class="price" data-price="{{ service.female_price }}">{{ service.female_price|intcomma }}</strong> <strong class="price-currency">VND</strong>
+
+                            {% endif %}       
+                        </td>
+                    </tr>
+
+                {% empty %}
+
+                    No service
+
+                {% endfor %}
+            </tbody>
+        </table>
     </div>
 
 {% endblock %}

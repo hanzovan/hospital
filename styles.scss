@@ -39,6 +39,10 @@ header {
     animation-play-state: paused;
 }
 
+.page-title {
+    margin-bottom: 1.5em;
+}
+
 // The line will not jump up anymore, just disappear
 @keyframes hide {
     0% {
@@ -332,6 +336,11 @@ td {
 .no-underline {
     text-decoration: none;
 }
-th {
-    text-align: center;
+
+// Table thead
+.text-column {
+    text-align: start;
+}
+.number-column {
+    text-align: end;
 }

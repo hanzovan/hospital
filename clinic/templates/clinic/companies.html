@@ -7,17 +7,36 @@
 {% endblock %}
 {% block main %}
 
-    <h1 class="text-center">Company list</h1>
-    <ul>
-        {% for company in companies %}
+    <h1 class="text-center page-title">Company list</h1>
+    <div class="container-fluid">
+        <table class="table table-hover">
+            <thead class="table-dark">
+                <tr>
+                    <th class="text-column">Company's Name</th>
+                    <th class="text-column">Industry</th>
+                    <th class="text-column">Address</th>
+                    <th class="number-column">Male Headcount</th>
+                    <th class="number-column">Female Headcount</th>
+                </tr>                
+            </thead>
+            <tbody>
+                {% for company in companies %}
 
-            <li>{{ company.name }}</li>
+                    <tr>
+                        <td class="text-column">{{ company.name }}</td>
+                        <td class="text-column">{{ company.industry }}</td>
+                        <td class="text-column">{{ company.address }}</td>
+                        <td class="number-column">{{ company.male_headcount }}</td>
+                        <td class="number-column">{{ company.female_headcount }}</td>
+                    </tr>
 
-        {% empty %}
+                {% empty %}
 
-            <li>No company yet</li>
+                    No company
 
-        {% endfor %}
-    </ul>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
 
 {% endblock %}
