@@ -85,6 +85,7 @@
         </tr>
         
     </table>
+    <a href="{% url 'generate_contract_docx' contract.id %}" class="btn btn-primary">Generate Word Document</a>
     {% if not contract.archived %}
 
         <form action="{% url 'archive_contract' %}" method="post">

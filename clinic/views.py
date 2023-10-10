@@ -10,6 +10,11 @@ from django.views.decorators.csrf import csrf_exempt
 from datetime import datetime, timedelta, date
 from django.utils import timezone
 
+# for word document editing
+from docx import Document
+from docx.shared import Pt
+from docx.enum.text import WD_ALIGN_PARAGRAPH
+
 from .models import User, People, ContactDiary, Company, Service, Contract, ContractPrice
 from .helpers import strong_password, user_right, days_between
 
@@ -758,15 +763,42 @@ def all_archived_contracts(request):
     })
 
 
-# Fixing service_detail can not edit
-
-# Allow user to enter discount for contract
-
-# Calculate value of contract
-
-# Estimate contract value
-
 # Prepare a contract in word ready for printing
+def generate_contract_docx(request, contract_id):
+    # Get the contract
+    contract = Contract.objects.get(pk=contract_id)
+
+    # Create a new word document
+    doc = Document()
+
+    # Add content to the document
+    title = doc.add_heading('CONTRACT AGREEMENT', level=1)
+    title.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    title_run = title.runs[0]
+    title_run.font.size = Pt(24)
+
+    # Add contract detail to the document
+    head1 = doc.add_heading('By ABC Hospital', level=2)
+    head1.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    head1_run = head1.runs[0]
+    head1_run.font.size = Pt(18)
+
+    doc.add_paragraph(f"Client: {contract.client.name}")
+    
+    doc.add_paragraph(f"Male Headcount: {contract.male_headcount}")
+    doc.add_paragraph(f"Female Headcount: {contract.female_headcount}")
+    doc.add_paragraph(f"Total Value: {contract.total_value}")
+    doc.add_paragraph(f"Discount: {contract.discount}")
+    doc.add_paragraph(f"Value after discount: {contract.revenue}")
+    doc.add_paragraph(f"Initiation Date: {contract.initiation_date}")
+
+    response = HttpResponse(content_type='application/msword')
+    response['Content-Disposition'] = f'attachment; filename=contract_{contract.id}.docx'
+
+    # save the doc
+    doc.save(response)
+
+    return response
 
 # Allow team to manage timeline, schedule, meeting to meet up with clients
 
