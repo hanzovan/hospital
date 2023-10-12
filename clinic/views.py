@@ -12,7 +12,7 @@ from django.utils import timezone
 
 # for word document editing
 from docx import Document
-from docx.shared import Pt
+from docx.shared import Pt, Inches
 from docx.enum.text import WD_ALIGN_PARAGRAPH
 
 from .models import User, People, ContactDiary, Company, Service, Contract, ContractPrice
@@ -778,19 +778,78 @@ def generate_contract_docx(request, contract_id):
     title_run.font.size = Pt(24)
 
     # Add contract detail to the document
-    head1 = doc.add_heading('By ABC Hospital', level=2)
+    head1 = doc.add_heading('By King Hospital', level=3)
     head1.alignment = WD_ALIGN_PARAGRAPH.CENTER
     head1_run = head1.runs[0]
-    head1_run.font.size = Pt(18)
+    head1_run.font.size = Pt(16)
 
-    doc.add_paragraph(f"Client: {contract.client.name}")
+    # Date of Agreement
+    contract_date = doc.add_paragraph(f"This Agreement is made on: {date.today()}")
+    contract_date.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    contract_date_run = contract_date.runs[0]
+    contract_date_run.font.size = Pt(12)
+
+    # Between
+    doc.add_heading('BETWEEN', level= 2)
+
+    # Create style for indentation
+    style = doc.styles.add_style('IndentedStyle', 1)
+    style.font.size = Pt(12)
+    style.paragraph_format.left_indent = Inches(0.2)
+
+    # Add the indented paragraph with the defined style
+    doc.add_paragraph("A party: King Hospital", style='IndentedStyle')
+    doc.add_paragraph(f"B party: {contract.client.name}", style='IndentedStyle')
     
-    doc.add_paragraph(f"Male Headcount: {contract.male_headcount}")
-    doc.add_paragraph(f"Female Headcount: {contract.female_headcount}")
+    # Recitals
+    doc.add_heading('RECITALS', level= 2)
+
+    doc.add_paragraph("A party have appropriate legal right and technology to perform annual health check")
+    doc.add_paragraph("B party have the need to provide their employees the benefit of checking health annually")
+
+    # Agreements
+    doc.add_heading('AGREEMENTS', level=2)
+
+    doc.add_paragraph("A party will perform health check for B party's employees in the attached list")
+
+    doc.add_heading('EMPLOYEE QUANTITY', level=3)
+
+    doc.add_paragraph(f"Male employees: {contract.male_headcount}")
+
+    doc.add_paragraph(f"Female employees: {contract.female_headcount}")
+
+    doc.add_heading('TEST OR EXAMINATION TO BE PERFORMED', level=3)
+
+    for service in contract.services:
+        doc.add_paragraph({service.name})    
+    
+    doc.add_heading('CONTRACT VALUE', level=3)
     doc.add_paragraph(f"Total Value: {contract.total_value}")
     doc.add_paragraph(f"Discount: {contract.discount}")
     doc.add_paragraph(f"Value after discount: {contract.revenue}")
+
+    doc.add_heading('CONTRACT INITIATION')
+
+    doc.add_paragraph(f"A party will perform health check for employees of party B regarding the quantity and name list attached from the initiation date to the end of the duration given")
+
     doc.add_paragraph(f"Initiation Date: {contract.initiation_date}")
+
+    doc.add_paragraph(f"Duration: 7 working days after initiation date")
+
+    doc.add_heading ('PAYMENT DURATION', level=3)
+    doc.add_paragraph("30 days after A party finished performing health check, send summarize health report, and payment request to B party")
+
+    doc.add_heading('RESPONSIBILITY', level=2)
+
+    doc.add_heading('A PARTY', level=3)
+
+    doc.add_paragraph("Prepare sufficient resources including machines, devices, doctors, nurses, and other supporting staff to successfully perform health check regarding people quantity in the contract. Organize, and inform the capability of the performance team so that B party have the clue to inform their employees to plan their coming ahead")
+
+    doc.add_heading('B PARTY', level=3)
+
+    doc.add_paragraph("Inform employee about the time and place to perform health check, and to cooperate with performing team to have best efficiency")
+
+    doc.add_paragraph("Pay the value due to the value in the contract")
 
     response = HttpResponse(content_type='application/msword')
     response['Content-Disposition'] = f'attachment; filename=contract_{contract.id}.docx'
