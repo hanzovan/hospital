@@ -22,6 +22,7 @@ class Company(models.Model):
     name = models.CharField(max_length=255)
     industry = models.CharField(max_length=255)
     address = models.TextField()
+    representative = models.ForeignKey('People', on_delete=models.SET_NULL, blank=True, null=True, related_name="companies")
     male_headcount = models.IntegerField()
     female_headcount = models.IntegerField()
     created_by = models.ForeignKey(User, on_delete=models.SET_NULL, blank=True, null=True, related_name="add_companies")
