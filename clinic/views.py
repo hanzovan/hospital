@@ -864,7 +864,9 @@ def generate_contract_docx(request, contract_id):
 
     doc.add_heading('PARTY A', level=4)
 
-    doc.add_paragraph("Prepare sufficient resources including machines, devices, doctors, nurses, and other supporting staff to successfully perform health check regarding people quantity in the contract. Organize, and inform the capability of the performance team so that party B can organize their work flow while executing the annual health check, and inform their employees to plan their coming ahead", style="IndentedStyle")
+    doc.add_paragraph("Prepare sufficient resources including machines, devices, doctors, nurses, and other supporting staff to successfully perform health check regarding people quantity in the contract.", style="IndentedStyle")
+
+    doc.add_paragraph("Organize the event, give the clear instruction, and inform the capability of the performance team so that party B can organize their work flow while executing the annual health check successfully, and inform their employees to plan their coming ahead", style="IndentedStyle")
 
     doc.add_heading('PARTY B', level=4)
 

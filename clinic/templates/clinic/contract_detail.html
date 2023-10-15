@@ -60,7 +60,7 @@
             <td>
                 {% if contract.pdf_file %}
 
-                    <a href="{{ contract.pdf_file.url }}" target="_blank">View file</a>
+                    <a class="no-underline" href="{{ contract.pdf_file.url }}" target="_blank">View file</a>
 
                 {% else %}
 
@@ -77,23 +77,22 @@
                     Archived
 
                 {% else %}
-
-                    Active
+                    <div><span style="color: green;">Active</span></div>
+                    
+                    <form action="{% url 'archive_contract' %}" method="post" onsubmit="return confirm('Do you really want to archive this contract?');">
+                        {% csrf_token %}
+                        <input name="contract_id" value="{{ contract.id }}" type="hidden">
+                        <span><i>If this contract was finished,</i></span>
+                        <button class="btn btn-link no-underline"><span style="color: red;">Archive this contract</span></button>
+                    </form>
 
                 {% endif %}
             </td>
         </tr>
         
     </table>
-    <a href="{% url 'generate_contract_docx' contract.id %}" class="btn btn-primary">Generate Word Document</a>
-    {% if not contract.archived %}
-
-        <form action="{% url 'archive_contract' %}" method="post">
-            {% csrf_token %}
-            <input name="contract_id" value="{{ contract.id }}" type="hidden">
-            <button>Archive this contract</button>
-        </form>
+    <div class="general">
+        <a href="{% url 'generate_contract_docx' contract.id %}" class="btn btn-primary" style="margin: 1.5em 0 1.5em 0;">Generate Word Document</a>
+    </div>
     
-    {% endif %}
-
 {% endblock %}

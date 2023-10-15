@@ -19,6 +19,9 @@
                         Company
                     </th>
                     <th>
+                        Representative
+                    </th>
+                    <th>
                         Male headcount
                     </th>
                     <th>
@@ -41,7 +44,8 @@
                                 {{ contract.id }}
                             </a>                            
                         </td>
-                        <td>{{ contract.client }}</td>
+                        <td>{{ contract.client.name }}</td>
+                        <td>{{ contract.client.representative }}</td>
                         <td class="text-end">{{ contract.male_headcount }}</td>
                         <td class="text-end">{{ contract.female_headcount }}</td>
                         <td class="text-end {% if contract.in_within_10_days %} text-danger {% endif %}">{{ contract.initiation_date }}</td>

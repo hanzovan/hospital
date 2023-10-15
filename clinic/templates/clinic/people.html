@@ -27,6 +27,7 @@
                             <a class="no-underline" href="{% url 'person_detail' person_id=item.person.id %}">{{ item.person.name }}</a>                            
                         </td>
                         <td>
+                            <!-- Get company from people class -->
                             {% for company in item.person.company.all.values %}
 
                                 {% if not forloop.last %}
@@ -36,6 +37,26 @@
                                 {% else %}
 
                                     {{ company.name }}
+
+                                {% endif %}
+
+                            {% endfor %}
+
+                            <!-- Get company from company's representative -->
+                            {% for company in item.person.companies.all.values %}
+
+                                <!-- Eliminate duplicate -->
+                                {% if company not in item.person.company.all.values %}
+
+                                    {% if not forloop.last %}
+                                    
+                                        {{ company.name }},
+
+                                    {% else %}
+
+                                        {{ company.name }}
+
+                                    {% endif %}
 
                                 {% endif %}
 

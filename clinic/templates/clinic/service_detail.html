@@ -7,26 +7,26 @@
 {% endblock %}
 {% block main %}
 
-    <h1 class="text-center">{{ service.name }}</h1>
+    <h1 class="text-center" style="margin-bottom: 1.5em;">{{ service.name }}</h1>
 
     <div class="container-fluid">
         <table class="table table-hover">
             <tbody class="field-value" id="original-value" data-service_id="{{ service.id }}">
                 <tr>
                     <td>Service</td>
-                    <td id="service-name" data-service_name="{{ service.name }}">{{ service.name }}</td>
+                    <td id="service-name" data-service_name="{{ service.name }}"><strong>{{ service.name }}</strong></td>
                 </tr>
                 <tr>
                     <td>Male Price</td>
-                    <td id="service-male-price" data-service_male_price="{{ service.male_price }}">{{ service.male_price }}</td>
+                    <td id="service-male-price" data-service_male_price="{{ service.male_price }}"><strong>{{ service.male_price }}</strong></td>
                 </tr>
                 <tr>
                     <td>Female Price</td>
-                    <td id="service-female-price" data-service_female_price="{{ service.female_price }}">{{ service.female_price }}</td>
+                    <td id="service-female-price" data-service_female_price="{{ service.female_price }}"><strong>{{ service.female_price }}</strong></td>
                 </tr>
                 <tr>
                     <td>Description</td>
-                    <td id="service-description" data-service_description="{{ service.description }}">{{ service.description }}</td>
+                    <td id="service-description" data-service_description="{{ service.description }}"><strong>{{ service.description }}</strong></td>
                 </tr>
             </tbody>
         </table>
