@@ -796,19 +796,23 @@ def generate_contract_docx(request, contract_id):
     # Between
     doc.add_heading('BETWEEN')
 
-    # Create style for indentation
+    # Create 2 styles for indentation
     style = doc.styles.add_style('IndentedStyle', 1)
     style.font.size = Pt(12)
     style.paragraph_format.left_indent = Inches(0.5)
 
+    style1 = doc.styles.add_style('IndentedStyle1', 1)
+    style1.font.size = Pt(12)
+    style1.paragraph_format.left_indent = Inches(0.2)
+
     # Add the indented paragraph with the defined style
-    doc.add_heading('Party A: King Hospital', level=3)
+    doc.add_heading('Party A: King Hospital', level=2)
     doc.add_paragraph("Address: 123 King street, ward 1, district 2, Ho Chi Minh city, Vietnam", style="IndentedStyle")
     doc.add_paragraph("Representative: Nguyen Tung Lam", style="IndentedStyle")
     doc.add_paragraph("Mobile Phone: +84909823456", style="IndentedStyle")
     doc.add_paragraph("Email: nguyentunglam@kinghospital.com", style="IndentedStyle")
 
-    doc.add_heading(f'Party B: {contract.client.name}', level=3)
+    doc.add_heading(f'Party B: {contract.client.name}', level=2)
     doc.add_paragraph(f"Address: {contract.client.address}", style='IndentedStyle')
     doc.add_paragraph(f"Representative: {contract.client.representative.name}", style="IndentedStyle")
     doc.add_paragraph(f"Mobile Phone: {contract.client.representative.phone}", style="IndentedStyle")
@@ -825,18 +829,25 @@ def generate_contract_docx(request, contract_id):
 
     doc.add_paragraph("Party A will perform health check service for party B's employees regarding the attached list with the chosen examinations and tests", style="IndentedStyle")
 
-    doc.add_heading('EMPLOYEE QUANTITY', level=3)
+    doc.add_heading("PARTY B'S EMPLOYEE QUANTITY", level=2)
 
     doc.add_paragraph(f"Male employees: {contract.male_headcount}", style="IndentedStyle")
 
     doc.add_paragraph(f"Female employees: {contract.female_headcount}", style="IndentedStyle")
 
-    doc.add_heading('TEST OR EXAMINATION TO BE PERFORMED', level=3)
+    # Services to be performed
+    doc.add_heading('SERVICES TO BE PROVIDED', level=2)
+
+    doc.add_paragraph('1. TEST OR EXAMINATION TO BE PERFORMED', style='IndentedStyle1')
 
     for service in contract.services.all():
         doc.add_paragraph({service.name}, style="IndentedStyle")    
     
-    doc.add_heading('CONTRACT VALUE', level=3)
+    doc.add_paragraph('2. EACH PERSONNEL HEALTH REPORT WAS SENT TO EACH EMPLOYEE SEALED IN AN ENVELOPE', style='IndentedStyle1')
+
+    doc.add_paragraph('3. GENERAL EMPLOYEES HEALTH CLASSIFYING WAS SENT TO THE HUMAN RESOURCE DEPARTMENT OF PARTY B', style='IndentedStyle1')
+
+    doc.add_heading('CONTRACT VALUE', level=2)
 
     # Set the locale
     locale.setlocale(locale.LC_ALL, 'en_US.UTF-8')
@@ -849,7 +860,7 @@ def generate_contract_docx(request, contract_id):
     revenue_with_separator = locale.format_string("%.2f", contract.revenue, grouping=True)
     doc.add_paragraph(f"Value after discount: {revenue_with_separator} VND", style="IndentedStyle")
 
-    doc.add_heading('CONTRACT INITIATION', level=3)
+    doc.add_heading('CONTRACT INITIATION', level=2)
 
     doc.add_paragraph(f"Party A will start to perform health check for party B with the employees' detail, quantity and name attached from the initiation date to the final date in the duration of the agreement", style="IndentedStyle")
 
@@ -857,18 +868,18 @@ def generate_contract_docx(request, contract_id):
 
     doc.add_paragraph(f"Duration: 7 working days after initiation date", style="IndentedStyle")
 
-    doc.add_heading ('PAYMENT DURATION', level=3)
+    doc.add_heading ('PAYMENT DURATION', level=2)
     doc.add_paragraph("30 days after party A finished performing health check, send summarize health report, and payment request to party B", style="IndentedStyle")
 
-    doc.add_heading('RESPONSIBILITY', level=3)
+    doc.add_heading('RESPONSIBILITY', level=2)
 
-    doc.add_heading('PARTY A', level=4)
+    doc.add_heading('PARTY A', level=3)
 
     doc.add_paragraph("Prepare sufficient resources including machines, devices, doctors, nurses, and other supporting staff to successfully perform health check regarding people quantity in the contract.", style="IndentedStyle")
 
     doc.add_paragraph("Organize the event, give the clear instruction, and inform the capability of the performance team so that party B can organize their work flow while executing the annual health check successfully, and inform their employees to plan their coming ahead", style="IndentedStyle")
 
-    doc.add_heading('PARTY B', level=4)
+    doc.add_heading('PARTY B', level=3)
 
     doc.add_paragraph("Inform employee about the time and place to perform health check, and to cooperate with performing team to have best efficiency", style="IndentedStyle")
 
@@ -888,6 +899,7 @@ def generate_contract_docx(request, contract_id):
     # Add content to the left cell
     left_cell = cells[0]
     left_cell.text = "Party A to sign"
+    left_cell.paragraphs[0].runs[0].bold = True
     # Add indentation to left cell
     left_paragraph = left_cell.paragraphs[0]
     left_paragraph.paragraph_format.left_indent = Inches(0.5)
@@ -895,7 +907,7 @@ def generate_contract_docx(request, contract_id):
     # Add content to the right cell
     right_cell = cells[1]
     right_cell.text = "Party B to sign"
-
+    right_cell.paragraphs[0].runs[0].bold = True
     
     response = HttpResponse(content_type='application/msword')
     response['Content-Disposition'] = f'attachment; filename=contract_{contract.id}.docx'
