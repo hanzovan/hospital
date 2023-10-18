@@ -113,50 +113,55 @@ header {
   transition: all 1s;
   transform: translateY(-200px); }
 
-#message-form .container {
+#add-meeting-form .container {
   display: flex;
   flex-direction: column;
-  padding: 2em;
-  width: 30vw; }
-#message-form h1 {
+  width: 30vw;
+  padding: 2em; }
+#add-meeting-form h1, #add-meeting-form p {
   text-align: center;
   margin-bottom: 1.5em; }
-#message-form textarea {
-  resize: none; }
-#message-form .form-group {
+#add-meeting-form .form-group {
   margin-bottom: 1.5em; }
-#message-form .form-label {
+#add-meeting-form .form-group:focus-within {
+  transform: scale(1.1, 1.1);
+  transition: all .6s; }
+#add-meeting-form .form-label {
   display: block;
   font-size: .75em;
   color: #555;
-  opacity: 0;
-  transform: translateX(-100px);
-  transition: all .3s; }
-#message-form .focused .form-label {
-  opacity: 1;
-  transform: translateX(0); }
-#message-form .form-control {
-  padding: .2em;
+  opacity: 1; }
+#add-meeting-form .form-control {
   box-shadow: none;
   border-radius: .25em;
-  border-color: #ccc;
   border-style: none none solid none;
-  font-size: 1.5em; }
-#message-form .form-control::placeholder {
+  border-color: #ccc;
+  padding: .2em;
+  font-size: 1.5em;
+  transition: all .6s; }
+#add-meeting-form .form-control::placeholder {
   color: #aaa; }
-#message-form .form-control:focus {
+#add-meeting-form .form-control:focus {
   box-shadow: none;
   outline: none;
   border-color: orange; }
-#message-form button {
+#add-meeting-form .form-control:invalid:focus {
+  border-color: red; }
+#add-meeting-form .form-control:valid {
+  border-color: green; }
+#add-meeting-form textarea {
+  resize: none; }
+#add-meeting-form button {
+  box-shadow: none;
   outline: none;
   border: none;
   border-radius: .25em;
-  background-color: #4412e8;
   padding: .75em;
+  background-color: #4412e8;
   font-size: 1em;
   color: white; }
-#message-form button:hover {
+#add-meeting-form button:hover {
+  cursor: pointer;
   background-color: #2904a4; }
 
 #register-form .container, #login-form .container, #add-people-form .container, #add-service-form .container, #add-company-form .container, #add-message-form .container {

@@ -67,6 +67,20 @@ class Service(models.Model):
     def __str__(self):
         return f"{self.name} in order to {self.benefit} with the price of {self.male_price} for male and {self.female_price} for female"
 
+
+# Create class that store meeting information
+class MeetUp(models.Model):
+    start_time = models.DateTimeField(blank=True, null=True)
+    end_time = models.DateTimeField(blank=True, null=True)
+    client = models.ForeignKey(Company, on_delete=models.CASCADE, related_name='meetings')
+    created = models.DateTimeField(auto_now_add=True)
+
+# Create a class that store meeting item's result
+class MeetingAgendaItem(models.Model):
+    meetup = models.ForeignKey(MeetUp, on_delete=models.CASCADE, related_name='agenda')
+    item = models.TextField()
+    result = models.TextField()
+
     
 class Contract(models.Model):
     client = models.ForeignKey(Company, on_delete=models.CASCADE, related_name='contracts')

@@ -153,48 +153,43 @@ header {
     transform: translateY(-200px);
 }
 
-#message-form {
+#add-meeting-form {
     .container {
         display: flex;
         flex-direction: column;
-        padding: 2em;
         width: 30vw;
+        padding: 2em;
     }
-    h1 {
+    h1, p {
         text-align: center;
         margin-bottom: 1.5em;
-    }
-    textarea {
-        resize: none;
     }
     .form-group {
         margin-bottom: 1.5em;
     }
+    .form-group:focus-within {
+        transform: scale(1.1, 1.1);
+        transition: all .6s;
+    }
     .form-label {
         display: block;
+
         font-size: .75em;
         color: $font-color;
-        
-        opacity: 0;
-        transform: translateX(-100px);
-        transition: all .3s;
-    }
 
-    .focused {
-        .form-label {
-            opacity: 1;
-            transform: translateX(0);
-        }
+        opacity: 1;
     }
-
     .form-control {
-        padding: .2em;
         box-shadow: none;
         border-radius: .25em;
-        border-color: #ccc;
         border-style: none none solid none;
+        border-color: #ccc;
 
+        padding: .2em;
+        
         font-size: 1.5em;
+
+        transition: all .6s;
     }
     .form-control::placeholder {
         color: #aaa;
@@ -204,20 +199,30 @@ header {
         outline: none;
         border-color: $font-hover-color;
     }
+    .form-control:invalid:focus {
+        border-color: red;
+    }
+    .form-control:valid {
+        border-color: green;
+    }
+    textarea {
+        resize: none;
+    }
     button {
+        box-shadow: none;
         outline: none;
-
         border: none;
         border-radius: .25em;
 
+        padding: .75em;
+
         background-color: rgb(68, 18, 232);
 
-        padding: .75em;
-        
         font-size: 1em;
         color: white;
     }
     button:hover {
+        cursor: pointer;
         background-color: rgb(41, 4, 164);
     }
 }

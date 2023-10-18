@@ -29,7 +29,8 @@ urlpatterns = [
     path('contract/<int:contract_id>', views.contract_detail, name="contract_detail"),
     path('archive_contract', views.archive_contract, name='archive_contract'),
     path('archived_contracts', views.all_archived_contracts, name="all_archived_contracts"),
-    path('generate_contract_docx/<int:contract_id>/', views.generate_contract_docx, name='generate_contract_docx')
+    path('generate_contract_docx/<int:contract_id>/', views.generate_contract_docx, name='generate_contract_docx'),
+    path('add_meeting', views.add_meeting, name="add_meeting")
 ]
 
 # Serve media files during development

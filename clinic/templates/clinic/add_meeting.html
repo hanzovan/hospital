@@ -1,0 +1,52 @@
+{% extends "clinic/layout.html" %}
+{% load static %}
+{% block title %}
+
+    add meeting
+
+{% endblock %}
+{% block main %}
+
+    <div class="general">
+        <div class="form-container">
+            <form action="{% url 'add_meeting' %}" method="post" id="add-meeting-form">
+                {% csrf_token %}
+                <div class="container">
+                    <h1>Add Meeting</h1>
+                    <p>Kindly fill all these fields for sufficient meeting information</p>
+                    
+                    <div class="form-group">
+                        <select name="client_id">
+                            <option selected disabled>Client Name</option>
+                            {% for company in companies %}
+
+                                <option value="{{ company.id }}">{{ company.name }}</option>
+
+                            {% empty %}
+
+                                <option disabled>No company</option>
+
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="start_time" class="form-label">Start Time</label>
+                        <input name="start_time" type="datetime-local" class="form-control" autocomplete="off" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="end_time" class="form-label">End Time</label>
+                        <input name="end_time" type="datetime-local" class="form-control" autocomplete="off" required>
+                    </div>
+                    
+                    <button>Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+{% endblock %}
+{% block script %}
+
+    <script src="{% static 'clinic/add_meeting.js' %}"></script>
+
+{% endblock %}

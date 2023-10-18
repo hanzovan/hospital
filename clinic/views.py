@@ -19,7 +19,7 @@ from docx.enum.table import WD_ALIGN_VERTICAL
 # for thousand separator
 import locale
 
-from .models import User, People, ContactDiary, Company, Service, Contract, ContractPrice
+from .models import User, People, ContactDiary, Company, Service, Contract, ContractPrice, MeetUp, MeetingAgendaItem
 from .helpers import strong_password, user_right, days_between
 
 
@@ -917,6 +917,73 @@ def generate_contract_docx(request, contract_id):
 
     return response
 
+
 # Allow team to manage timeline, schedule, meeting to meet up with clients
+def add_meeting(request):
+    # If user submitted form
+    if request.method == 'POST':
+        # Get input from user input
+        client_id = request.POST.get('client_id')
+        start_time = request.POST.get('start_time')
+        end_time = request.POST.get('end_time')
+
+        if not start_time or not end_time:
+            request.session['nay_message'] = 'You have to choose meeting time'
+            return HttpResponseRedirect(reverse('add_meeting'))
+        
+        if not client_id:
+            request.session['nay_message'] = 'You have to choose a client'
+            return HttpResponseRedirect(reverse('add_meeting'))
+
+
+
+        # Check if end time come before start time
+
+
+        client = Company.objects.get(pk=client_id)
+
+
+
+       
+
+
+
+        start_datetime = datetime.strptime(start_time, '%Y-%m-%dT%H:%M')
+        end_datetime = datetime.strptime(end_time, '%Y-%m-%dT%H:%M')
+
+        newMeetUp = MeetUp(
+            start_time = start_datetime,
+            end_time = end_datetime,
+            client = client
+        )
+
+        # Check if meeting overlap each other
+        overlapping_meetings = MeetUp.objects.filter(
+            start_time__lt = newMeetUp.end_time,
+            end_time__gt = newMeetUp.start_time
+        )
+
+        if overlapping_meetings.exists():
+            request.session['nay_message'] = 'New meeting overlapped other meeting'
+            return HttpResponseRedirect(reverse('add_meeting'))
+
+        newMeetUp.save()
+        request.session['yay_message'] = 'Meeting added'
+
+        return HttpResponseRedirect(reverse('index'))
+
+    # If user clicked link or being redirected
+    else:
+        yay_message = request.session.get('yay_message', '')
+        nay_message = request.session.get('nay_message', '')
+        request.session['yay_message'] = ''
+        request.session['nay_message'] = ''
+
+        companies = Company.objects.all()
+        return render(request, "clinic/add_meeting.html", {
+            "companies": companies,
+            "yay_message": yay_message,
+            "nay_message": nay_message
+        })
 
 # Implement search function
