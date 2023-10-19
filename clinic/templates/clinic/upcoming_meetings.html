@@ -1,0 +1,36 @@
+{% extends "clinic/layout.html" %}
+{% load static %}
+{% block title %}
+
+    upcoming meetings
+
+{% endblock %}
+{% block main %}
+
+    <h1 class="text-center page-title">Upcoming Meetings</h1>
+    <div class="container-fluid">
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Client</th>
+                    <th>Start Time</th>
+                    <th>End Time</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for meeting in meetings %}
+
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{ meeting.client.name }}</td>
+                        <td class="{% if meeting.in_within_3_days %} text-danger {% endif %}">{{ meeting.start_time }}</td>
+                        <td class="{% if meeting.in_within_3_days %} text-danger {% endif %}">{{ meeting.end_time }}</td>
+                    </tr>
+
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+{% endblock %}

@@ -1,0 +1,36 @@
+{% extends "clinic/layout.html" %}
+{% load static %}
+{% block title %}
+
+    all meetings
+
+{% endblock %}
+{% block main %}
+
+    <h1 class="text-center page-title">All Meetings</h1>
+    <container class="container-fluid">
+        <table class="table table-hover">
+            <thead class="table-dark">
+                <tr>
+                    <th>#</th>
+                    <th>Client</th>
+                    <th>Start Time</th>
+                    <th>End Time</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for meeting in meetings %}
+                
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{ meeting.client.name }}</td>
+                        <td>{{ meeting.start_time }}</td>
+                        <td>{{ meeting.end_time }}</td>
+                    </tr>
+
+                {% endfor %}
+            </tbody>
+        </table>
+    </container>
+
+{% endblock %}

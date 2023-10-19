@@ -935,21 +935,16 @@ def add_meeting(request):
             request.session['nay_message'] = 'You have to choose a client'
             return HttpResponseRedirect(reverse('add_meeting'))
 
-
-
-        # Check if end time come before start time
-
-
         client = Company.objects.get(pk=client_id)
 
-
-
-       
-
-
-
+        # Transform start and end time from string to datetime
         start_datetime = datetime.strptime(start_time, '%Y-%m-%dT%H:%M')
         end_datetime = datetime.strptime(end_time, '%Y-%m-%dT%H:%M')
+
+        # Check if end time come before start time
+        if start_datetime >= end_datetime:
+            request.session['nay_message'] = "End time have to come after Start time"
+            return HttpResponseRedirect(reverse('add_meeting'))
 
         newMeetUp = MeetUp(
             start_time = start_datetime,
@@ -985,5 +980,33 @@ def add_meeting(request):
             "yay_message": yay_message,
             "nay_message": nay_message
         })
+    
+
+# Allow user to tract all the meeting
+def all_meetings(request):
+    meetings = MeetUp.objects.all().order_by("-start_time")
+
+    return render(request, "clinic/all_meetings.html", {
+        "meetings": meetings
+    })
+
+
+# Allow user to access list of all upcoming meeting
+def upcoming_meetings(request):
+    now = datetime.now()
+    meetings = MeetUp.objects.filter(start_time__gt = now).order_by("start_time")
+
+    # Try to warn user if meeting is close
+    today = date.today()
+    for meeting in meetings:
+        if days_between(str(today), str(meeting.start_time.date())) <= 3:
+            meeting.in_within_3_days = True
+        else:
+            meeting.in_within_3_days = False
+
+    return render(request, "clinic/upcoming_meetings.html", {
+        "meetings": meetings
+    })
+
 
 # Implement search function
