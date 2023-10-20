@@ -16,6 +16,7 @@
                     <th>Client</th>
                     <th>Start Time</th>
                     <th>End Time</th>
+                    <th>Status</th>
                 </tr>
             </thead>
             <tbody>
@@ -28,6 +29,17 @@
                         <td>{{ meeting.client.name }}</td>
                         <td>{{ meeting.start_time }}</td>
                         <td>{{ meeting.end_time }}</td>
+                        <td>
+                            {% if not meeting.end_or_not %}
+
+                                <span style="color: green;">Active</span>
+
+                            {% else %}
+
+                                <span style="color: red;">Ended</span>
+
+                            {% endif %}
+                        </td>
                     </tr>
 
                 {% endfor %}

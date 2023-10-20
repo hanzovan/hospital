@@ -74,6 +74,7 @@ class MeetUp(models.Model):
     end_time = models.DateTimeField(blank=True, null=True)
     client = models.ForeignKey(Company, on_delete=models.CASCADE, related_name='meetings')
     created = models.DateTimeField(auto_now_add=True)
+    end_or_not = models.BooleanField(default=False)
 
 # Create a class that store meeting item's result
 class MeetingAgendaItem(models.Model):

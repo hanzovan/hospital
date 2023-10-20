@@ -1035,6 +1035,11 @@ def add_meeting_agenda(request, meeting_id):
             request.session['nay_message'] = "Meeting id does not exist"
             return HttpResponseRedirect(reverse('index'))
         
+        # If the meetup already over, return error, not user end time because real meeting may extend longer than the preset end time
+        if meeting.end_or_not:
+            request.session['nay_message'] = "Meeting already over"
+            return redirect('meeting_agenda', meeting_id=meeting.id)
+
         # Get the item
         items = {}
         for i in range(1, 6):
@@ -1049,11 +1054,8 @@ def add_meeting_agenda(request, meeting_id):
                     )
                     new_item.save()
 
+        request.session['yay_message'] = "Item added"
         return redirect('meeting_agenda', meeting_id=meeting.id)
-    
-
-        # Deal with excessive blank item
-
 
     # if user being redirected or clicking link
     else:
@@ -1066,3 +1068,23 @@ def add_meeting_agenda(request, meeting_id):
         return render(request, "clinic/add_agenda.html", {
             "meeting": meeting
         })
+    
+
+# Allow user to end a meeting
+def end_meeting(request):
+    if request.method == 'POST':
+
+        meeting_id = request.POST.get('meeting_id', '')
+
+        try:
+            meeting = MeetUp.objects.get(pk=meeting_id)
+        except MeetUp.DoesNotExist:
+            request.session['nay_message'] = "Meeting id does not exist"
+
+        if not meeting.end_or_not:
+            meeting.end_or_not = True
+
+        meeting.save()
+        request.session['yay_message'] = "Meeting ended"
+
+        return redirect('meeting_agenda', meeting_id=meeting.id)

@@ -23,6 +23,20 @@
                     <td>End Time</td>
                     <td>{{ meeting.end_time }}</td>
                 </tr>
+                <tr>
+                    <td>Status</td>
+                    <td>
+                        {% if not meeting.end_or_not %}
+
+                            <span style="color: green;">Active</span>
+
+                        {% else %}
+
+                            <span style="color: red;">Ended</span>
+
+                        {% endif %}
+                    </td>
+                </tr>
                 {% for item in meeting.agenda.all.values %}
 
                     <tr>
@@ -40,6 +54,20 @@
             </tbody>
         </table>
     </div>
-    <a class="no-underline" href="{% url 'add_meeting_agenda' meeting_id=meeting.id %}">Add Item</a>
+
+    {% if not meeting.end_or_not %}
+
+        <div style="display:flex; justify-content:center; align-items: center; margin: 50px 0 50px 0;">
+            <a class="text-center btn btn-primary" href="{% url 'add_meeting_agenda' meeting_id=meeting.id %}">Add Item</a>
+        </div>
+        <div style="display: flex; justify-content: center; align-items: center;">
+            <form action="{% url 'end_meeting' %}" method="post" id="end-meeting-form" onsubmit="return confirm('Are you really want to end this meeting?');">
+                {% csrf_token %}
+                <input name="meeting_id" type="hidden" value="{{ meeting.id }}">
+                <button class="btn btn-danger">End Meeting</button>
+            </form>
+        </div>    
+
+    {% endif %}    
 
 {% endblock %}
