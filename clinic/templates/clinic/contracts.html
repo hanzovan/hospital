@@ -13,7 +13,7 @@
             <thead>
                 <tr>
                     <th>
-                        Contract ID
+                        #
                     </th>
                     <th>
                         Company
@@ -41,7 +41,7 @@
                     <tr>                        
                         <td class="text-end">
                             <a class="no-underline" href="{% url 'contract_detail' contract_id=contract.id %}">
-                                {{ contract.id }}
+                                {{ forloop.counter }}
                             </a>                            
                         </td>
                         <td>{{ contract.client.name }}</td>

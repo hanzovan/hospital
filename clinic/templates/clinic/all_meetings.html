@@ -22,7 +22,9 @@
                 {% for meeting in meetings %}
                 
                     <tr>
-                        <td>{{ forloop.counter }}</td>
+                        <td>
+                            <a class="no-underline" href="{% url 'meeting_agenda' meeting_id=meeting.id %}">{{ forloop.counter }}</a>
+                        </td>
                         <td>{{ meeting.client.name }}</td>
                         <td>{{ meeting.start_time }}</td>
                         <td>{{ meeting.end_time }}</td>

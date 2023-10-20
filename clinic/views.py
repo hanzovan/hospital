@@ -1009,4 +1009,60 @@ def upcoming_meetings(request):
     })
 
 
-# Implement search function
+# Allow user to access meeting agenda
+def meeting_agenda(request, meeting_id):
+    meeting = MeetUp.objects.get(pk=meeting_id)
+
+    yay_message = request.session.get('yay_message', '')
+    nay_message = request.session.get('nay_message', '')
+    request.session['yay_message'] = ''
+    request.session['nay_message'] = ''
+
+    return render(request, "clinic/meeting_agenda.html", {
+        "meeting": meeting,
+        "nay_message": nay_message,
+        "yay_message": yay_message
+    })
+
+
+# allow user to add item to meeting's agenda
+def add_meeting_agenda(request, meeting_id):
+    # if user submited form
+    if request.method == 'POST':
+        try:
+            meeting = MeetUp.objects.get(pk=meeting_id)
+        except MeetUp.DoesNotExist:
+            request.session['nay_message'] = "Meeting id does not exist"
+            return HttpResponseRedirect(reverse('index'))
+        
+        # Get the item
+        items = {}
+        for i in range(1, 6):
+            if (f"item_{i}") in request.POST:
+                items[f"item_{i}"] = request.POST[f"item_{i}"] or ""
+
+                if items[f"item_{i}"] != "":
+
+                    new_item = MeetingAgendaItem(
+                        meetup = meeting,
+                        item = items[f"item_{i}"]
+                    )
+                    new_item.save()
+
+        return redirect('meeting_agenda', meeting_id=meeting.id)
+    
+
+        # Deal with excessive blank item
+
+
+    # if user being redirected or clicking link
+    else:
+        try:
+            meeting = MeetUp.objects.get(pk=meeting_id)
+        except MeetUp.DoesNotExist:
+            request.session['nay_message'] = "Meeting id does not exist"
+            return HttpResponseRedirect(reverse('index'))
+        
+        return render(request, "clinic/add_agenda.html", {
+            "meeting": meeting
+        })

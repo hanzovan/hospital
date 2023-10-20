@@ -1,0 +1,45 @@
+{% extends "clinic/layout.html" %}
+{% load static %}
+{% block title %}
+
+    meeting agenda
+
+{% endblock %}
+{% block main %}
+
+    <h1 class="text-center page-title">Meeting Agenda</h1>
+    <div class="container-fluid">
+        <table class="table table-hover">
+            <tbody>
+                <tr>
+                    <td>Client</td>
+                    <td>{{ meeting.client.name }}</td>
+                </tr>
+                <tr>
+                    <td>Start Time</td>
+                    <td>{{ meeting.start_time }}</td>
+                </tr>
+                <tr>
+                    <td>End Time</td>
+                    <td>{{ meeting.end_time }}</td>
+                </tr>
+                {% for item in meeting.agenda.all.values %}
+
+                    <tr>
+                        <td>Item {{ forloop.counter }}</td>
+                        <td>{{ item.item }}</td>
+                    </tr>                    
+
+                {% empty %}
+                    <tr>
+                        <td>Item</td>
+                        <td>No item yet</td>
+                    </tr>                    
+
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <a class="no-underline" href="{% url 'add_meeting_agenda' meeting_id=meeting.id %}">Add Item</a>
+
+{% endblock %}
