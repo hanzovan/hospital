@@ -16,6 +16,7 @@ urlpatterns = [
     path('add_people', views.add_people, name='add_people'),
     path('authorize', views.authorize, name='authorize'),
     path('service_detail/<int:service_id>', views.service_detail, name='service_detail'),
+    path('remove_service', views.remove_service, name="remove_service"),
     path('people', views.people, name='people'),
     path('person/<int:person_id>', views.person_detail, name='person_detail'),
     path('check_right', views.check_right, name='check_right'),

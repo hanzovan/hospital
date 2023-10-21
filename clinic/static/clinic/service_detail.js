@@ -1,9 +1,13 @@
 document.addEventListener('DOMContentLoaded', function() {
+    // Define object in service detail page
     const editBtn = document.querySelector('#edit-btn');
     const editBtnContainer = document.querySelector('#edit-btn-container');
+    const removeBtn = document.querySelector('#remove-service-btn');
+    const removeFormContainer = document.querySelector('#remove-service-form-container');
 
-    // by default hide the editBtn
+    // by default hide the editBtn, remove btn
     editBtnContainer.style.display = 'none';
+    removeFormContainer.style.display = 'none';
 
     // User an HTTP request to check if user is valid for edit service
     fetch('/check_right', {
@@ -19,13 +23,15 @@ document.addEventListener('DOMContentLoaded', function() {
         // If user does not have right, hide the button 
         if (result) {
             editBtnContainer.style.display = 'block';
+            removeFormContainer.style.display = 'block';
         } else {
             editBtnContainer.style.display = 'none';
+            removeFormContainer.style.display = 'none';
         }
     })
     .catch(error => {
         console.log(error);
-    })
+    }) 
 
     editBtn.onclick = function() {
         if (document.querySelector('.edit-container')) {

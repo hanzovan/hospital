@@ -32,11 +32,31 @@
         </table>
     </div>
 
-    <div class="text-center" id="edit-btn-container">
-        <button class="btn btn-primary" id="edit-btn">
-            Edit
-        </button>
+    <div style="display: flex; justify-content: center; align-items: center;">
+        <table>
+            <tbody>
+                <tr>
+                    <td>
+                        <div id="edit-btn-container">
+                            <button class="btn btn-primary" id="edit-btn">
+                                Edit
+                            </button>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="remove-service-form-container">
+                            <form action="{% url 'remove_service' %}" method="post" id="remove-service-form" onsubmit="return confirm('Are you really want to remove this service?');">
+                                {% csrf_token %}
+                                <input name="service_id" type="hidden" value="{{ service.id }}">
+                                <button class="btn btn-danger" id="remove-service-btn">Remove Service</button>
+                            </form>
+                        </div>                        
+                    </td>
+                </tr>
+            </tbody>
+        </table>
     </div>
+    
 
 {% endblock %}
 {% block script %}

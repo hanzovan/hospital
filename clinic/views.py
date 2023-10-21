@@ -282,12 +282,44 @@ def service_detail(request, service_id):
             return HttpResponseRedirect(reverse('index'))
         try:
             service = Service.objects.get(pk=service_id)
+
+            yay_message = request.session.get('yay_message', '')
+            nay_message = request.session.get('nay_message', '')
+            request.session['yay_message'] = ''
+            request.session['nay_message'] = ''
+
             return render(request, "clinic/service_detail.html", {
-                "service": service
+                "service": service,
+                "yay_message": yay_message,
+                "nay_message": nay_message
             })
         except Service.DoesNotExist:
             request.session['nay_message'] = 'Service does not exist'
             return HttpResponseRedirect(reverse('index'))
+
+
+# Allow user to remove service
+@login_required
+def remove_service(request):
+    if request.method == 'POST':    
+        # Get the service that needed to remove
+        service_id = request.POST.get('service_id', '')
+
+        try:
+            service = Service.objects.get(pk=service_id)
+        except Service.DoesNotExist:
+            request.session['nay_message'] = "Service with provided id does not exist"
+
+        # Check user right
+        if 'modify_service_info' not in user_right(request.user.management_right_level):
+            request.session['nay_message'] = "You do not have the right to modify service information"
+            return redirect('service_detail', service_id=service_id)
+
+        service.delete()
+
+        request.session['yay_message'] = "Service removed"
+
+        return HttpResponseRedirect(reverse('index'))
 
 
 # Allow user to add people
