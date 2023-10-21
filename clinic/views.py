@@ -510,8 +510,7 @@ def add_company(request):
             )
             new_company.save()
             request.session['yay_message'] = "Company added"
-            return HttpResponseRedirect(reverse('index'))
-        
+            return HttpResponseRedirect(reverse('index'))        
     
     # If user clicking link or being redirected
     else:
@@ -535,6 +534,24 @@ def companies(request):
         "companies": companies
     })
 
+
+# Allow user to access company's detail
+@login_required
+def company_detail(request, company_id):
+    # Only user with the right to check company info can go to this route
+    if "read_company_info" not in user_right(request.user.management_right_level):
+        request.session['nay_message'] = "You do not have the right to access this page"
+        return HttpResponseRedirect(reverse('index'))
+    # If user right satisfied condition, continue
+    try:
+        company = Company.objects.get(pk=company_id)
+    except Company.DoesNotExist:
+        request.session['nay_message'] = "Company with that id does not exist"
+        return HttpResponseRedirect(reverse('companies'))
+
+    return render(request, "clinic/company_detail.html", {
+        "company": company
+    })
 
 
 # Allow add message from person_detail page

@@ -1,0 +1,52 @@
+{% extends "clinic/layout.html" %}
+{% load static %}
+{% block title %}
+
+    company detail
+
+{% endblock %}
+{% block main %}
+
+    <h1 class="text-center page-title">
+        Company detail
+    </h1>
+    <div class="container-fluid">
+        <table class="table table-hover">
+            <tbody>
+                <tr>
+                    <td>Company Name</td>
+                    <td><strong>{{ company.name }}</strong></td>
+                </tr>
+                <tr>
+                    <td>Industry</td>
+                    <td><strong>{{ company.industry }}</strong></td>
+                </tr>
+                <tr>
+                    <td>Representative</td>
+                    <td><strong>{{ company.representative }}</strong></td>
+                </tr>
+                <tr>
+                    <td>Address</td>
+                    <td><strong>{{ company.address }}</strong></td>
+                </tr>
+                <tr>
+                    <td>Male Headcount</td>
+                    <td><strong>{{ company.male_headcount }}</strong></td>
+                </tr>
+                <tr>
+                    <td>Female HeadCount</td>
+                    <td><strong>{{ company.female_headcount }}</strong></td>
+                </tr>
+                <tr>
+                    <td>Created By</td>
+                    <td><strong>{{ company.created_by }}</strong></td>
+                </tr>
+                <tr>
+                    <td>Last Modified By</td>
+                    <td><strong>{{ company.modified_by }}</strong></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+{% endblock %}
