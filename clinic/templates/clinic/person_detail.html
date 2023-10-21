@@ -172,6 +172,15 @@
             </form>
         </div>
     </div>
+    <div style="display: flex; justify-content: center; align-items: center;">
+        <div id="remove-person-form-container">
+            <form action="{% url 'remove_person' %}" method="post" id="remove-person-form" onsubmit="return confirm('Are you really want to delete this person information?');">
+                {% csrf_token %}
+                <input name="person_id" type="hidden" value="{{ person.id }}">
+                <button class="btn btn-danger">Remove Person</button>
+            </form>
+        </div>
+    </div>
 {% endblock %}
 {% block script %}
 

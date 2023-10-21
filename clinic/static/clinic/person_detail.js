@@ -5,6 +5,32 @@ document.addEventListener('DOMContentLoaded', function() {
     const editForm = editDiv.querySelector('#edit-form');
     const showNewMessageBtn = document.querySelector('#new-message-show');
     const newMessageDiv = document.querySelector('#new-message');
+    const removePersonFormContainer = document.querySelector('#remove-person-form-container');
+
+    // By defaul the form should be hidden
+    removePersonFormContainer.style.display = 'none';
+
+    // Call an Http request to check user right
+    fetch('/check_right', {
+        method: 'POST',
+        body: JSON.stringify({
+            'right': 'modify_people_info'
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        const result = data.check_result;
+
+        // If user does not have the right, hide the button, else show the button
+        if (result) {
+            removePersonFormContainer.style.display = 'block';
+        } else {
+            removePersonFormContainer.style.display = 'none';
+        }
+    })
+    .catch(error => {
+        console.log(error);
+    })
 
     editForm.onsubmit = function() {
         // Get the value from the form

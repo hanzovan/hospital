@@ -320,6 +320,10 @@ def remove_service(request):
         request.session['yay_message'] = "Service removed"
 
         return HttpResponseRedirect(reverse('index'))
+    
+    else:
+        request.session['nay_message'] = "POST method required"
+        return HttpResponseRedirect(reverse('index'))
 
 
 # Allow user to add people
@@ -396,6 +400,7 @@ def my_people(request):
 # Allow user to check all people relevant to the hospital, only level 2 or higher admin can check this
 @login_required
 def people(request):
+    # Check if user have appropriate right to visit the page
     if "read_all_people_info" not in user_right(request.user.management_right_level):
         request.session['nay_message'] = 'You are not allowed to enter this part'
         return HttpResponseRedirect(reverse('index'))
@@ -497,6 +502,33 @@ def person_detail(request, person_id):
             request.session['nay_message'] = 'That person does not exist'
             return HttpResponseRedirect(reverse('people'))
         
+
+# Allow user with appropriate right to remove person's information
+@login_required
+def remove_person(request):
+    if request.method == 'POST':
+        # Define variable
+        person_id = request.POST.get('person_id', '')
+        try:
+            person = People.objects.get(pk=person_id)
+        except People.DoesNotExist:
+            request.session['nay_message'] = "People with that id does not exist"
+            return HttpResponseRedirect(reverse('people'))
+
+        # Check if user have the appropriate right
+        if 'modify_people_info' not in user_right(request.user.management_right_level):
+            request.session['nay_message'] = "You do not have the right to do this"
+            return HttpResponseRedirect(reverse('people'))
+        
+        # If user is legit, continue
+        person.delete()
+        request.session['yay_message'] = "Person information deleted successfully"
+        return HttpResponseRedirect(reverse('people'))
+    
+    else:
+        request.session['nay_message'] = "POST method request"
+        return HttpResponseRedirect(reverse('index'))
+
 
 # Add company
 @login_required
