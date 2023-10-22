@@ -594,8 +594,15 @@ def companies(request):
     # If user right satisfied condition, show all companies
     companies = Company.objects.all()
 
+    yay_message = request.session.get('yay_message', '')
+    nay_message = request.session.get('nay_message', '')
+    request.session['yay_message'] = ''
+    request.session['nay_message'] = ''
+
     return render(request, "clinic/companies.html", {
-        "companies": companies
+        "companies": companies,
+        "yay_message": yay_message,
+        "nay_message": nay_message
     })
 
 
@@ -613,10 +620,43 @@ def company_detail(request, company_id):
         request.session['nay_message'] = "Company with that id does not exist"
         return HttpResponseRedirect(reverse('companies'))
 
+    yay_message = request.session.get('yay_message', '')
+    nay_message = request.session.get('nay_message', '')
+    request.session['yay_message'] = ''
+    request.session['nay_message'] = ''
+
     return render(request, "clinic/company_detail.html", {
-        "company": company
+        "company": company,
+        "yay_message": yay_message,
+        "nay_message": nay_message
     })
 
+
+# Allow user to remove company
+def remove_company(request):
+    if request.method == 'POST':
+        company_id = request.POST.get('company_id', '')
+        try:
+            company = Company.objects.get(pk=company_id)
+        except Company.DoesNotExist:
+            request.session['nay_message'] = "Company with that id does not exist"
+            return HttpResponseRedirect(reverse('companies'))
+
+        # Check user right
+        if 'modify_company_info' not in user_right(request.user.management_right_level):
+            request.session['nay_message'] = "You do not have the right to modify company information"
+            return redirect('company_detail', company_id=company_id)
+
+        # Remove company
+        company.delete()
+
+        # Alert success and redirect
+        request.session['yay_message'] = "Company was deleted"
+        return HttpResponseRedirect(reverse('companies'))
+    
+    else:
+        request.session['nay_message'] = "POST method required"
+        return HttpResponseRedirect(reverse('companies'))
 
 # Allow add message from person_detail page
 def message(request, person_id):

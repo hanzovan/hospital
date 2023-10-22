@@ -25,6 +25,7 @@ urlpatterns = [
     path('add_company', views.add_company, name="add_company"),
     path('companies', views.companies, name="companies"),
     path('company_detail/<int:company_id>', views.company_detail, name="company_detail"),
+    path('remove_company', views.remove_company, name="remove_company"),
     path('message/<int:person_id>', views.message, name="message"),
     path('add_message_from_all_people_page/<int:person_id>', views.add_message_from_all_people_page, name="add_message_from_all_people_page"),
     path('add_contract', views.add_contract, name="add_contract"),

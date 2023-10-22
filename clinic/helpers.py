@@ -34,6 +34,7 @@ def user_right(level):
         'read_all_people_info',
         'add_service_info',
         'modify_service_info',
+        'modify_company_info',
         'read_user_right',        
         'modify_user_right'
     ]
@@ -57,7 +58,8 @@ def user_right(level):
                     all_rights[7],
                     all_rights[8],
                     all_rights[9],
-                    all_rights[10]
+                    all_rights[10],
+                    all_rights[11]
                 ])
     
     return user_rights

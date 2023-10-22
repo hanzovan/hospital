@@ -48,5 +48,19 @@
             </tbody>
         </table>
     </div>
+    <div style="display: flex; justify-content: center; align-items: center;">
+        <div id="remove-company-form-container">
+            <form action="{% url 'remove_company' %}" method="post" onsubmit="return confirm('Are you really want to remove this company?');">
+                {% csrf_token %}
+                <input name="company_id" type="hidden" value="{{ company.id }}">
+                <button class="btn btn-danger">Remove Company</button>
+            </form>
+        </div>
+    </div>
+
+{% endblock %}
+{% block script %}
+
+    <script src="{% static 'clinic/company_detail.js' %}"></script>
 
 {% endblock %}
