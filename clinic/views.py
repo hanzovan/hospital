@@ -413,19 +413,19 @@ def people(request):
 
     people = People.objects.all()
 
-    # Create a list of dictionary of people with their latest message
-    people_with_latest_message = []
-
     for person in people:
-        latest_message = person.talks.order_by("-date").first()
-        people_with_latest_message.append({
-            'person': person,
-            'latest_message': latest_message
-        })
+        # Get latest message of the person
+        person.latest_message = person.talks.order_by("-date").first()
+
+        # Get the list of unique companies that related to person
+        related_companies = person.company.all()
+        representing_companies = person.companies.all()
+
+        unique_companies = list(set(related_companies).union(set(representing_companies)))
+        person.unique_companies = unique_companies
 
     return render(request, "clinic/people.html", {
         "people": people,
-        "people_with_latest_message": people_with_latest_message,
         "nay_message": nay_message,
         "yay_message": yay_message
     })

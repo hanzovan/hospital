@@ -10,25 +10,24 @@
     <h1 class="text-center" style="margin-bottom: 1.5em;">Clients</h1>
     <div class="container-fluid">
         <table class="table table-info">
-            <thead class="table-dark">
+            <thead class="table table-dark">
                 <tr>
                     <th>Name</th>
                     <th>Company</th>
-                    <th>Latest message</th>
-                    <th>Sent at</th>
+                    <th>Latest Message</th>
+                    <th>Sent At</th>
                     <th>New Message</th>
                 </tr>
             </thead>
             <tbody>
-                {% for item in people_with_latest_message %}
+                {% for person in people %}
 
                     <tr>
                         <td>
-                            <a class="no-underline" href="{% url 'person_detail' person_id=item.person.id %}">{{ item.person.name }}</a>                            
-                        </td>
+                            <a class="no-underline" href="{% url 'person_detail' person_id=person.id %}">{{ person.name }}</a>
+                        </td>                        
                         <td>
-                            <!-- Get company from people class -->
-                            {% for company in item.person.company.all.values %}
+                            {% for company in person.unique_companies %}
 
                                 {% if not forloop.last %}
 
@@ -41,38 +40,21 @@
                                 {% endif %}
 
                             {% endfor %}
-
-                            <!-- Get company from company's representative -->
-                            {% for company in item.person.companies.all.values %}
-
-                                <!-- Eliminate duplicate -->
-                                {% if company not in item.person.company.all.values %}
-
-                                    {% if not forloop.last %}
-                                    
-                                        {{ company.name }},
-
-                                    {% else %}
-
-                                        {{ company.name }}
-
-                                    {% endif %}
-
-                                {% endif %}
-
-                            {% endfor %}
                         </td>
-                        <td>{{ item.latest_message.content }}</td>
-                        <td>{{ item.latest_message.date }}</td>
-                        <td style="text-align: center;"><a href="{% url 'add_message_from_all_people_page' person_id=item.person.id %}" style="text-decoration: none;">+</a></td>                        
-                    </tr>                    
+                        <td>
+                            {{ person.latest_message.content }}
+                        </td>
+                        <td>
+                            {{ person.latest_message.date }}
+                        </td>
+                        <td style="text-align: center;">
+                            <a href="{% url 'add_message_from_all_people_page' person_id=person.id %}" class="no-underline">+</a>
+                        </td>
+                    </tr>
 
                 {% empty %}
 
-                    <tr>
-                        <td>N/A</td>
-                        <td>N/A</td>
-                    </tr>
+                    No person yet
 
                 {% endfor %}
             </tbody>
