@@ -8,6 +8,8 @@
 {% block main %}
 
     <h1 class="text-center page-title">Contract Detail</h1>
+
+    <!-- Display contract information in table -->
     <table class="table table-hover">
         <tr>
             <th>Contract ID</th>
@@ -34,7 +36,7 @@
 
                 {% endfor %}
             </td>
-        </tr>
+        </tr>        
         <tr>
             <th>Male Headcount</th>
             <td>{{ contract.male_headcount }}</td>
@@ -42,6 +44,25 @@
         <tr>
             <th>Female Headcount</th>
             <td>{{ contract.female_headcount }}</td>
+        </tr>
+        <tr>
+            <th>Total Value</th>
+            <td>{{ contract.total_value }}</td>
+        </tr>
+        <tr>
+            <th>Discount</th>
+            <td>
+                {{ contract.discount }}%
+            </td>
+        </tr>
+        <tr>
+            <th>Revenue</th>
+            <td>
+                {{ contract.revenue }}
+            </td>
+        </tr>
+        <tr>
+
         </tr>
         <tr>
             <th>Initiation Date</th>
@@ -52,8 +73,12 @@
             <td>{{ contract.created }}</td>
         </tr>
         <tr>
-            <th>Created by</th>
+            <th>Created By</th>
             <td>{{ contract.created_by.username }}</td>
+        </tr>
+        <tr>
+            <th>Last Modified By</th>
+            <td>{{ contract.modified_by.username }}</td>
         </tr>
         <tr>
             <th>Contract file</th>
@@ -91,8 +116,99 @@
         </tr>
         
     </table>
+
+    <!-- Button to create a word document prefilled with contract information -->
     <div class="general">
         <a href="{% url 'generate_contract_docx' contract.id %}" class="btn btn-primary" style="margin: 1.5em 0 1.5em 0;">Generate Word Document</a>
     </div>
+
+    <!-- Button to show the editing contract form -->
+    <div class="general">
+        <button class="btn btn-primary" id="show-editing">Edit Contract</button>
+    </div>
+
+    <!-- The editing form container -->
+    <div class="general">
+        <div class="form-container" id="edit-contract-form-container">
+
+            <!-- Button to hide the form which attached on the form -->
+            <button class="closing-btn" id="hide-editing">X</button>
+
+            <!-- the form which was prefill with current contract information -->
+            <form action="{% url 'edit_contract' %}" method="post" id="edit-contract-form" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="container">
+                    <h1>Edit Contract</h1>
+                    <input name="contract_id" type="hidden" value="{{ contract.id }}">
+                    <div class="form-group">
+                        <label for="client_id" class="form-label">Client</label>
+                        <select name="client_id">
+                            <option selected value="{{ contract.client.id }}">{{ contract.client.name }}</option>
+                            {% for company in companies %}
+        
+                                {% if company.id != contract.client.id %}
+
+                                    <option value="{{ company.id }}">{{ company.name }}</option>
+        
+                                {% endif %}
+
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="chosen_service" class="form-label">Service</label>
+
+                        <!-- list all service, original chosen services were checked for user convenience -->
+                        {% for service in services %}
+                            <div>
+                                <input type="checkbox" name="chosen_services" value="{{ service.id }}" {% if service.chosen %} checked {% endif %}> {{ service.name }}
+                            </div>
+                        {% endfor %}
+
+                    </div>
+                    <div class="form-group">
+                        <label for="discount" class="form-label">Discount (%)</label>
+                        <input name="discount" class="form-control" type="text" pattern="\d+(\.\d{2})?" value="{{ contract.discount }}">
+                    </div>
+                    <div class="form-group">
+                        <label for="male_headcount" class="form-label">Male Headcount</label>
+                        <input name="male_headcount" type="number" min="0" class="form-control" value="{{ contract.male_headcount }}">
+                    </div>
+                    <div class="form-group">
+                        <label for="female_headcount" class="form-label">Female Headcount</label>
+                        <input name="female_headcount" type="number" min="0" class="form-control" value="{{ contract.female_headcount }}">
+                    </div>
+                    <div class="form-group">
+                        <label for="initiation_date" class="form-label">Initiation Date</label>
+                        <input name="initiation_date" type="date" class="form-control" value="{{ contract.initiation_date|date:'Y-m-d' }}">
+                    </div>
+
+                    <!-- File can't be prefilled due to security reason, therefore I just show the file name if the contract already had -->
+                    <div class="form-group">
+                        <label for="uploaded_file" class="form-label">Current Contract File</label>
+                        {% if contract.pdf_file %}
+
+                            <p>{{ contract.pdf_file.name }}</p>
+
+                        {% else %}
+
+                            <p>No file uploaded</p>
+
+                        {% endif %}
+                    </div>
+                    <div class="form-group">
+                        <label for="contract_file" class="form-label">New Contract File</label>
+                        <input name="contract_file" type="file">
+                    </div>
+                    <button>Save Change</button>
+                </div>                
+            </form>
+        </div>
+    </div>
     
+{% endblock %}
+{% block script %}
+
+    <script src="{% static 'clinic/contract_detail.js' %}"></script>
+
 {% endblock %}

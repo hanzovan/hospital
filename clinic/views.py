@@ -834,9 +834,16 @@ def all_contracts(request):
         else:
             contract.in_within_10_days = False
 
+    yay_message = request.session.get('yay_message', '')
+    nay_message = request.session.get('nay_message', '')
+    request.session['yay_message'] = ''
+    request.session['nay_message'] = ''
+
     return render(request, "clinic/contracts.html", {
         "contracts": contracts,
-        "today": today
+        "today": today,
+        "yay_message": yay_message,
+        "nay_message": nay_message
     })
 
 
@@ -849,9 +856,178 @@ def contract_detail(request, contract_id):
         request.session['nay_message'] = "Invalid contract ID"
         return HttpResponseRedirect(reverse('all_contracts'))
 
+    # List of companies for editing
+    companies = Company.objects.all()
+    services = Service.objects.all()
+    chosen_services = contract.services.all()
+
+    # Add field to service to define which services were chosen in original contract
+    for service in services:
+        if service in chosen_services:
+            service.chosen = True
+        else:
+            service.chosen = False
+
+    yay_message = request.session.get('yay_message', '')
+    nay_message = request.session.get('nay_message', '')
+    request.session['yay_message'] = ''
+    request.session['nay_message'] = ''
+
     return render(request, "clinic/contract_detail.html", {
-        "contract": contract
+        "contract": contract,
+        "companies": companies,
+        "services": services,
+        "yay_message": yay_message,
+        "nay_message": nay_message
     })
+
+
+# Allow user to edit the contract, delete the contract
+@login_required
+def edit_contract(request):
+    if request.method == 'POST':
+        # Get variables from POST
+        contract_id = request.POST.get('contract_id', '')
+        client_id = request.POST.get('client_id', '')
+        service_ids = request.POST.getlist('chosen_services')
+        discount = request.POST.get('discount', '')
+        male_headcount = request.POST.get('male_headcount', '')
+        female_headcount = request.POST.get('female_headcount', '')
+        initiation_date = request.POST.get('initiation_date', '')
+        pdf_file = request.FILES.get('contract_file')
+
+        # Check contract id
+        if not contract_id:
+            request.session['nay_message'] = "Contract id was not provided"
+            return HttpResponseRedirect(reverse('all_contracts'))
+        try:
+            contract = Contract.objects.get(pk=contract_id)
+        except Contract.DoesNotExist:
+            request.session['nay_message'] = "Contract does not exist"
+
+        # Check user right
+        if "modify_contract_info" not in user_right(request.user.management_right_level):
+            request.session['nay_message'] = "You do not have the permission to modify contract information"
+            return redirect("contract_detail", contract_id=contract_id)
+
+        # Check client id
+        if not client_id:
+            request.session['nay_message'] = "Please choose a client"
+            return redirect("contract_detail", contract_id=contract_id)
+        try:
+            client = Company.objects.get(pk=client_id)
+        except Company.DoesNotExist:
+            request.session['nay_message'] = "Company does not exist"
+            return redirect("contract_detail", contract_id=contract_id)
+
+        # Remove empty id in service_ids
+        service_ids = [i for i in service_ids if i]
+
+        # Check chosen service
+        services = []
+        for i in service_ids:
+            try:
+                service = Service.objects.get(pk=i)
+                services.append(service)
+            except Service.DoesNotExist:
+                request.session['nay_message'] = f"service with id {i} does not exist"
+
+        # Check discount
+        if discount:
+            try:
+                discount = round(float(discount), 2)
+                if discount < 0:
+                    request.session['nay_message'] = "Discount has to be greater or equal to 0"
+                    return redirect("contract_detail", contract_id=contract_id)
+            except ValueError:
+                request.session['nay_message'] = "Invalid input for discount"
+                return redirect("contract_detail", contract_id=contract_id)
+        else:
+            discount = 0
+
+        # Check male and female headcount
+        # if both male_headcount and female_headcount are empty, raise error
+        if not male_headcount and not female_headcount:
+            request.session['nay_message'] = "Contract can not have empty head count"
+            return redirect("contract_detail", contract_id=contract_id)
+        
+        # if either of male_headcount or female_headcount exist, move forward
+        if not male_headcount:
+            male_headcount = 0
+        else:
+            try: 
+                male_headcount = int(male_headcount)
+                if male_headcount < 0:
+                    request.session['nay_message'] = "headcount has to be equal or greater than 0"
+                    return redirect("contract_detail", contract_id=contract_id)
+            except ValueError:
+                request.session['nay_message'] = "headcount has to be positive integer"
+                return redirect("contract_detail", contract_id=contract_id)
+
+        if not female_headcount:
+            female_headcount = 0
+        else:
+            try:
+                female_headcount = int(female_headcount)
+                if female_headcount < 0:
+                    request.session['nay_message'] = "headcount has to be equal or greater than 0"
+                    return redirect("contract_detail", contract_id=contract_id)
+            except ValueError:
+                request.session['nay_message'] = "headcount has to be positive integer"
+                return redirect("contract_detail", contract_id=contract_id)
+            
+        # Check initiation date
+        if not initiation_date:
+            initiation_date = None
+        else:
+            try:
+                # Check the value of initiation_date
+                initiation_date_check = datetime.strptime(initiation_date, '%Y-%m-%d')
+            except ValueError:
+                request.session['nay_message'] = "Invalid date format"
+                return redirect("contract_detail", contract_id=contract_id)
+
+
+        # Get the total value
+        total_value = 0
+        for service in services:
+            if service.male_price:
+                service_value_for_male = int(service.male_price)*male_headcount
+            else:
+                service_value_for_male = 0
+
+            if service.female_price:
+                service_value_for_female = int(service.female_price)*female_headcount
+            else:
+                service_value_for_female = 0
+            total_value += (service_value_for_male + service_value_for_female)
+
+        # Get the revenue
+        revenue = round(float(total_value*(100 - discount)/100))
+
+        # Update the contract value
+        contract.client = client
+        contract.male_headcount = male_headcount
+        contract.female_headcount = female_headcount
+        contract.total_value = total_value
+        contract.discount = discount
+        contract.revenue = revenue
+        contract.initiation_date = initiation_date
+        contract.modified_by = request.user
+        contract.services.set(services)
+        contract.save()
+
+        # Get contract file
+        if pdf_file:
+            contract.pdf_file = pdf_file
+            contract.save()
+
+        request.session['yay_message'] = "Contract modified"
+        return redirect("contract_detail", contract_id=contract_id)
+    
+    else:
+        request.session['nay_message'] = "Post method required"
+        return HttpResponseRedirect(reverse('all_contracts'))
 
 
 # Allow user to change contracts from activation to finish or archived

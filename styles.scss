@@ -139,6 +139,16 @@ header {
     align-items: center;
 }
 
+.closing-btn {
+    position: absolute;
+    background-color: transparent;
+    border: none;
+    font-size: 1em;
+    color: black;
+    top: 2px;
+    right: 2px;
+}
+
 // Without this div, the form background will fill all the screen
 .general {
     display: flex;
@@ -151,6 +161,10 @@ header {
     box-shadow: 0 15px 35px rgba(50, 50, 93, .1), 0 5px 15px rgba(0, 0, 0, .07);
     transition: all 1s;
     transform: translateY(-200px);
+}
+
+#edit-contract-form-container {
+    transform: translateY(0);
 }
 
 #add-meeting-form {
@@ -223,6 +237,69 @@ header {
     }
     button:hover {
         cursor: pointer;
+        background-color: rgb(41, 4, 164);
+    }
+}
+
+#edit-contract-form {
+    .container {
+        display: flex;
+        flex-direction: column;
+        width: 30vw;
+        padding: 2em;
+    }
+    h1, p {
+        text-align: center;
+        margin-bottom: 1.5em;
+    }
+    .form-group {
+        margin-bottom: 1.5em;
+    }
+    .form-group:focus-within {
+        transform: scale(1.1, 1.1);
+        transition: all .6s;
+    }
+    .form-label {
+        display: block;
+        font-size: .75em;
+        color: $font-color;
+    }
+    .form-control {
+        box-shadow: none;
+        padding: .2em;
+        border-radius: .25em;
+        border-color: #ccc;
+        border-style: none none solid none;
+        font-size: 1.5em;
+        transition: all .6s;
+    }
+    .form-control::placeholder {
+        color: #aaa;
+    }
+    .form-control:focus {
+        box-shadow: none;
+        outline: none;
+        border-color: $font-hover-color;
+    }
+    .form-control:invalid:focus {
+        border-color: red;
+    }
+    .form-control:valid {
+        border-color: green;
+    }
+    textarea {
+        resize: none;
+    }
+    button {
+        outline: none;
+        border: none;
+        border-radius: .25em;
+        padding: .75em;
+        background-color: rgb(68, 18, 232);
+        font-size: 1em;
+        color: white;
+    }
+    button:hover {
         background-color: rgb(41, 4, 164);
     }
 }

@@ -101,6 +101,15 @@ header {
   flex-direction: column;
   align-items: center; }
 
+.closing-btn {
+  position: absolute;
+  background-color: transparent;
+  border: none;
+  font-size: 1em;
+  color: black;
+  top: 2px;
+  right: 2px; }
+
 .general {
   display: flex;
   justify-content: center;
@@ -112,6 +121,9 @@ header {
   box-shadow: 0 15px 35px rgba(50, 50, 93, 0.1), 0 5px 15px rgba(0, 0, 0, 0.07);
   transition: all 1s;
   transform: translateY(-200px); }
+
+#edit-contract-form-container {
+  transform: translateY(0); }
 
 #add-meeting-form .container {
   display: flex;
@@ -162,6 +174,54 @@ header {
   color: white; }
 #add-meeting-form button:hover {
   cursor: pointer;
+  background-color: #2904a4; }
+
+#edit-contract-form .container {
+  display: flex;
+  flex-direction: column;
+  width: 30vw;
+  padding: 2em; }
+#edit-contract-form h1, #edit-contract-form p {
+  text-align: center;
+  margin-bottom: 1.5em; }
+#edit-contract-form .form-group {
+  margin-bottom: 1.5em; }
+#edit-contract-form .form-group:focus-within {
+  transform: scale(1.1, 1.1);
+  transition: all .6s; }
+#edit-contract-form .form-label {
+  display: block;
+  font-size: .75em;
+  color: #555; }
+#edit-contract-form .form-control {
+  box-shadow: none;
+  padding: .2em;
+  border-radius: .25em;
+  border-color: #ccc;
+  border-style: none none solid none;
+  font-size: 1.5em;
+  transition: all .6s; }
+#edit-contract-form .form-control::placeholder {
+  color: #aaa; }
+#edit-contract-form .form-control:focus {
+  box-shadow: none;
+  outline: none;
+  border-color: orange; }
+#edit-contract-form .form-control:invalid:focus {
+  border-color: red; }
+#edit-contract-form .form-control:valid {
+  border-color: green; }
+#edit-contract-form textarea {
+  resize: none; }
+#edit-contract-form button {
+  outline: none;
+  border: none;
+  border-radius: .25em;
+  padding: .75em;
+  background-color: #4412e8;
+  font-size: 1em;
+  color: white; }
+#edit-contract-form button:hover {
   background-color: #2904a4; }
 
 #register-form .container, #login-form .container, #add-people-form .container, #add-service-form .container, #add-company-form .container, #add-message-form .container {

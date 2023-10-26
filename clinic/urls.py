@@ -31,6 +31,7 @@ urlpatterns = [
     path('add_contract', views.add_contract, name="add_contract"),
     path('all_contracts', views.all_contracts, name="all_contracts"),
     path('contract/<int:contract_id>', views.contract_detail, name="contract_detail"),
+    path('edit_contract', views.edit_contract, name="edit_contract"),
     path('archive_contract', views.archive_contract, name='archive_contract'),
     path('archived_contracts', views.all_archived_contracts, name="all_archived_contracts"),
     path('generate_contract_docx/<int:contract_id>/', views.generate_contract_docx, name='generate_contract_docx'),
