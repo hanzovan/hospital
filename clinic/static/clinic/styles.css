@@ -224,6 +224,30 @@ header {
 #edit-contract-form button:hover {
   background-color: #2904a4; }
 
+#edit-meeting-form .container {
+  display: flex;
+  flex-direction: column;
+  width: 30vw;
+  padding: 2em; }
+#edit-meeting-form h1 {
+  text-align: center;
+  margin-bottom: 1.5em; }
+#edit-meeting-form .form-group {
+  margin-bottom: 1.5em; }
+#edit-meeting-form .form-label {
+  display: block;
+  font-size: .75em; }
+#edit-meeting-form button {
+  outline: none;
+  border: none;
+  border-radius: .25em;
+  padding: .75em;
+  background-color: #4412e8;
+  font-size: 1em;
+  color: white; }
+#edit-meeting-form button:hover {
+  background-color: #2904a4; }
+
 #register-form .container, #login-form .container, #add-people-form .container, #add-service-form .container, #add-company-form .container, #add-message-form .container {
   display: flex;
   flex-direction: column;

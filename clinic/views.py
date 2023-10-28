@@ -978,7 +978,8 @@ def edit_contract(request):
             
         # Check initiation date
         if not initiation_date:
-            initiation_date = None
+            request.session['nay_message'] = "Initiation date required"
+            return redirect("contract_detail", contract_id=contract_id)
         else:
             try:
                 # Check the value of initiation_date
@@ -1030,7 +1031,7 @@ def edit_contract(request):
         return HttpResponseRedirect(reverse('all_contracts'))
 
 
-# Allow user to change contracts from activation to finish or archived
+# Allow user to change contracts from active to finish or archived
 @login_required
 def archive_contract(request):
     if request.method == 'POST':
@@ -1065,6 +1066,7 @@ def all_archived_contracts(request):
 
 
 # Prepare a contract in word ready for printing
+@login_required
 def generate_contract_docx(request, contract_id):
     # Get the contract
     contract = Contract.objects.get(pk=contract_id)
@@ -1216,6 +1218,7 @@ def generate_contract_docx(request, contract_id):
 
 
 # Allow team to manage timeline, schedule, meeting to meet up with clients
+@login_required
 def add_meeting(request):
     # If user submitted form
     if request.method == 'POST':
@@ -1280,6 +1283,7 @@ def add_meeting(request):
     
 
 # Allow user to tract all the meeting
+@login_required
 def all_meetings(request):
     meetings = MeetUp.objects.all().order_by("-start_time")
 
@@ -1289,6 +1293,7 @@ def all_meetings(request):
 
 
 # Allow user to access list of all upcoming meeting
+@login_required
 def upcoming_meetings(request):
     now = datetime.now()
     meetings = MeetUp.objects.filter(start_time__gt = now).order_by("start_time")
@@ -1307,6 +1312,7 @@ def upcoming_meetings(request):
 
 
 # Allow user to access meeting agenda
+@login_required
 def meeting_agenda(request, meeting_id):
     meeting = MeetUp.objects.get(pk=meeting_id)
 
@@ -1323,6 +1329,7 @@ def meeting_agenda(request, meeting_id):
 
 
 # allow user to add item to meeting's agenda
+@login_required
 def add_meeting_agenda(request, meeting_id):
     # if user submited form
     if request.method == 'POST':
@@ -1365,9 +1372,99 @@ def add_meeting_agenda(request, meeting_id):
         return render(request, "clinic/add_agenda.html", {
             "meeting": meeting
         })
+
+
+# Allow user to modify meeting information
+@login_required
+def edit_meeting(request, meeting_id):
+    if request.method == 'POST':
+        try:
+            meeting = MeetUp.objects.get(pk=meeting_id)
+        except MeetUp.DoesNotExist:
+            request.session['nay_message'] = "Meeting id not found"
+            return HttpResponseRedirect(reverse('all_meetings'))
+        
+        # Get the variables
+        client_id = request.POST.get('client_id', '')
+        if not client_id:
+            request.session['nay_message'] = "Client id missng"
+            return redirect("edit_meeting", meeting_id=meeting_id)
+        try:
+            client = Company.objects.get(pk=client_id)
+        except Company.DoesNotExist:
+            request.session['nay_message'] = "Client does not exist"
+            return redirect("edit_meeting", meeting_id=meeting_id)
+        
+        start_time = request.POST.get('start_time', '')
+        end_time = request.POST.get('end_time', '')
+
+        if not start_time or not end_time:
+            request.session['nay_message'] = "Start and end time required"
+            return redirect("edit_meeting", meeting_id=meeting_id)
+        
+        try:
+            start_time = datetime.strptime(start_time, '%Y-%m-%dT%H:%M')
+            end_time = datetime.strptime(end_time, '%Y-%m-%dT%H:%M')
+        except ValueError:
+            request.session['nay_message'] = "Invalid time format"
+            return redirect("edit_meeting", meeting_id=meeting_id)
+        
+        # Check if end time come before start time
+        if start_time >= end_time:
+            request.session['nay_message'] = "End time have to come after Start time"
+            return redirect("edit_meeting", meeting_id=meeting_id)
+        
+        # Check if meeting overlap each other
+        overlapping_meetings = MeetUp.objects.filter(
+            start_time__lt = end_time,
+            end_time__gt = start_time
+        )
+        if overlapping_meetings.exists():
+            request.session['nay_message'] = "Modified meeting overlapped other meeting"
+            return redirect("edit_meeting", meeting_id=meeting_id)
+        
+        # Save meeting
+        meeting.client = client
+        meeting.start_time = start_time
+        meeting.end_time = end_time
+        meeting.save()
+
+        # Inform successfully and redirect user
+        request.session['yay_message'] = "Meeting modified"
+        return redirect("meeting_agenda", meeting_id=meeting_id)
     
+    else:
+        try:
+            meeting = MeetUp.objects.get(pk=meeting_id)
+        except MeetUp.DoesNotExist:
+            request.session['nay_message'] = "Meeting id does not exist"
+            return HttpResponseRedirect(reverse('all_meetings'))
+        
+        # Get the companies list
+        companies = Company.objects.all()
+
+        yay_message = request.session.get('yay_message', '')
+        nay_message = request.session.get('nay_message', '')
+        request.session['yay_message'] = ''
+        request.session['nay_message'] = ''
+
+        return render(request, "clinic/edit_meeting.html", {
+            "meeting": meeting,
+            "companies": companies,
+            "yay_message": yay_message,
+            "nay_message": nay_message
+        })
+
+
+# Allow user to remove item
+@login_required
+def meeting_item_remove(request):
+    if request.method == 'POST':
+        return HttpResponse('On constructing')
+
 
 # Allow user to end a meeting
+@login_required
 def end_meeting(request):
     if request.method == 'POST':
 

@@ -1,0 +1,50 @@
+{% extends "clinic/layout.html" %}
+{% load static %}
+{% block title %}
+
+    edit meeting
+
+{% endblock %}
+{% block main %}
+
+    <div class="general">
+        <div class="form-container" id="edit-form-container">
+            <form action="{% url 'edit_meeting' meeting_id=meeting.id %}" method="post" id="edit-meeting-form">
+                {% csrf_token %}
+                <div class="container">
+                    <h1>Edit Meeting</h1>
+                    <div class="form-group">
+                        <label for="client_id" class="form-label">Client</label>
+                        <select name="client_id">
+                            <option selected value="{{ meeting.client.id }}">{{ meeting.client.name }}</option>
+                            {% for company in companies %}
+
+                                {% if company.name != meeting.client.name %}
+
+                                    <option value="{{ company.id }}">{{ company.name }}</option>
+
+                                {% endif %}
+
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="start_time" class="form-label">Start Time</label>
+                        <input name="start_time" type="datetime-local" class="form-control" value="{{ meeting.start_time|date:'Y-m-d\TH:i' }}" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="end_time" class="form-label">End Time</label>
+                        <input name="end_time" type="datetime-local" class="form-control" value="{{ meeting.end_time|date:'Y-m-d\TH:i' }}" required>
+                    </div>
+                    <button>Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+{% endblock %}
+{% block script %}
+
+    <script src="{% static 'clinic/edit_meeting.js' %}"></script>
+
+{% endblock %}

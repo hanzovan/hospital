@@ -40,6 +40,8 @@ urlpatterns = [
     path('upcoming_meetings', views.upcoming_meetings, name="upcoming_meetings"),
     path('meeting_agenda/<int:meeting_id>', views.meeting_agenda, name="meeting_agenda"),
     path('add_meeting_agenda/<int:meeting_id>', views.add_meeting_agenda, name="add_meeting_agenda"),
+    path('edit_meeting/<int:meeting_id>', views.edit_meeting, name="edit_meeting"),
+    path('meeting_item_remove', views.meeting_item_remove, name="meeting_item_remove"),
     path('end_meeting', views.end_meeting, name="end_meeting")
 ]
 

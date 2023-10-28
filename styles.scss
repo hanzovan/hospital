@@ -304,6 +304,38 @@ header {
     }
 }
 
+#edit-meeting-form {
+    .container {
+        display: flex;
+        flex-direction: column;
+        width: 30vw;
+        padding: 2em;
+    }
+    h1 {
+        text-align: center;
+        margin-bottom: 1.5em;
+    }
+    .form-group {
+        margin-bottom: 1.5em;
+    }
+    .form-label {
+        display: block;
+        font-size: .75em;
+    }
+    button {
+        outline: none;
+        border: none;
+        border-radius: .25em;
+        padding: .75em;
+        background-color: rgb(68, 18, 232);
+        font-size: 1em;
+        color: white;
+    }
+    button:hover {
+        background-color: rgb(41, 4, 164);
+    }
+}
+
 #register-form, #login-form, #add-people-form, #add-service-form, #add-company-form, #add-message-form {
     .container {
         display: flex;
