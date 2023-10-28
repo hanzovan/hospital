@@ -1287,8 +1287,15 @@ def add_meeting(request):
 def all_meetings(request):
     meetings = MeetUp.objects.all().order_by("-start_time")
 
+    yay_message = request.session.get('yay_message', '')
+    nay_message = request.session.get('nay_message', '')
+    request.session['yay_message'] = ''
+    request.session['nay_message'] = ''
+
     return render(request, "clinic/all_meetings.html", {
-        "meetings": meetings
+        "meetings": meetings,
+        "yay_message": yay_message,
+        "nay_message": nay_message
     })
 
 
@@ -1374,6 +1381,34 @@ def add_meeting_agenda(request, meeting_id):
         })
 
 
+# Allow user to remove item in meeting agenda
+@login_required
+def meeting_item_remove(request, meeting_id):
+    # If user submitted form
+    if request.method == 'POST':
+        # Get the item's id
+        item_id = request.POST.get('item_id', '')
+        if not item_id:
+            request.session['nay_message'] = "Item id not found"
+            return redirect("meeting_agenda", meeting_id=meeting_id)
+        try: 
+            item = MeetingAgendaItem.objects.get(pk=item_id)
+        except MeetingAgendaItem.DoesNotExist:
+            request.session['nay_message'] = "Item not found"
+            return redirect("meeting_agenda", meeting_id=meeting_id)
+        
+        # Delete the item from database
+        item.delete()
+
+        # Confirm result and redirect user back
+        request.session['yay_message'] = "Item removed"
+        return redirect("meeting_agenda", meeting_id=meeting_id)
+
+    else:
+        request.session['nay_message'] = "POST method required"
+        return HttpResponseRedirect(reverse('all_meetings'))
+
+
 # Allow user to modify meeting information
 @login_required
 def edit_meeting(request, meeting_id):
@@ -1454,13 +1489,6 @@ def edit_meeting(request, meeting_id):
             "yay_message": yay_message,
             "nay_message": nay_message
         })
-
-
-# Allow user to remove item
-@login_required
-def meeting_item_remove(request):
-    if request.method == 'POST':
-        return HttpResponse('On constructing')
 
 
 # Allow user to end a meeting

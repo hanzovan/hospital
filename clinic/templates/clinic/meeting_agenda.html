@@ -7,7 +7,7 @@
 {% endblock %}
 {% block main %}
 
-    <h1 class="text-center page-title">Meeting Agenda</h1>
+    <h2 class="text-center page-title">Schedule</h2>
     <div class="container-fluid">
         <table class="table table-hover">
             <tbody>
@@ -37,18 +37,32 @@
                         {% endif %}
                     </td>
                 </tr>
+            </tbody>
+        </table>
+    </div>
+    <h2 class="text-center page-title">Agenda</h2>
+    <div class="container-fluid">
+        <table class="table table-hover">
+            <tbody>
                 {% for item in meeting.agenda.all.values %}
 
                     <tr>
                         <td>Item {{ forloop.counter }}</td>
                         <td>{{ item.item }}</td>
-                    </tr>                    
+                        <td>
+                            <form action="{% url 'meeting_item_remove' meeting_id=meeting.id %}" method="post" onsubmit="return confirm('Do you really want to remove this agenda item?');">
+                                {% csrf_token %}
+                                <input name="item_id" type="hidden" value="{{ item.id }}">
+                                <button class="btn btn-link no-underline">-</button>
+                            </form>
+                        </td>
+                    </tr>
 
                 {% empty %}
+
                     <tr>
-                        <td>Item</td>
-                        <td>No item yet</td>
-                    </tr>                    
+                        No item yet
+                    </tr>
 
                 {% endfor %}
             </tbody>
