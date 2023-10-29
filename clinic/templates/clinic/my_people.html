@@ -7,13 +7,58 @@
 {% endblock %}
 {% block main %}
 
-    <h1 class="text-center">The people I added</h1>
-    {% for person in people %}
-        <p>{{ person.name }}</p>
-    {% empty %}
+    <h1 class="text-center page-title">Contacts added by me</h1>
+    <div class="container-fluid">
+        <table class="table table-info">
+            <thead class="table table-dark">
+                <tr>
+                    <th>Name</th>
+                    <th>Company</th>
+                    <th>Latest Message</th>
+                    <th>Sent At</th>
+                    <th>New Message</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for person in people %}
 
-        <p>No person</p>
+                    <tr>
+                        <td>
+                            <a class="no-underline" href="{% url 'person_detail' person_id=person.id %}">{{ person.name }}</a>
+                        </td>
+                        <td>
+                            {% for company in person.unique_companies %}
 
-    {% endfor %}
+                                {% if not forloop.last %}
+
+                                    {{ company.name }},
+
+                                {% else %}
+
+                                    {{ company.name }}
+
+                                {% endif %}
+
+                            {% endfor %}
+                        </td>
+                        <td>
+                            {{ person.latest_message.content }}
+                        </td>
+                        <td>
+                            {{ person.latest_message.date }}
+                        </td>
+                        <td style="text-align: center;">
+                            <a href="{% url 'add_message_from_all_people_page' person_id=person.id %}" class="no-underline">+</a>
+                        </td>
+                    </tr>
+
+                {% empty %}
+
+                    No contact yet
+
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
 
 {% endblock %}

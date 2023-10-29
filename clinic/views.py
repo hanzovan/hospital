@@ -390,10 +390,30 @@ def my_people(request):
         request.session['nay_message'] = "You're not allow to check this info"
         return HttpResponseRedirect(reverse('index'))
     
+    # Get message if there is
+    yay_message = request.session.get('yay_message', '')
+    nay_message = request.session.get('nay_message', '')
+    request.session['yay_message'] = ''
+    request.session['nay_message'] = ''
+
+    # Get people information
     people = People.objects.filter(created_by=request.user)
 
+    # Get latest message as well as the companies that related to the person
+    for person in people:
+        person.latest_message = person.talks.order_by("-date").first()
+
+        # Get the list of companies
+        related_companies = person.company.all()
+        representing_companies = person.companies.all()
+
+        unique_companies = list(set(related_companies).union(set(representing_companies)))
+        person.unique_companies = unique_companies
+
     return render(request, "clinic/my_people.html", {
-        "people": people
+        "people": people,
+        "yay_message": yay_message,
+        "nay_message": nay_message
     })
 
 
@@ -677,6 +697,7 @@ def message(request, person_id):
         return HttpResponseRedirect(reverse('index'))
 
 # Add message from all people page, with symbol for better visual
+@login_required
 def add_message_from_all_people_page(request, person_id):
     # If user submitted form
     if request.method == 'POST':
