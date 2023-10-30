@@ -48,13 +48,24 @@
             </tbody>
         </table>
     </div>
-    <div style="display: flex; justify-content: center; align-items: center;">
+    <div style="display: flex; justify-content: center; align-items: center;">        
         <div id="remove-company-form-container">
-            <form action="{% url 'remove_company' %}" method="post" onsubmit="return confirm('Are you really want to remove this company?');">
-                {% csrf_token %}
-                <input name="company_id" type="hidden" value="{{ company.id }}">
-                <button class="btn btn-danger">Remove Company</button>
-            </form>
+            <table>
+                <tbody>
+                    <tr>
+                        <td>
+                            <a class="text-center btn btn-info" href="{% url 'edit_company' company_id=company.id %}">Edit Company</a>
+                        </td>
+                        <td>
+                            <form action="{% url 'remove_company' %}" method="post" onsubmit="return confirm('Are you really want to remove this company?');">
+                                {% csrf_token %}
+                                <input name="company_id" type="hidden" value="{{ company.id }}">
+                                <button class="btn btn-danger">Remove Company</button>
+                            </form>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>            
         </div>
     </div>
 

@@ -2,46 +2,46 @@
 {% load static %}
 {% block title %}
 
-    add company
+    edit company
 
 {% endblock %}
 {% block main %}
 
     <div class="general">
         <div class="form-container">
-            <form action="{% url 'add_company' %}" method="post" id="add-company-form">
+            <form action="{% url 'edit_company' company_id=company.id %}" method="post" id="edit-company-form">
                 {% csrf_token %}
                 <div class="container">
-                    <h1>Add Company</h1>
+                    <h1>Edit Company Info</h1>
                     <div class="form-group">
                         <label for="name" class="form-label">Company's name</label>
-                        <input name="name" type="text" required class="form-control" autocomplete="off" placeholder="ABC Company" autofocus>
+                        <input name="name" type="text" class="form-control" value="{{ company.name }}" required>
                     </div>
                     <div class="form-group">
                         <label for="industry" class="form-label">Industry</label>
-                        <input name="industry" type="text" required class="form-control" autocomplete="off" placeholder="education">
+                        <input name="industry" type="text" class="form-control" value="{{ company.industry }}" required>
                     </div>
                     <div class="form-group">
                         <label for="address" class="form-label">Address</label>
-                        <input name="address" type="text" required class="form-control" autocomplete="off" placeholder="123 ABCD street">
+                        <input name="address" type="text" class="form-control" value="{{ company.address }}" required>
                     </div>
                     <div class="form-group">
                         <label for="email" class="form-label">Email</label>
-                        <input name="email" type="email" class="form-control" autocomplete="off" placeholder="anderson@gmail.com">
+                        <input name="email" type="text" class="form-control" value="{{ company.email }}" required>
                     </div>
                     <div class="form-group">
                         <label for="phone" class="form-label">Phone</label>
-                        <input name="phone" type="text" class="form-control" autocomplete="off" placeholder="0123405302">
+                        <input name="phone" type="text" class="form-control" value="{{ company.phone }}" required>
                     </div>
                     <div class="form-group">
                         <label for="male_headcount" class="form-label">Male Headcount</label>
-                        <input name="male_headcount" type="number" required min="0" class="form-control" autocomplete="off" placeholder="100">
+                        <input name="male_headcount" type="number" min="0" value="{{ company.male_headcount }}" class="form-control" required>
                     </div>
                     <div class="form-group">
                         <label for="female_headcount" class="form-label">Female Headcount</label>
-                        <input name="female_headcount" type="number" required min="0" class="form-control" autocomplete="off" placeholder="100">
+                        <input name="female_headcount" type="number" min="0" value="{{ company.female_headcount }}" class="form-control" required>
                     </div>
-                    <button>Save</button>
+                    <button>Save Change</button>
                 </div>
             </form>
         </div>
@@ -50,6 +50,6 @@
 {% endblock %}
 {% block script %}
 
-    <script src="{% static 'clinic/add_company.js' %}"></script>
+    <script src="{% static 'clinic/edit_company.js' %}"></script>
 
 {% endblock %}

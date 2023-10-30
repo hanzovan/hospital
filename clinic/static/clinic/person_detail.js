@@ -36,6 +36,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // Get the value from the form
         const new_name = document.querySelector('#name').value;
         const new_position = document.querySelector('#position').value;
+        const new_address = document.querySelector('#address').value;
         const new_email = document.querySelector('#email').value;
         const new_phone = document.querySelector('#phone').value;
         const new_note = document.querySelector('#note').value;
@@ -46,6 +47,7 @@ document.addEventListener('DOMContentLoaded', function() {
             body: JSON.stringify({
                 'new_name': new_name,
                 'new_position': new_position,
+                'new_address': new_address,
                 'new_email': new_email,
                 'new_phone': new_phone,
                 'new_note': new_note
