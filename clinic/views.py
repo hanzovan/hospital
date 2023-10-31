@@ -33,7 +33,7 @@ def index(request):
     request.session['nay_message'] = ''
 
     # Get all the service
-    services = Service.objects.all()
+    services = Service.objects.all().order_by('name')
 
     return render(request, "clinic/index.html", {
         "yay_message": yay_message,

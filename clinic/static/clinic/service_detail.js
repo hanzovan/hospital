@@ -130,6 +130,9 @@ document.addEventListener('DOMContentLoaded', function() {
                         oriDescription.setAttribute('data-service_description', newDescription);
 
                         editContainer.remove();
+
+                        // Modify page title as well
+                        document.querySelector('#service-page-title').innerHTML = newName;
                     } else if (response.status === 403) {
                         window.location.href = '/';
                     } else {
