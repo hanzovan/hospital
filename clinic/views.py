@@ -269,6 +269,7 @@ def service_detail(request, service_id):
                 else:
                     service.female_price = data['new-female-price']
                 
+                service.benefit = data['new-benefit']
                 service.description = data['new-description']
                 service.modified_by = request.user
                 service.save()

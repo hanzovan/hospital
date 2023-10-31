@@ -25,8 +25,20 @@
                     <td id="service-female-price" data-service_female_price="{{ service.female_price }}"><strong>{{ service.female_price }}</strong></td>
                 </tr>
                 <tr>
+                    <td>Benefit</td>
+                    <td id="service-benefit" data-service_benefit="{{ service.benefit }}"><strong>{{ service.benefit }}</strong></td>
+                </tr>
+                <tr>
                     <td>Description</td>
                     <td id="service-description" data-service_description="{{ service.description }}"><strong>{{ service.description }}</strong></td>
+                </tr>
+                <tr>
+                    <td>Created By</td>
+                    <td><strong>{{ service.created_by }}</strong></td>
+                </tr>
+                <tr>
+                    <td>Last Modified By</td>
+                    <td><strong>{{ service.modified_by }}</strong></td>
                 </tr>
             </tbody>
         </table>
