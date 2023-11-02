@@ -31,84 +31,103 @@ document.addEventListener('DOMContentLoaded', function() {
     })
     .catch(error => {
         console.log(error);
-    }) 
-
+    })
+    
     editBtn.onclick = function() {
-        if (document.querySelector('.edit-container')) {
-            document.querySelector('.edit-container').remove();
+        // If form already created, delete it, if not exist, create it
+        if (document.querySelector('#edit-container')) {
+            document.querySelector('#edit-container').remove();
         } else {
-            // Create a form that populated by the original information
-            // 1st, create a container div
+            // Create general div
             const editContainer = document.createElement('div');
-            editContainer.className = 'edit-container';
-            document.querySelector('main').appendChild(editContainer);
+            editContainer.id = 'edit-container';
+            editContainer.className = 'general';
+            document.querySelector('#edit-view').appendChild(editContainer);
 
-            // 1.5, create a form
+            // Create form container
+            const formContainer = document.createElement('div');
+            formContainer.className = 'form-container';
+            editContainer.appendChild(formContainer);
+
+            // Add a button for user to close form
+            const xBtn = document.createElement('button');
+            xBtn.className = 'closing-btn';
+            xBtn.innerHTML = 'X';
+            xBtn.onclick = function() {
+                formContainer.style.opacity = '0';
+                formContainer.style.transform = 'translateY(-200px)';
+            }
+            formContainer.appendChild(xBtn);
+
+            // Create the form
             const editForm = document.createElement('form');
-            editForm.className = 'my-edit-form';
+            editForm.id = 'edit-service-form';
+            formContainer.appendChild(editForm);
 
-            editContainer.appendChild(editForm);
+            // Create container inside the form
+            const container = document.createElement('div');
+            container.className = 'container';
+            editForm.appendChild(container);
 
-            // 2nd, create 2 divs, 1 for field name and 1 for field value input
-            const fieldNameDiv = document.createElement('div');
-            fieldNameDiv.className = 'field-name';
-
-            const fieldValueDiv = document.createElement('div');
-            fieldValueDiv.className = 'field-value';
-            editForm.append(fieldNameDiv, fieldValueDiv)
-
-            // 3rd, give the field name
-            const fieldNameList = document.createElement('ul');
-            fieldNameList.className = 'no-bullet';
-            fieldNameList.innerHTML = `
-                <li><i class="i-left">Service's name</i></li>
-                <li><i class="i-left">Male price</i></li>
-                <li><i class="i-left">Female price</i></li>
-                <li><i class="i-left">Benefit</i></li>
-                <li><i class="i-left">Description</i></li>
-            `
-            fieldNameDiv.appendChild(fieldNameList);
-
-            // 4th, create the value field, and set variable for the element that contain value
+            // Get the original values
             const oriName = document.querySelector('#service-name');
             const oriMalePrice = document.querySelector('#service-male-price');
             const oriFemalePrice = document.querySelector('#service-female-price');
             const oriBenefit = document.querySelector('#service-benefit');
             const oriDescription = document.querySelector('#service-description');
 
-            const fieldValueList = document.createElement('ul');
-            fieldValueList.className = 'no-bullet';
-            fieldValueList.innerHTML = `
-                <li><input class="service-input" id="new-service-name" type="text" value="${oriName.getAttribute('data-service_name')}"></li>
-                <li><input class="service-input" id="new-service-male-price" type="number" value="${oriMalePrice.getAttribute('data-service_male_price')}"></li>
-                <li><input class="service-input" id="new-service-female-price" type="number" value="${oriFemalePrice.getAttribute('data-service_female_price')}"></li>
-                <li><input class="service-input" id="new-service-benefit" type="text" value="${oriBenefit.getAttribute('data-service_benefit')}"></li>
-                <li><input class="service-input" id="new-service-description" value="${oriDescription.getAttribute('data-service_description')}"></li>
-            `;
-            fieldValueDiv.appendChild(fieldValueList);
+            // Display all inputs and display all original values
+            container.innerHTML = `
+                <h1>Edit Service Info</h1>
+                <div class="form-group">
+                    <label for="new-service-name" class="form-label">Service Name</label>
+                    <input id="new-service-name" class="form-control" value="${oriName.getAttribute('data-service_name')}">
+                </div>
+                <div class="form-group">
+                    <label for="new-service-male-price" class="form-label">Male Price</label>
+                    <input id="new-service-male-price" class="form-control" value="${oriMalePrice.getAttribute('data-service_male_price') === 'None' ? '' : oriMalePrice.getAttribute('data-service_male_price')}">
+                </div>
+                <div class="form-group">
+                    <label for="new-service-female-price" class="form-label">Female Price</label>
+                    <input id="new-service-female-price" class="form-control" value="${oriFemalePrice.getAttribute('data-service_female_price') === 'None' ? '' : oriFemalePrice.getAttribute('data-service_female_price')}">
+                </div>
+                <div class="form-group">
+                    <label for="new-service-benefit" class="form-label">Benefit</label>
+                    <input id="new-service-benefit" class="form-control" value="${oriBenefit.getAttribute('data-service_benefit')}">
+                </div>
+                <div class="form-group">
+                    <label for="new-service-description" class="form-label">Description</label>
+                    <input id="new-service-description" class="form-control" value="${oriDescription.getAttribute('data-service_description')}">
+                </div>
+                <button>Save Change</button>
+            `
+            // Effect for label to move from left to the the center of the form
+            const formControls = container.querySelectorAll('.form-control');
+            formControls.forEach(control => {
+                control.onfocus = function() {
+                    this.closest('.form-group').classList.add('focused');
+                }
+                control.onblur = function() {
+                    this.closest('.form-group').classList.remove('focused');
+                }
+            })
 
-            // 5th, create submit button for the form
-            const saveBtn = document.createElement('button');
-            saveBtn.className = 'btn btn-primary';
-            saveBtn.innerHTML = 'Save';
-            editForm.appendChild(saveBtn);
-
-            // 6th, add Eventlistener to the form
+            // When user submit form, send HTTP request to server
             editForm.onsubmit = function() {
-                // Get the user input
-                const newName = fieldValueList.querySelector('#new-service-name').value;
-                const newMalePrice = fieldValueList.querySelector('#new-service-male-price').value;
-                const newFemalePrice = fieldValueList.querySelector('#new-service-female-price').value;
-                const newBenefit = fieldValueList.querySelector('#new-service-benefit').value;
-                const newDescription = fieldValueList.querySelector('#new-service-description').value;
-                
-                // Check if newMalePrice is empty and set it to 'None' if true
-                const displayMalePrice = newMalePrice === '' ? 'None' : newMalePrice;
-                const displayFemalePrice = newFemalePrice === '' ? 'None' : newFemalePrice;
-                const displayBenefit = newBenefit === '' ? 'None' : newBenefit;
-                const displayDescription = newDescription === '' ? 'None' : newDescription;
+                // Get the value from user input
+                const newName = container.querySelector('#new-service-name').value;
+                const newMalePrice = container.querySelector('#new-service-male-price').value;
+                const newFemalePrice = container.querySelector('#new-service-female-price').value;
+                const newBenefit = container.querySelector('#new-service-benefit').value;
+                const newDescription = container.querySelector('#new-service-description').value;
 
-                // send user input to the server
+                // If non-essential inputs were left blank, get the None value
+                const displayMalePrice = newMalePrice === '' ? 'None' : newMalePrice;
+                const displayFemalePrice = newFemalePrice === '' ? 'None': newFemalePrice;
+                const displayBenefit = newBenefit === '' ? '' : newBenefit;
+                const displayDescription = newDescription === '' ? '' : newDescription;
+
+                // Send values to server via HTTP request
                 fetch(`/service_detail/${document.querySelector('#original-value').getAttribute('data-service_id')}`, {
                     method: 'POST',
                     body: JSON.stringify({
@@ -120,27 +139,26 @@ document.addEventListener('DOMContentLoaded', function() {
                     })
                 })
                 .then(response => {
+                    // If success, modify original value in the page
                     if (response.status === 200) {
-                        // Modify value field in the original div as well as the appropriate data-information
                         oriName.innerHTML = `<strong>${newName}</strong>`;
-                        
-                        oriMalePrice.innerHTML = `<strong>${displayMalePrice}</strong>`;                       
-                        
-                        oriFemalePrice.innerHTML = `<strong>${displayFemalePrice}</strong>`;
-
-                        oriBenefit.innerHTML = `<strong>${displayBenefit}</strong>`;
-                                                
-                        oriDescription.innerHTML = `<strong>${displayDescription}</strong>`;                            
-
                         oriName.setAttribute('data-service_name', newName);
+
+                        oriMalePrice.innerHTML = `<strong>${displayMalePrice}</strong>`;
                         oriMalePrice.setAttribute('data-service_male_price', newMalePrice);
+
+                        oriFemalePrice.innerHTML = `<strong>${displayFemalePrice}</strong>`;
                         oriFemalePrice.setAttribute('data-service_female_price', newFemalePrice);
+                        
+                        oriBenefit.innerHTML = `<strong>${displayBenefit}</strong>`;
+                        oriBenefit.setAttribute('data-service_benefit', newBenefit);
+
+                        oriDescription.innerHTML = `<strong>${displayDescription}</strong>`;
                         oriDescription.setAttribute('data-service_description', newDescription);
 
-                        editContainer.remove();
-
-                        // Modify page title as well
                         document.querySelector('#service-page-title').innerHTML = newName;
+
+                        editContainer.remove();
                     } else if (response.status === 403) {
                         window.location.href = '/';
                     } else {
@@ -150,9 +168,14 @@ document.addEventListener('DOMContentLoaded', function() {
                 .catch(error => {
                     console.log(error);
                 })
-
+                
                 return false;
             }
+            formContainer.style.opacity = '0';
+            setTimeout(function() {
+                formContainer.style.opacity = '1';
+                formContainer.style.transform = 'translateY(50px)';
+            }, 50);
         }
-    }
+    }    
 })

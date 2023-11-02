@@ -2,7 +2,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Define elements
     const editDiv = document.querySelector('.edit-div');
     const showBtn = document.querySelector('#edit-btn');
-    const editForm = editDiv.querySelector('#edit-form');
+    const editForm = editDiv.querySelector('#edit-person-detail-form');
     const showNewMessageBtn = document.querySelector('#new-message-show');
     const newMessageDiv = document.querySelector('#new-message');
     const removePersonFormContainer = document.querySelector('#remove-person-form-container');
@@ -84,33 +84,94 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // By default editDiv and newMessageDiv will be hidden
-    editDiv.style.display = 'none';
+    editDiv.style.opacity = '0';
+    editDiv.style.height = '0';
     newMessageDiv.style.opacity = '0';
+    newMessageDiv.style.height = '0';
+
+    // Display has to be set to none when not using form so that other components (like other function button) won't be affect
+    editDiv.style.display = 'none';
+    newMessageDiv.style.display = 'none';
+    
 
     // When user click the button, show the editDiv
     showBtn.onclick = function() {
-        if (editDiv.style.display === 'none') {
+        if (editDiv.style.opacity === '0') {
             editDiv.style.display = 'block';
+            setTimeout(function() {
+                editDiv.style.height = '100%';
+                editDiv.style.opacity = '1';
+                editDiv.style.transform = 'translateY(50px)';
+            }, 50);
+            
         } else {
-            editDiv.style.display = 'none';
+            editDiv.style.opacity = '0';
+            editDiv.style.transform = 'translateY(-200px)';
+            editDiv.style.height = '0';
+            setTimeout(function() {
+                editDiv.style.display = 'none';
+            }, 50);
         }        
     }
 
     showNewMessageBtn.onclick = function() {
-        if (newMessageDiv.style.opacity === '0') {
-            newMessageDiv.style.opacity = '1';
-            newMessageDiv.style.transform = 'translateY(0)';
+        if (newMessageDiv.style.opacity === '0') {            
+            newMessageDiv.style.display = 'block';
+            setTimeout(function() {
+                newMessageDiv.style.height = '100%';
+                newMessageDiv.style.opacity = '1';
+                newMessageDiv.style.transform = 'translateY(0)';
+            }, 50);            
+            
         } else {
             newMessageDiv.style.opacity = '0';
             newMessageDiv.style.transform = 'translateY(-200px)';
+            newMessageDiv.style.height = '0';
+            setTimeout(function() {
+                newMessageDiv.style.display = 'none';
+            }, 1000);
         }
     }
+    // Make effect when user click on message input
     const messageContent = document.querySelector('#message-form').querySelector('.form-control');
     messageContent.onfocus = function() {
         this.closest('.form-group').classList.add('focused');
     }
     messageContent.onblur = function() {
         this.closest('.form-group').classList.remove('focused');
+    }
+
+    // Add effect when using click on a input on edit person form
+    const editPersonControls = editForm.querySelectorAll('.form-control');
+    editPersonControls.forEach(control => {
+        control.onfocus = function() {
+            this.closest('.form-group').classList.add('focused');
+        }
+        control.onblur = function() {
+            this.closest('.form-group').classList.remove('focused');
+        }
+    })
+
+    // Add button that allow user to close new message form
+    const hideMessageBtn = document.querySelector('#hide-new-message');
+    hideMessageBtn.onclick = function() {
+        newMessageDiv.style.opacity = '0';
+        newMessageDiv.style.transform = 'translateY(-200px)';
+        newMessageDiv.style.height = '0';
+        setTimeout(function() {
+            newMessageDiv.style.display = 'none';
+        }, 1000);
+    }
+
+    // Add button that allow user to close the editing info form
+    const hideEditingPersonBtn = document.querySelector('#hide-editing-person');
+    hideEditingPersonBtn.onclick = function() {
+        editDiv.style.opacity = '0';
+        editDiv.style.transform = 'translateY(-200px)';
+        editDiv.style.height = '0';
+        setTimeout(function() {
+            editDiv.style.display = 'none';
+        }, 1000);
     }
 
     

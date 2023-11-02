@@ -16,6 +16,9 @@
                         #
                     </th>
                     <th>
+                        ID
+                    </th>
+                    <th>
                         Company
                     </th>
                     <th>
@@ -44,6 +47,7 @@
                                 {{ forloop.counter }}
                             </a>                            
                         </td>
+                        <td class="text-end">{{ contract.id }}</td>
                         <td>{{ contract.client.name }}</td>
                         <td>{{ contract.client.representative }}</td>
                         <td class="text-end">{{ contract.male_headcount }}</td>

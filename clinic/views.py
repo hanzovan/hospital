@@ -1620,3 +1620,7 @@ def end_meeting(request):
         request.session['yay_message'] = "Meeting ended"
 
         return redirect('meeting_agenda', meeting_id=meeting.id)
+    
+
+# Use standard form for other route
+# Create X button for every form

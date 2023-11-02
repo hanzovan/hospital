@@ -103,30 +103,42 @@
             </tbody>
         </table>
     </div>
-    <div class="edit-div">
-        <form id="edit-form">
-            <div class="container my-person-edit-container">
-                <h1>Edit info</h1>
-                <p>Please enter person's information as follow</p>
-                
-                <label for="name">Name</label>
-                <input id="name" type="text" value="{{ person.name }}">                             
-                <label for="position">Position</label>
-                <input id="position" type="text" value="{{ person.position }}">                        
-                <label for="address">Address</label>
-                <input id="address" type="text" value="{{ person.address }}">
-                <label for="email">Email</label>
-                <input id="email" type="email" value="{{ person.email }}">            
-                <label for="phone">Phone</label>
-                <input id="phone" type="text" value="{{ person.phone }}">            
-                <label for="note">Note</label>
-                <textarea id="note">{{ person.note }}</textarea>
-            
-                <button>Save</button>                
-            </div>
-                      
-        </form>
-    </div>
+    <div class="general">
+        <div class="edit-div form-container">
+            <button class="closing-btn" id="hide-editing-person">X</button>
+            <form id="edit-person-detail-form">
+                <div class="container">
+                    <h1>Edit info</h1>
+                    <p>Please enter person's information as follow</p>
+                    <div class="form-group">
+                        <label for="name" class="form-label">Name</label>
+                        <input id="name" type="text" class="form-control" value="{{ person.name }}">
+                    </div>
+                    <div class="form-group">
+                        <label for="position" class="form-label">Position</label>
+                        <input id="position" class="form-control" type="text" value="{{ person.position }}">
+                    </div>
+                    <div class="form-group">
+                        <label for="address" class="form-label">Address</label>
+                        <input id="address" class="form-control" type="text" value="{{ person.address }}">
+                    </div>
+                    <div class="form-group">
+                        <label for="email" class="form-label">Email</label>
+                        <input id="email" class="form-control" type="email" value="{{ person.email }}">
+                    </div>
+                    <div class="form-group">
+                        <label for="phone" class="form-label">Phone</label>
+                        <input id="phone" class="form-control" type="text" value="{{ person.phone }}">
+                    </div>
+                    <div class="form-group">
+                        <label for="note" class="form-label">Note</label>
+                        <textarea id="note" class="form-control" cols="40" rows="5">{{ person.note }}</textarea>
+                    </div>              
+                    <button>Save</button>                
+                </div>                          
+            </form>
+        </div>
+    </div>   
 
     <div class="container-fluid">
         <table class="table table-borderless table-hover align-middle caption-top message-table">
@@ -161,6 +173,7 @@
     </div>
     <div class="general">
         <div class="form-container" id="new-message">
+            <button class="closing-btn" id="hide-new-message">X</button>
             <form action="{% url 'message' person_id=person.id %}" method="post" id="message-form">
                 {% csrf_token %}
                 <div class="container">
