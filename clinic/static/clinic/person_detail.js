@@ -92,44 +92,62 @@ document.addEventListener('DOMContentLoaded', function() {
     // Display has to be set to none when not using form so that other components (like other function button) won't be affect
     editDiv.style.display = 'none';
     newMessageDiv.style.display = 'none';
-    
 
-    // When user click the button, show the editDiv
+    // Define a function that accept 2 arguments, the event and the targeted div, the function will close the div
+    function clickOutside(event, targetDiv) {
+        if(!targetDiv.contains(event.target)) {            
+            closeEditing(targetDiv);
+        }
+    }
+
+    // Event Delegation
+    const clickOutsideEditDiv = (event) => {
+        clickOutside(event, editDiv); 
+    }
+    const clickOutsideMessageDiv = (event) => {
+        clickOutside(event, newMessageDiv);
+    }
+
+    // When user click the button, show the editDiv, or close it if it already shown
     showBtn.onclick = function() {
         if (editDiv.style.opacity === '0') {
+            document.removeEventListener('click', clickOutsideEditDiv);
             editDiv.style.display = 'block';
             setTimeout(function() {
                 editDiv.style.height = '100%';
                 editDiv.style.opacity = '1';
-                editDiv.style.transform = 'translateY(50px)';
+                editDiv.style.transform = 'translateY(-500px)';
             }, 50);
             
-        } else {
-            editDiv.style.opacity = '0';
-            editDiv.style.transform = 'translateY(-200px)';
-            editDiv.style.height = '0';
+            // Add eventlistener
             setTimeout(function() {
-                editDiv.style.display = 'none';
-            }, 50);
+                document.addEventListener('click', clickOutsideEditDiv);
+            }, 50);            
+
+        } else {
+            // Close the form
+            closeEditing(editDiv);
         }        
     }
 
     showNewMessageBtn.onclick = function() {
-        if (newMessageDiv.style.opacity === '0') {            
+        if (newMessageDiv.style.opacity === '0') {
+            document.removeEventListener('click', clickOutsideMessageDiv);            
             newMessageDiv.style.display = 'block';
             setTimeout(function() {
                 newMessageDiv.style.height = '100%';
                 newMessageDiv.style.opacity = '1';
-                newMessageDiv.style.transform = 'translateY(0)';
-            }, 50);            
+                newMessageDiv.style.transform = 'translateY(-400px)';
+            }, 50);
+            
+            // Add eventlistener that close the message form when user click outside
+            setTimeout(function() {
+                document.addEventListener('click', clickOutsideMessageDiv);
+            })
             
         } else {
-            newMessageDiv.style.opacity = '0';
-            newMessageDiv.style.transform = 'translateY(-200px)';
-            newMessageDiv.style.height = '0';
-            setTimeout(function() {
-                newMessageDiv.style.display = 'none';
-            }, 1000);
+            // Close the form
+            closeEditing(newMessageDiv);
         }
     }
     // Make effect when user click on message input
@@ -155,24 +173,24 @@ document.addEventListener('DOMContentLoaded', function() {
     // Add button that allow user to close new message form
     const hideMessageBtn = document.querySelector('#hide-new-message');
     hideMessageBtn.onclick = function() {
-        newMessageDiv.style.opacity = '0';
-        newMessageDiv.style.transform = 'translateY(-200px)';
-        newMessageDiv.style.height = '0';
-        setTimeout(function() {
-            newMessageDiv.style.display = 'none';
-        }, 1000);
+        //Remove div
+        closeEditing(newMessageDiv);
     }
 
     // Add button that allow user to close the editing info form
     const hideEditingPersonBtn = document.querySelector('#hide-editing-person');
     hideEditingPersonBtn.onclick = function() {
-        editDiv.style.opacity = '0';
-        editDiv.style.transform = 'translateY(-200px)';
-        editDiv.style.height = '0';
-        setTimeout(function() {
-            editDiv.style.display = 'none';
-        }, 1000);
+        //Remove div
+        closeEditing(editDiv);
     }
 
-    
+    // Close editing form
+    function closeEditing(targetDiv) {
+        targetDiv.style.opacity = '0';
+        targetDiv.style.transform = 'translateY(-200px)';
+        targetDiv.style.height = '0';
+        setTimeout(function() {
+            targetDiv.style.display = 'none';
+        }, 1000);
+    }
 })
