@@ -54,10 +54,12 @@ document.addEventListener('DOMContentLoaded', function() {
             xBtn.className = 'closing-btn';
             xBtn.innerHTML = 'X';
             xBtn.onclick = function() {
-                formContainer.style.opacity = '0';
-                formContainer.style.transform = 'translateY(-200px)';
+                closeEditing(formContainer);
+                setTimeout(function() {
+                    editContainer.remove();
+                }, 1000);
             }
-            formContainer.appendChild(xBtn);
+            formContainer.appendChild(xBtn);            
 
             // Create the form
             const editForm = document.createElement('form');
@@ -174,8 +176,37 @@ document.addEventListener('DOMContentLoaded', function() {
             formContainer.style.opacity = '0';
             setTimeout(function() {
                 formContainer.style.opacity = '1';
-                formContainer.style.transform = 'translateY(50px)';
+                formContainer.style.transform = 'translateY(-600px)';
             }, 50);
+
+            // Add an eventlistener that automatically close the form when user click outside of the form
+            const clickOutsideFormContainer = (event) => {
+                clickOutside(event, formContainer);
+            }
+            document.removeEventListener('click', clickOutsideFormContainer);
+            setTimeout(function() {
+                document.addEventListener('click', clickOutsideFormContainer)
+            }, 50);
+
+            // Create a function that close the form
+            function closeEditing(targetDiv) {
+                targetDiv.style.opacity = '0';
+                targetDiv.style.transform = 'translateY(-200px)';
+                targetDiv.style.height = '0';
+                setTimeout(function() {
+                    targetDiv.style.display = 'none';
+                }, 1000);
+            }
+            
+            // Define a function that close the form if user click outside of it
+            function clickOutside(event, targetDiv) {
+                if (!targetDiv.contains(event.target)) {
+                    closeEditing(targetDiv);
+                    setTimeout(function() {
+                        editContainer.remove();
+                    }, 1000);                    
+                }
+            }
         }
     }    
 })
