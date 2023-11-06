@@ -643,32 +643,6 @@ def companies(request):
 # Allow user to access company's detail
 @login_required
 def company_detail(request, company_id):
-    # Only user with the right to check company info can go to this route
-    if "read_company_info" not in user_right(request.user.management_right_level):
-        request.session['nay_message'] = "You do not have the right to access this page"
-        return HttpResponseRedirect(reverse('index'))
-    # If user right satisfied condition, continue
-    try:
-        company = Company.objects.get(pk=company_id)
-    except Company.DoesNotExist:
-        request.session['nay_message'] = "Company with that id does not exist"
-        return HttpResponseRedirect(reverse('companies'))
-
-    yay_message = request.session.get('yay_message', '')
-    nay_message = request.session.get('nay_message', '')
-    request.session['yay_message'] = ''
-    request.session['nay_message'] = ''
-
-    return render(request, "clinic/company_detail.html", {
-        "company": company,
-        "yay_message": yay_message,
-        "nay_message": nay_message
-    })
-
-
-# Allow user to edit company's information
-@login_required
-def edit_company(request, company_id):
     # If user submitted form
     if request.method == 'POST':
         # Check the id
@@ -719,25 +693,104 @@ def edit_company(request, company_id):
         # Inform user and redirect
         request.session['yay_message'] = "Company information modified successfully"
         return redirect('company_detail', company_id=company_id)
-
-    # Else if user was being redirected or clicked link
+    
+    # If user click link or being redirected
     else:
+        # Only user with the right to check company info can go to this route
+        if "read_company_info" not in user_right(request.user.management_right_level):
+            request.session['nay_message'] = "You do not have the right to access this page"
+            return HttpResponseRedirect(reverse('index'))
+        # If user right satisfied condition, continue
         try:
             company = Company.objects.get(pk=company_id)
         except Company.DoesNotExist:
-            request.session['nay_message'] = "Company does not exist"
+            request.session['nay_message'] = "Company with that id does not exist"
             return HttpResponseRedirect(reverse('companies'))
-        
+
         yay_message = request.session.get('yay_message', '')
         nay_message = request.session.get('nay_message', '')
         request.session['yay_message'] = ''
         request.session['nay_message'] = ''
 
-        return render(request, "clinic/edit_company.html", {
+        return render(request, "clinic/company_detail.html", {
             "company": company,
             "yay_message": yay_message,
             "nay_message": nay_message
         })
+
+
+# Allow user to edit company's information
+# @login_required
+# def edit_company(request, company_id):
+#     # If user submitted form
+#     if request.method == 'POST':
+#         # Check the id
+#         try:
+#             company = Company.objects.get(pk=company_id)
+#         except Company.DoesNotExist:
+#             request.session['nay_message'] = "Company not found"
+#             return HttpResponseRedirect(reverse('companies'))
+
+#         # If the id is valid, then company exist, check the user right
+#         if "modify_company_info" not in user_right(request.user.management_right_level):
+#             request.session['nay_message'] = "You do not have the right to modify company's information"
+#             return redirect("company_detail", company_id=company_id)
+        
+#         # Get the variables
+#         name = request.POST.get('name', '')
+#         industry = request.POST.get('industry', '')
+#         address = request.POST.get('address', '')
+#         email = request.POST.get('email', '')
+#         phone = request.POST.get('phone', '')
+#         male_headcount = request.POST.get('male_headcount', '')
+#         female_headcount = request.POST.get('female_headcount', '')
+
+#         if not name or not industry or not address or not email or not phone or not male_headcount or not female_headcount:
+#             request.session['nay_message'] = "Please fill all fields"
+#             return redirect("edit_company", company_id=company_id)
+
+#         try:
+#             # Check that if headcount is negative or not
+#             if int(male_headcount) < 0 or int(female_headcount) < 0:
+#                 request.session['nay_message'] = "Headcount has to be equal or greater than 0"
+#                 return redirect("edit_company", company_id=company_id)
+#         except ValueError:
+#             request.session['nay_message'] = "Headcount has to be integer"
+#             return redirect("edit_company", company_id=company_id)
+
+#         # Save the new information of the company
+#         company.name = name
+#         company.industry = industry
+#         company.address = address
+#         company.email = email
+#         company.phone = phone
+#         company.male_headcount = male_headcount
+#         company.female_headcount = female_headcount
+#         company.modified_by = request.user
+#         company.save()
+
+#         # Inform user and redirect
+#         request.session['yay_message'] = "Company information modified successfully"
+#         return redirect('company_detail', company_id=company_id)
+
+#     # Else if user was being redirected or clicked link
+#     else:
+#         try:
+#             company = Company.objects.get(pk=company_id)
+#         except Company.DoesNotExist:
+#             request.session['nay_message'] = "Company does not exist"
+#             return HttpResponseRedirect(reverse('companies'))
+        
+#         yay_message = request.session.get('yay_message', '')
+#         nay_message = request.session.get('nay_message', '')
+#         request.session['yay_message'] = ''
+#         request.session['nay_message'] = ''
+
+#         return render(request, "clinic/edit_company.html", {
+#             "company": company,
+#             "yay_message": yay_message,
+#             "nay_message": nay_message
+#         })
 
 
 # Allow user to remove company

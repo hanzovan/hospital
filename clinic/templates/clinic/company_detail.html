@@ -54,7 +54,7 @@
                 <tbody>
                     <tr>
                         <td>
-                            <a class="text-center btn btn-info" href="{% url 'edit_company' company_id=company.id %}">Edit Company</a>
+                            <a class="text-center btn btn-info" id="show-edit-company-btn">Edit Company</a>
                         </td>
                         <td>
                             <form action="{% url 'remove_company' %}" method="post" onsubmit="return confirm('Are you really want to remove this company?');">
@@ -66,6 +66,46 @@
                     </tr>
                 </tbody>
             </table>            
+        </div>
+    </div>
+    <div class="general">
+        <div class="form-container" id="edit-company-container">
+            <button class="closing-btn" id="hide-editing-company">X</button>
+            <form action="{% url 'company_detail' company_id=company.id %}" method="post" id="edit-company-form">
+                {% csrf_token %}
+                <div class="container">
+                    <h1>Edit Company Info</h1>
+                    <div class="form-group">
+                        <label for="name" class="form-label">Company's name</label>
+                        <input type="text" name="name" class="form-control" value="{{ company.name }}">
+                    </div>
+                    <div class="form-group">
+                        <label for="industry" class="form-label">Industry</label>
+                        <input type="text" name="industry" class="form-control" value="{{ company.industry }}">
+                    </div>
+                    <div class="form-group">
+                        <label for="address" class="form-label">Address</label>
+                        <input type="text" name="address" class="form-control" value="{{ company.address }}">
+                    </div>
+                    <div class="form-group">
+                        <label for="email" class="form-label">Email</label>
+                        <input type="text" name="email" class="form-control" value="{{ company.email }}">
+                    </div>
+                    <div class="form-group">
+                        <label for="phone" class="form-label">Phone</label>
+                        <input type="text" name="phone" class="form-control" value="{{ company.phone }}">
+                    </div>
+                    <div class="form-group">
+                        <label for="male_headcount" class="form-label">Male Headcount</label>
+                        <input type="number" name="male_headcount" class="form-control" min="0" value="{{ company.male_headcount }}">
+                    </div>
+                    <div class="form-group">
+                        <label for="female_headcount" class="form-label">Female Headcount</label>
+                        <input type="number" name="female_headcount" class="form-control" min="0" value="{{ company.female_headcount }}">
+                    </div>
+                    <button>Save Change</button>
+                </div>
+            </form>
         </div>
     </div>
 
