@@ -5,21 +5,42 @@ document.addEventListener('DOMContentLoaded', function() {
     const hideEditingBtn = document.querySelector('#hide-editing');
 
     // By default, the form should be hidden
-    editForm.style.opacity = '0';
+    closeEditing(editForm);
 
     // When user click the showEditing button, the form should appear, clicking it again should hide it again
     showEditingBtn.onclick = function() {
-        if (editForm.style.opacity === '0') {
+        //Remove eventlistener first to avoid dupplicate
+        document.removeEventListener('click', clickOutsideForm);        
+        editForm.style.display = 'block';
+        setTimeout(function() {
             editForm.style.opacity = '1';
-            editForm.style.transform = 'translateY(50px)';
-        } else {
-            editForm.style.opacity = '0';
-            editForm.style.transform = 'translateY(0)';
-        }
+            editForm.style.height = '100%';
+            editForm.style.transform = 'translateY(-500px)';
+            document.addEventListener('click', clickOutsideForm);
+        }, 50);        
     }
     
     hideEditingBtn.onclick = function() {
-        editForm.style.opacity = '0';
-        editForm.style.transform = 'translateY(0)';
+        closeEditing(editForm);
+    }
+
+    //Function that hide the edit form
+    function closeEditing(targetDiv) {
+        targetDiv.style.opacity = '0';
+        targetDiv.style.transform = 'translateY(-200px)';
+        targetDiv.style.height = '0';
+        setTimeout(function() {
+            targetDiv.style.display = 'none';
+        }, 1000);
+    }
+    //Function that close the form when user click outside
+    function clickOutside(event, targetDiv) {
+        if (!targetDiv.contains(event.target)) {
+            closeEditing(targetDiv);
+        }
+    }
+    //Delegation event
+    const clickOutsideForm = (event) => {
+        clickOutside(event, editForm);
     }
 })
