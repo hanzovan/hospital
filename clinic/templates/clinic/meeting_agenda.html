@@ -70,15 +70,18 @@
     </div>
 
     {% if not meeting.end_or_not %}
-
+        
         <div style="display: flex; justify-content: center; align-items: center;">
             <div>
                 <table>
                     <tbody>
                         <tr>
+                            <!-- button to show the form that allow add item to agenda -->
                             <td>
                                 <button class="btn btn-primary" id="show-add-meeting-agenda-form">Add Item</button>
                             </td>
+
+                            <!-- the form that allow user to end the meeting -->
                             <td>
                                 <form action="{% url 'end_meeting' %}" method="post" id="end-meeting-form" onsubmit="return confirm('Are you really want to end this meeting?');">
                                     {% csrf_token %}
@@ -86,14 +89,18 @@
                                     <button class="btn btn-danger">End Meeting</button>
                                 </form>
                             </td>
+
+                            <!-- button to show the form that allow user to editing the meeting schedule -->
                             <td>
-                                <a class="text-center btn btn-info" href="{% url 'edit_meeting' meeting_id=meeting.id %}">Edit Meeting</a>
+                                <button class="btn btn-info" id="show-edit-meeting-form">Edit Meeting</button>
                             </td>
                         </tr>
                     </tbody>
                 </table>
             </div>
         </div>
+
+        <!-- form for user to add item to meeting agenda -->
         <div class="general">
             <div class="form-container" id="add-agenda-container">
                 <button class="closing-btn" id="hide-add-agenda-form">X</button>
@@ -113,6 +120,43 @@
                         <p><i>If meeting has less than 5 items, just ignore the excessive items</i></p>
                         <p><i>If it has more than 5 items, you can add more later</i></p>
                         
+                        <button>Save</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- form that allow user to edit the meeting schedule -->
+        <div class="general">
+            <div class="form-container" id="edit-meeting-form-container">
+                <button class="closing-btn" id="hide-edit-meeting-form">X</button>
+                <form action="{% url 'edit_meeting' meeting_id=meeting.id %}" method="post" id="edit-meeting-form">
+                    {% csrf_token %}
+                    <div class="container">
+                        <h1>Edit Meeting</h1>
+                        <div class="form-group">
+                            <label for="client_id" class="form-label">Client</label>
+                            <select name="client_id">
+                                <option selected value="{{ meeting.client.id }}">{{ meeting.client.name }}</option>
+                                {% for company in companies %}
+    
+                                    {% if company.name != meeting.client.name %}
+    
+                                        <option value="{{ company.id }}">{{ company.name }}</option>
+    
+                                    {% endif %}
+    
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="start_time" class="form-label">Start Time</label>
+                            <input name="start_time" type="datetime-local" class="form-control" value="{{ meeting.start_time|date:'Y-m-d\TH:i' }}" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="end_time" class="form-label">End Time</label>
+                            <input name="end_time" type="datetime-local" class="form-control" value="{{ meeting.end_time|date:'Y-m-d\TH:i' }}" required>
+                        </div>
                         <button>Save</button>
                     </div>
                 </form>

@@ -3,6 +3,9 @@ document.addEventListener('DOMContentLoaded', function() {
     const addAgendaForm = document.querySelector('#add-agenda-container');
     const showAddAgendaFormBtn = document.querySelector('#show-add-meeting-agenda-form');
     const hideAddAgendaFormBtn = document.querySelector('#hide-add-agenda-form');
+    const editMeetingForm = document.querySelector('#edit-meeting-form-container');
+    const showEditMeetingBtn = document.querySelector('#show-edit-meeting-form');
+    const hideEditMeetingBtn = document.querySelector('#hide-edit-meeting-form');
     
     //By default, the form was hidden
     function closingDiv(targetDiv) {
@@ -14,6 +17,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }, 1000);
     }
     closingDiv(addAgendaForm);
+    closingDiv(editMeetingForm);
 
     showAddAgendaFormBtn.onclick = function() {
         //Remove eventlistener
@@ -27,9 +31,24 @@ document.addEventListener('DOMContentLoaded', function() {
             document.addEventListener('click', clickOutsideAddAgendaForm);
         }, 50);
     }
+    showEditMeetingBtn.onclick = function() {
+        //remove old eventlistener
+        document.removeEventListener('click', clickOutsideEditMeetingForm);
+
+        editMeetingForm.style.display = 'block';
+        setTimeout(function() {
+            editMeetingForm.style.opacity = '1';
+            editMeetingForm.style.height = '100%';
+            editMeetingForm.style.transform = 'translateY(-500px)';
+            document.addEventListener('click', clickOutsideEditMeetingForm);
+        }, 50);
+    }
 
     hideAddAgendaFormBtn.onclick = function() {
         closingDiv(addAgendaForm);
+    }
+    hideEditMeetingBtn.onclick = function() {
+        closingDiv(editMeetingForm);
     }
 
     //Define function that hide the form when user click outside
@@ -41,6 +60,9 @@ document.addEventListener('DOMContentLoaded', function() {
     //Event delegation
     const clickOutsideAddAgendaForm = (event) => {
         clickOutside(event, addAgendaForm);
+    }
+    const clickOutsideEditMeetingForm = (event) => {
+        clickOutside(event, editMeetingForm);
     }
 
     //Add effect to label of add agenda form
