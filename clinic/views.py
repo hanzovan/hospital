@@ -1454,6 +1454,12 @@ def add_meeting_agenda(request, meeting_id):
                     )
                     new_item.save()
 
+        # If no item was added, return nay message and redirect back
+        if all(value == "" for value in items.values()):
+            request.session['nay_message'] = "Please enter at least one item"
+            return redirect('meeting_agenda', meeting_id=meeting_id)
+
+        # If exist item, return yay message, then redirect also
         request.session['yay_message'] = "Item added"
         return redirect('meeting_agenda', meeting_id=meeting.id)
 
@@ -1603,3 +1609,4 @@ def end_meeting(request):
 
 # Use standard form for other route
 # Create X button for every form
+# merge meeting form

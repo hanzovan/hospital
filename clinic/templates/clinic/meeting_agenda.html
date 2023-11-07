@@ -53,7 +53,7 @@
                             <form action="{% url 'meeting_item_remove' meeting_id=meeting.id %}" method="post" onsubmit="return confirm('Do you really want to remove this agenda item?');">
                                 {% csrf_token %}
                                 <input name="item_id" type="hidden" value="{{ item.id }}">
-                                <button class="btn btn-link no-underline">-</button>
+                                <button class="btn btn-link no-underline"><span style="color: red;">Remove Item</span></button>
                             </form>
                         </td>
                     </tr>
@@ -77,7 +77,7 @@
                     <tbody>
                         <tr>
                             <td>
-                                <a class="text-center btn btn-primary" href="{% url 'add_meeting_agenda' meeting_id=meeting.id %}">Add Item</a>
+                                <button class="btn btn-primary" id="show-add-meeting-agenda-form">Add Item</button>
                             </td>
                             <td>
                                 <form action="{% url 'end_meeting' %}" method="post" id="end-meeting-form" onsubmit="return confirm('Are you really want to end this meeting?');">
@@ -94,7 +94,36 @@
                 </table>
             </div>
         </div>
+        <div class="general">
+            <div class="form-container" id="add-agenda-container">
+                <button class="closing-btn" id="hide-add-agenda-form">X</button>
+                <form action="{% url 'add_meeting_agenda' meeting_id=meeting.id %}" method="post" id="add-agenda-form">
+                    {% csrf_token %}
+                    <div class="container">
+                        <h1>Add Item</h1>
+                        {% for i in "12345" %}
+    
+                            <div class="form-group">
+                                <label for="item_{{ i }}" class="form-label">Item {{ i }}</label>
+                                <textarea class="form-control" name="item_{{ i }}"></textarea>
+                            </div>
+    
+                        {% endfor %}
+    
+                        <p><i>If meeting has less than 5 items, just ignore the excessive items</i></p>
+                        <p><i>If it has more than 5 items, you can add more later</i></p>
+                        
+                        <button>Save</button>
+                    </div>
+                </form>
+            </div>
+        </div>
 
     {% endif %}    
+
+{% endblock %}
+{% block script %}
+
+        <script src="{% static 'clinic/meeting_agenda.js' %}"></script>
 
 {% endblock %}
