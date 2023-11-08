@@ -46,11 +46,11 @@ def user_right(level):
             all_rights[0],
             all_rights[1],
             all_rights[2],
-            all_rights[3]
+            all_rights[3],
+            all_rights[4]
             ])
         if level > 1:
             user_rights.extend([
-                all_rights[4],
                 all_rights[5],
                 all_rights[6],
                 all_rights[7]

@@ -16,7 +16,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // only check if user logged in
     if (isAuthenticated) {
-        // CHECK RIGHTS FOR ADD PEOPLE, ADD SERVICE, AND ADD COMPANY, WHEN BOTH WERE CHECKED, COUNT THE RIGHTS, THEN IF THE RIGHT = 0, HIDE THE 'ADD' BUTTON ON NAVIGATION BAR
+        // CHECK RIGHTS FOR ADD PEOPLE, ADD SERVICE, ADD COMPANY, ADD CONTRACT, WHEN ALL WERE CHECKED, COUNT THE RIGHTS, THEN IF THE RIGHT = 0, HIDE THE 'ADD' BUTTON ON NAVIGATION BAR
         const checkAddPeopleRight = fetch('/check_right', {
             method: 'POST',
             body: JSON.stringify({
@@ -52,6 +52,18 @@ document.addEventListener('DOMContentLoaded', function() {
         .catch(error => {
             console.log(error);
         })
+
+        const checkAddContractRight = fetch('/check_right', {
+            method: 'POST',
+            body: JSON.stringify ({
+                'right': 'modify_contract_info'
+            })
+        })
+        .then(response => response.json())
+        .then(data => data.check_result)
+        .catch(error => {
+            console.log(error);
+        })
     
         // Get the adding list item
         const adding = document.querySelector('#adding-items');
@@ -65,12 +77,15 @@ document.addEventListener('DOMContentLoaded', function() {
         // Get the adding company item
         const addCoListItem = document.querySelector('#add-company-list-item');
     
+        // Get the adding contract item
+        const addContractListItem = document.querySelector('#add-contract-list-item');
+
         // IMPORTANT-LEVEL-S: Wait for both promise to resolve, then count
-        Promise.all([checkAddPeopleRight, checkAddServiceRight, checkAddCompanyRight])
+        Promise.all([checkAddPeopleRight, checkAddServiceRight, checkAddCompanyRight, checkAddContractRight])
     
         // Hide or show the list items
         .then(results => {
-            const [addPeopleResult, addServiceResult, addCompanyResult] = results;       
+            const [addPeopleResult, addServiceResult, addCompanyResult, addContractResult] = results;       
     
             // Decide to show or hide list item depending on whether user have right to add people or not
             if (addPeopleResult) {
@@ -91,6 +106,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 addCoListItem.style.display = 'block';
             } else {
                 addCoListItem.style.display = 'none';
+            }
+            // The same with add contract
+            if (addContractResult) {
+                addContractListItem.style.display = 'block';
+            } else {
+                addContractListItem.style.display = 'none';
             }
         })
     

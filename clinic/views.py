@@ -854,6 +854,11 @@ def add_contract(request):
                 "companies": companies
             })
         
+        # Check if user has the right to modify contract info
+        if "modify_contract_info" not in user_right(request.user.management_right_level):
+            request.session['nay_message'] = "You do not have the right to add contract"
+            return HttpResponseRedirect(reverse('index'))
+
         # Get service id
         service_ids = request.POST.getlist('chosen_services')
 
@@ -941,11 +946,22 @@ def add_contract(request):
     
     # If user clicked link or being redirect
     else:
+        #Check user right
+        if "modify_contract_info" not in user_right(request.user.management_right_level):
+            request.session['nay_message'] = "You do not have the right to add contract"
+            return HttpResponseRedirect(reverse('index'))
+        
         companies = Company.objects.all()
         services = Service.objects.all()
+        yay_message = request.session.get('yay_message', '')
+        nay_message = request.session.get('nay_message', '')
+        request.session['yay_message'] = ''
+        request.session['nay_message'] = ''
         return render(request, "clinic/add_contract.html", {
             "services": services,
-            "companies": companies
+            "companies": companies,
+            "yay_message": yay_message,
+            "nay_message": nay_message
         })
 
 
