@@ -749,9 +749,21 @@ def remove_company(request):
 # Allow add message from person_detail page
 def message(request, person_id):
     if request.method == 'POST':
+        #Get content from the form input
         content = request.POST['content']
-        person = People.objects.get(pk=person_id)
+
+        #Check if person with that id exist or not, if not redirect user to index page
+        try:
+            person = People.objects.get(pk=person_id)
+        except People.DoesNotExist:
+            request.session['nay_message'] = "Person not found"
+            return HttpResponseRedirect(reverse('index'))
         
+        #Check user right
+        if "add_people_info" not in user_right(request.user.management_right_level):
+            request.session['nay_message'] = "You do not have the right to add message"
+            return HttpResponseRedirect(reverse('index'))
+
         message = ContactDiary(
             name = person,
             content = content
@@ -1607,6 +1619,29 @@ def end_meeting(request):
         return redirect('meeting_agenda', meeting_id=meeting.id)
     
 
+def testing_route(request, person_id):
+    #if user submitting form
+    # if request.method == 'POST':
+    #     try:
+    #         person = People.objects.get(pk=person_id)
+    #     except People.DoesNotExist:
+    #         request.session['nay_message'] = "Person does not exist"
+    #         return HttpResponseRedirect(reverse('index'))
+
+    #     content = request.POST.get('content')
+
+    #     return HttpResponse(content)
+    
+    # else:
+
+    person = People.objects.get(pk=person_id)
+    return render(request, "clinic/testing.html", {
+        "person": person
+    })
+
+
 # Use standard form for other route
 # Create X button for every form
 # merge meeting form
+
+

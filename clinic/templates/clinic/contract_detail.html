@@ -1,5 +1,6 @@
 {% extends "clinic/layout.html" %}
 {% load static %}
+{% load humanize %}
 {% block title %}
 
     contract detail
@@ -47,7 +48,7 @@
         </tr>
         <tr>
             <th>Total Value</th>
-            <td>{{ contract.total_value }}</td>
+            <td>{{ contract.total_value|intcomma }} VND</td>
         </tr>
         <tr>
             <th>Discount</th>
@@ -58,7 +59,7 @@
         <tr>
             <th>Revenue</th>
             <td>
-                {{ contract.revenue }}
+                {{ contract.revenue|intcomma }} VND
             </td>
         </tr>
         <tr>
