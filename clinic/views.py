@@ -781,7 +781,18 @@ def message(request, person_id):
 def add_message_from_all_people_page(request, person_id):
     # If user submitted form
     if request.method == 'POST':
-        person = People.objects.get(pk=person_id)
+        #Check if person exist
+        try:
+            person = People.objects.get(pk=person_id)
+        except People.DoesNotExist:
+            request.session['nay_message'] = "Person does not exist"
+            return redirect("add_message_from_all_people_page", person_id=person_id)
+        
+        #Check if user has the right, if not raise error and show the form again
+        if "add_people_info" not in user_right(request.user.management_right_level):
+            request.session['nay_message'] = "You do not have the right to add message"
+            return redirect("add_message_from_all_people_page", person_id=person_id)
+
         content = request.POST.get('content', '')
         
         # save the new message
@@ -795,9 +806,27 @@ def add_message_from_all_people_page(request, person_id):
     
     # If user clicked link
     else:
-        person = People.objects.get(pk=person_id)
+        # Check if person exist
+        try:            
+            person = People.objects.get(pk=person_id)
+        except People.DoesNotExist:
+            request.session['nay_message'] = "Person not found"
+            return redirect("add_message_from_all_people_page", person_id=person_id)
+        # Check if user has the right, if not redirect user to index route
+        if "add_people_info" not in user_right(request.user.management_right_level):
+            request.session['nay_message'] = "You do not have the right to add message"
+            return HttpResponseRedirect(reverse('index'))
+
+        # Show message
+        yay_message = request.session.get('yay_message', '')
+        nay_message = request.session.get('nay_message', '')
+        request.session['yay_message'] = ''
+        request.session['nay_message'] = ''
+
         return render(request, "clinic/add_message_from_all_people_page.html", {
-            "person": person
+            "person": person,
+            "yay_message": yay_message,
+            "nay_message": nay_message
         })
 
 
