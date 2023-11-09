@@ -968,6 +968,11 @@ def add_contract(request):
 # Retrieve all contracts that are not archived
 @login_required
 def all_contracts(request):
+    # If user does not has the right to read contract info, redirect to index
+    if "read_contract_info" not in user_right(request.user.management_right_level):
+        request.session['nay_message'] = 'You do not have the right to access this information'
+        return HttpResponseRedirect(reverse('index'))
+
     contracts = Contract.objects.filter(archived=False).order_by('initiation_date')
 
     # Get today
@@ -1002,6 +1007,11 @@ def contract_detail(request, contract_id):
         request.session['nay_message'] = "Invalid contract ID"
         return HttpResponseRedirect(reverse('all_contracts'))
 
+    # Check user right, if not redirect to index
+    if "read_contract_info" not in user_right(request.user.management_right_level):
+        request.session['nay_message'] = "You do not have the right to access this page"
+        return HttpResponseRedirect(reverse('index'))
+
     # List of companies for editing
     companies = Company.objects.all()
     services = Service.objects.all()
@@ -1032,6 +1042,11 @@ def contract_detail(request, contract_id):
 @login_required
 def edit_contract(request):
     if request.method == 'POST':
+        # Check if user has the permission to edit contract information
+        if "modify_contract_info" not in user_right(request.user.management_right_level):
+            request.session['nay_message'] = "You do not have the permission to modify this information"
+            return HttpResponseRedirect(reverse('all_contracts'))
+
         # Get variables from POST
         contract_id = request.POST.get('contract_id', '')
         client_id = request.POST.get('client_id', '')
@@ -1203,6 +1218,11 @@ def archive_contract(request):
 # Allow user to visit all archived contracts
 @login_required
 def all_archived_contracts(request):
+    #If user do not have the right to read contract info, redirect
+    if "read_contract_info" not in user_right(request.user.management_right_level):
+        request.session['nay_message'] = "You do not have the permission to access this page"
+        return HttpResponseRedirect(reverse('index'))
+
     # Get all archived contracts
     contracts = Contract.objects.filter(archived=True).order_by("initiation_date")
 
@@ -1688,5 +1708,6 @@ def testing_route(request, person_id):
 # Use standard form for other route
 # Create X button for every form
 # merge meeting form
+# User with level 1 can access self add people list, but can't access their detail
 
 

@@ -4,6 +4,26 @@ document.addEventListener('DOMContentLoaded', function() {
     const showEditingBtn = document.querySelector('#show-editing');
     const hideEditingBtn = document.querySelector('#hide-editing');
 
+    // Check user right, if user does not have permission to edit contract, hide showEditingBtn
+    fetch('/check_right', {
+        method: 'POST',
+        body: JSON.stringify({
+            'right': 'modify_contract_info'
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        const result = data.check_result;
+        if (result) {
+            showEditingBtn.style.display = 'block';
+        } else {
+            showEditingBtn.style.display = 'none';
+        }
+    })
+    .catch(error => {
+        console.log(error);
+    })
+
     // By default, the form should be hidden
     closeEditing(editForm);
 

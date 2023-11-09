@@ -80,7 +80,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // Get the adding contract item
         const addContractListItem = document.querySelector('#add-contract-list-item');
 
-        // IMPORTANT-LEVEL-S: Wait for both promise to resolve, then count
+        // Important-S: Wait for all promise to resolve, then count
         Promise.all([checkAddPeopleRight, checkAddServiceRight, checkAddCompanyRight, checkAddContractRight])
     
         // Hide or show the list items
@@ -169,46 +169,120 @@ document.addEventListener('DOMContentLoaded', function() {
         })
 
         // CHECK RIGHTS FOR SHOW PEOPLE, COMPANY
-        fetch('/check_right', {
+        const readMyPeopleRight = fetch('/check_right', {
+            method: 'POST',
+            body: JSON.stringify({
+                'right': "read_self_add_people_info"
+            })
+        })
+        .then(response => response.json())
+        .then(data => data.check_result)
+        .catch(error => {
+            console.log(error);
+        })
+
+        const readPeopleRight = fetch('/check_right', {        
             method: 'POST',
             body: JSON.stringify({
                 'right': "read_all_people_info"
             })
         })
         .then(response => response.json())
-        .then(data => {
-            const result = data.check_result;
-
-            // If user have right
-            if (result) {
-                document.querySelector('#all-people-list-item').style.display = 'block';
-            } else {
-                document.querySelector('#all-people-list-item').style.display = 'none';
-            }
-        })
+        .then(data => data.check_result)
         .catch(error => {
             console.log(error);
         })
 
-        fetch('/check_right', {
+        const readCompaniesRight = fetch('/check_right', {        
             method: 'POST',
             body: JSON.stringify({
                 'right': "read_company_info"
             })
         })
         .then(response => response.json())
-        .then(data => {
-            const result = data.check_result;
-
-            // If user have right
-            if (result) {
-                document.querySelector('#all-companies-list-item').style.display = 'block';
-            } else {
-                document.querySelector('#all-companies-list-item').style.display = 'none';
-            }
-        })
+        .then(data => data.check_result)
         .catch(error => {
             console.log(error);
         })
-    }    
+
+        const readContractsRight = fetch('/check_right', {
+            method: 'POST',
+            body: JSON.stringify({
+                'right': "read_contract_info"
+            })
+        })
+        .then(response => response.json())
+        .then(data => data.check_result)
+        .catch(error => {
+            console.log(error);
+        })
+
+        //Get the items from reading menu
+        const reading = document.querySelector('#reading-items');
+        const myPeopleItem = document.querySelector('#my-people-list-item');
+        const allPeopleItem = document.querySelector('#all-people-list-item');
+        const companiesListItem = document.querySelector('#all-companies-list-item');
+        const activeContractsListItem = document.querySelector('#active-contracts-list-item');
+        const archivedContractsListItem = document.querySelector('#archived-contracts-list-item');
+        const allMeetingsListItem = document.querySelector('#all-meetings-list-item');
+        const upcomingMeetingsListItem = document.querySelector('#upcoming-meetings-list-item');
+
+        //Important-S: wait for all promises to resolve, then count
+        Promise.all([readMyPeopleRight, readPeopleRight, readCompaniesRight, readContractsRight])
+        .then(results => {
+            const [readMyPeopleResult, readPeopleResult, readCompaniesResult, readContractsResult] = results;
+
+            //If user has right to read their own people info
+            if (readMyPeopleResult) {
+                myPeopleItem.style.display = 'block';
+            } else {
+                myPeopleItem.style.display = 'none';
+            }
+
+            //Similarly for the right to read all people info
+            if (readPeopleResult) {
+                allPeopleItem.style.display = 'block';
+            } else {
+                allPeopleItem.style.display = 'none';
+            }
+
+            //The same goes with the right to read companies info
+            if (readCompaniesResult) {
+                companiesListItem.style.display = 'block';
+            } else {
+                companiesListItem.style.display = 'none';
+            }
+
+            //And the right to read contract info
+            if (readContractsResult) {
+                activeContractsListItem.style.display = 'block';
+                archivedContractsListItem.style.display = 'block';
+            } else {
+                activeContractsListItem.style.display = 'none';
+                archivedContractsListItem.style.display = 'none';
+            }
+        })
+        //Then count the visible list items, if there is none, hide the entire menu
+        .then(() => {
+            //Get the dropdown menu ul
+            const readDropDown = reading.querySelector('.dropdown-menu');
+
+            //Get all li inside the dropdown
+            const readAllLi = readDropDown.querySelectorAll('li');
+
+            //Important-B: Get the visible li
+            const readVisibleLi = Array.from(readAllLi).filter(li => li.style.display !== 'none');
+
+            //Get the count
+            const readLiNum = readVisibleLi.length;
+
+            if (readLiNum === 0) {
+                reading.style.display = 'none';
+            }
+        })
+
+
+
+
+    }
 })

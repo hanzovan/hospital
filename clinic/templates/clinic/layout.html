@@ -29,29 +29,27 @@
         </script>
     </head>
     <body>
-        <nav class="navbar navbar-expand-lg navbar-custom border">
-            <a class="navbar-brand" href="{% url 'index' %}"><span><h1>Clinic</h1></span></a>
-            <div class="collapse navbar-collapse" id="navbar">
-                <ul class="navbar-nav me-auto mt-2">
-                    <li class="nav-item">
-                        <div class="dropdown">
-                            <button class="nav-link active" type="button" id="dropdownMenuButton3" data-bs-toggle="dropdown" aria-expanded="false">
-                                Lists
-                            </button>
-                            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton3">
-                                <li><a class="dropdown-item" href="{% url 'index' %}">Services</a></li>
-                                <li><a class="dropdown-item" href="{% url 'my_people' %}">People added by me</a></li>                                                                
-                                <li id="all-people-list-item"><a class="dropdown-item" href="{% url 'people' %}">People</a></li>
-                                <li id="all-companies-list-item"><a class="dropdown-item" href="{% url 'companies' %}">Companies</a></li>
-                                <li><a class="dropdown-item" href="{% url 'all_contracts' %}">All Active Contracts</a></li>
-                                <li><a class="dropdown-item" href="{% url 'all_archived_contracts' %}">All Archived Contracts</a></li>
-                                <li><a class="dropdown-item" href="{% url 'all_meetings' %}">All Meetings</a></li>
-                                <li><a class="dropdown-item" href="{% url 'upcoming_meetings' %}">Upcoming Meetings</a></li>
-                            </ul>
-                        </div>
-                    </li>
-                    {% if user.is_authenticated %}
-
+        {% if user.is_authenticated %}
+            <nav class="navbar navbar-expand-lg navbar-custom border">
+                <a class="navbar-brand" href="{% url 'index' %}"><span><h1>Clinic</h1></span></a>
+                <div class="collapse navbar-collapse" id="navbar">                
+                    <ul class="navbar-nav me-auto mt-2">
+                        <li class="nav-item" id="reading-items">
+                            <div class="dropdown">
+                                <button class="nav-link active" type="button" id="dropdownMenuButton3" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Lists
+                                </button>
+                                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton3">
+                                    <li id="my-people-list-item"><a class="dropdown-item" href="{% url 'my_people' %}">People added by me</a></li>                                                                
+                                    <li id="all-people-list-item"><a class="dropdown-item" href="{% url 'people' %}">People</a></li>
+                                    <li id="all-companies-list-item"><a class="dropdown-item" href="{% url 'companies' %}">Companies</a></li>
+                                    <li id="active-contracts-list-item"><a class="dropdown-item" href="{% url 'all_contracts' %}">All Active Contracts</a></li>
+                                    <li id="archived-contracts-list-item"><a class="dropdown-item" href="{% url 'all_archived_contracts' %}">All Archived Contracts</a></li>
+                                    <li id="all-meetings-list-item"><a class="dropdown-item" href="{% url 'all_meetings' %}">All Meetings</a></li>
+                                    <li id="upcoming-meetings-list-item"><a class="dropdown-item" href="{% url 'upcoming_meetings' %}">Upcoming Meetings</a></li>
+                                </ul>
+                            </div>
+                        </li>               
                         <li class="nav-item" id="adding-items">
                             <div class="dropdown">
                                 <button class="nav-link active" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
@@ -65,13 +63,9 @@
                                     <li id="add-meeting-list-item"><a class="dropdown-item" href="{% url 'add_meeting' %}">Add Meeting</a></li>
                                 </ul>
                             </div>
-                        </li>                        
-
-                    {% endif %}                    
-                </ul>
-                <ul class="navbar-nav ms-auto mt-2">
-                    {% if user.is_authenticated %}
-
+                        </li>                                          
+                    </ul>                
+                    <ul class="navbar-nav ms-auto mt-2">
                         <li class="nav-item">
                             <div class="dropdown">
                                 <button class="nav-link active" style="color: purple;" type="button" id="dropdownMenuButton2" data-bs-toggle="dropdown" aria-expanded="false">
@@ -81,21 +75,11 @@
                                     <li><a class="dropdown-item" href="{% url 'logout' %}">Log out</a></li>
                                 </ul>
                             </div>
-                        </li>
-    
-                    {% else %}
-
-                        <li class="nav-item">
-                            <a class="nav-link active" href="{% url 'login' %}">
-                                Log in
-                            </a>
-                        </li>
-
-                    {% endif %}
-                    
-                </ul>
-            </div>
-        </nav>
+                        </li>                    
+                    </ul>
+                </div>
+            </nav>
+        {% endif %}
         <header class="text-center">
             {% if yay_message %}
                 <div class="alert alert-success" role="alert">
@@ -110,7 +94,6 @@
 
             {% endif %}            
         </header>
-        <div id="testing"></div>
         <main>{% block main %}{% endblock %}</main>
         <footer class="text-center">
             &#169;Nguyen Dinh Thi Van
