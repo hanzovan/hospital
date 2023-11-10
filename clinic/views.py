@@ -1198,15 +1198,26 @@ def archive_contract(request):
     if request.method == 'POST':
         contract_id = request.POST.get('contract_id')
         if contract_id:
+            # Check if that id match with any contract
             try:
-                contract = Contract.objects.get(pk=contract_id)
-                contract.archived = True
-                contract.archived_date = timezone.now()
-                contract.archived_by = request.user
-                contract.save()
+                contract = Contract.objects.get(pk=contract_id)                
             except Contract.DoesNotExist:
                 request.session['nay_message'] = "Contract with that id does not exist"
                 return HttpResponseRedirect(reverse('all_contracts'))
+
+            # Check if user has the permission to modify contract information
+            if "modify_contract_info" not in user_right(request.user.management_right_level):
+                request.session['nay_message'] = "You do not have the right to archive contract"
+                return redirect('contract_detail', contract_id = contract_id)
+
+            # If requirements met, archive the contract
+            contract.archived = True
+            contract.archived_date = timezone.now()
+            contract.archived_by = request.user
+            contract.save()
+
+            # Inform successfully
+            request.session['yay_message'] = "Contract archived successfully"
 
         return redirect('contract_detail', contract_id = contract_id)
     

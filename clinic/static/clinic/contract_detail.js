@@ -3,6 +3,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const editForm = document.querySelector('#edit-contract-form-container');
     const showEditingBtn = document.querySelector('#show-editing');
     const hideEditingBtn = document.querySelector('#hide-editing');
+    const archiveForm = document.querySelector('#archive-form-container');
 
     // Check user right, if user does not have permission to edit contract, hide showEditingBtn
     fetch('/check_right', {
@@ -16,8 +17,10 @@ document.addEventListener('DOMContentLoaded', function() {
         const result = data.check_result;
         if (result) {
             showEditingBtn.style.display = 'block';
+            archiveForm.style.display = 'block';
         } else {
             showEditingBtn.style.display = 'none';
+            archiveForm.style.display = 'none';
         }
     })
     .catch(error => {

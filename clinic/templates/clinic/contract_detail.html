@@ -104,14 +104,14 @@
 
                 {% else %}
                     <div><span style="color: green;">Active</span></div>
-                    
-                    <form action="{% url 'archive_contract' %}" method="post" onsubmit="return confirm('Do you really want to archive this contract?');">
-                        {% csrf_token %}
-                        <input name="contract_id" value="{{ contract.id }}" type="hidden">
-                        <span><i>If this contract was finished,</i></span>
-                        <button class="btn btn-link no-underline"><span style="color: red;">Archive this contract</span></button>
-                    </form>
-
+                    <div id="archive-form-container">
+                        <form action="{% url 'archive_contract' %}" method="post" onsubmit="return confirm('Do you really want to archive this contract?');">
+                            {% csrf_token %}
+                            <input name="contract_id" value="{{ contract.id }}" type="hidden">
+                            <span><i>If this contract was finished,</i></span>
+                            <button class="btn btn-link no-underline"><span style="color: red;">Archive this contract</span></button>
+                        </form>
+                    </div>
                 {% endif %}
             </td>
         </tr>
