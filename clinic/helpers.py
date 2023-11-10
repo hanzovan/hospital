@@ -34,6 +34,7 @@ def user_right(level):
         'modify_people_info',
         'read_all_people_info',
         'modify_contract_info',
+        'modify_meeting_info',
         'add_service_info',
         'modify_service_info',
         'modify_company_info',        
@@ -55,15 +56,16 @@ def user_right(level):
             user_rights.extend([
                 all_rights[6],
                 all_rights[7],
-                all_rights[8]
+                all_rights[8],
+                all_rights[9]
             ])
             if level > 2:
                 user_rights.extend([
-                    all_rights[9],
                     all_rights[10],
                     all_rights[11],
                     all_rights[12],
-                    all_rights[13]
+                    all_rights[13],
+                    all_rights[14]
                 ])
     
     return user_rights

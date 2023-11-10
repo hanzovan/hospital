@@ -64,6 +64,18 @@ document.addEventListener('DOMContentLoaded', function() {
         .catch(error => {
             console.log(error);
         })
+
+        const checkAddMeetingRight = fetch('/check_right', {
+            method: 'POST',
+            body: JSON.stringify ({
+                'right': 'modify_meeting_info'
+            })
+        })
+        .then(response => response.json())
+        .then(data => data.check_result)
+        .catch(error => {
+            console.log(error);
+        })
     
         // Get the adding list item
         const adding = document.querySelector('#adding-items');
@@ -80,12 +92,15 @@ document.addEventListener('DOMContentLoaded', function() {
         // Get the adding contract item
         const addContractListItem = document.querySelector('#add-contract-list-item');
 
+        // Get the adding meeting item
+        const addMeetingListItem = document.querySelector('#add-meeting-list-item');
+
         // Important-S: Wait for all promise to resolve, then count
-        Promise.all([checkAddPeopleRight, checkAddServiceRight, checkAddCompanyRight, checkAddContractRight])
+        Promise.all([checkAddPeopleRight, checkAddServiceRight, checkAddCompanyRight, checkAddContractRight, checkAddMeetingRight])
     
         // Hide or show the list items
         .then(results => {
-            const [addPeopleResult, addServiceResult, addCompanyResult, addContractResult] = results;       
+            const [addPeopleResult, addServiceResult, addCompanyResult, addContractResult, addMeetingResult] = results;       
     
             // Decide to show or hide list item depending on whether user have right to add people or not
             if (addPeopleResult) {
@@ -112,6 +127,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 addContractListItem.style.display = 'block';
             } else {
                 addContractListItem.style.display = 'none';
+            }
+            // Decide for add meeting button
+            if (addMeetingResult) {
+                addMeetingListItem.style.display = 'block';
+            } else {
+                addMeetingListItem.style.display = 'none';
             }
         })
     

@@ -4,6 +4,27 @@ document.addEventListener('DOMContentLoaded', function() {
     const showEditingBtn = document.querySelector('#show-editing');
     const hideEditingBtn = document.querySelector('#hide-editing');
     const archiveForm = document.querySelector('#archive-form-container');
+    const generateContractContainer = document.querySelector('#generate-contract-container');
+
+    //Check user right, if user does not have permission to read contract information, hide generate button
+    fetch('/check_right', {
+        method: 'POST',
+        body: JSON.stringify({
+            'right': 'read_contract_info'
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        const result = data.check_result;
+        if (result) {
+            generateContractContainer.style.display = 'block';
+        } else {
+            generateContractContainer.style.display = 'none';
+        }
+    })
+    .catch(error => {
+        console.log(error);
+    })
 
     // Check user right, if user does not have permission to edit contract, hide showEditingBtn
     fetch('/check_right', {

@@ -1245,6 +1245,11 @@ def all_archived_contracts(request):
 # Prepare a contract in word ready for printing
 @login_required
 def generate_contract_docx(request, contract_id):
+    #Check if user has the permission to read contract info
+    if "read_contract_info" not in user_right(request.user.management_right_level):
+        request.session['nay_message'] = "You do not have the right to access this information"
+        return HttpResponseRedirect(reverse('index'))
+
     # Get the contract
     contract = Contract.objects.get(pk=contract_id)
 
@@ -1399,6 +1404,11 @@ def generate_contract_docx(request, contract_id):
 def add_meeting(request):
     # If user submitted form
     if request.method == 'POST':
+        # Check if user has permission to modify meeting
+        if "modify_meeting_info" not in user_right(request.user.management_right_level):
+            request.session['nay_message'] = "You do not have the right to add or modify meeting"
+            return HttpResponseRedirect(reverse('index'))
+
         # Get input from user input
         client_id = request.POST.get('client_id')
         start_time = request.POST.get('start_time')
@@ -1446,6 +1456,11 @@ def add_meeting(request):
 
     # If user clicked link or being redirected
     else:
+        # Check if user has the permission to add or modify meeting
+        if "modify_meeting_info" not in user_right(request.user.management_right_level):
+            request.session['nay_message'] = "You do not have the permission to access this page"
+            return HttpResponseRedirect(reverse('index'))
+
         yay_message = request.session.get('yay_message', '')
         nay_message = request.session.get('nay_message', '')
         request.session['yay_message'] = ''
@@ -1720,5 +1735,5 @@ def testing_route(request, person_id):
 # Create X button for every form
 # merge meeting form
 # User with level 1 can access self add people list, but can't access their detail
-
+# Modify add contract form
 
