@@ -854,6 +854,11 @@ def add_contract(request):
                 "companies": companies
             })
         
+        # Company has to provide representative before creating contract
+        if not client.representative:
+            request.session['nay_message'] = "Company has to update representative before creating contract"
+            return HttpResponseRedirect(reverse('add_contract'))
+        
         # Check if user has the right to modify contract info
         if "modify_contract_info" not in user_right(request.user.management_right_level):
             request.session['nay_message'] = "You do not have the right to add contract"
