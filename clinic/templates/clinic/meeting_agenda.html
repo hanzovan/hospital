@@ -70,6 +70,10 @@
     </div>
 
     {% if not meeting.end_or_not %}
+        <script>
+            // save the variable for Javascript
+            var isMeetingEnd = false;
+        </script>
         {% if meeting.edit_permission %}
             <div style="display: flex; justify-content: center; align-items: center;">
                 <div>
@@ -164,11 +168,16 @@
             </div>
         
         {% endif %}
+    {% else %}
+        <script>
+            // Save the variable for JavaScript
+            var isMeetingEnd = true;
+        </script>
     {% endif %}    
 
 {% endblock %}
 {% block script %}
 
-        <script src="{% static 'clinic/meeting_agenda.js' %}"></script>
+    <script src="{% static 'clinic/meeting_agenda.js' %}"></script>
 
 {% endblock %}
