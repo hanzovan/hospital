@@ -26,6 +26,7 @@ def user_right(level):
     level = int(level)
     all_rights = [
         'read_all_service_info',
+        'read_meeting_info',
         'add_people_info',
         'read_self_add_people_info',
         'add_company_info',
@@ -50,22 +51,23 @@ def user_right(level):
             all_rights[2],
             all_rights[3],
             all_rights[4],
-            all_rights[5]
+            all_rights[5],
+            all_rights[6]
             ])
         if level > 1:
             user_rights.extend([
-                all_rights[6],
                 all_rights[7],
                 all_rights[8],
-                all_rights[9]
+                all_rights[9],
+                all_rights[10]
             ])
             if level > 2:
                 user_rights.extend([
-                    all_rights[10],
                     all_rights[11],
                     all_rights[12],
                     all_rights[13],
-                    all_rights[14]
+                    all_rights[14],
+                    all_rights[15]
                 ])
     
     return user_rights

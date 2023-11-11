@@ -1482,6 +1482,11 @@ def add_meeting(request):
 # Allow user to tract all the meeting
 @login_required
 def all_meetings(request):
+    #Check if user has permission to read meeting information
+    if "read_meeting_info" not in user_right(request.user.management_right_level):
+        request.session['nay_message'] = "You do not have the permission to read this information"
+        return HttpResponseRedirect(reverse('index'))
+
     meetings = MeetUp.objects.all().order_by("-start_time")
 
     yay_message = request.session.get('yay_message', '')
@@ -1499,6 +1504,11 @@ def all_meetings(request):
 # Allow user to access list of all upcoming meeting
 @login_required
 def upcoming_meetings(request):
+    #Check if user has the permission to read meeting information
+    if "read_meeting_info" not in user_right(request.user.management_right_level):
+        request.session['nay_message'] = "You do not have the permission to read this information"
+        return HttpResponseRedirect(reverse('index'))
+
     now = datetime.now()
     meetings = MeetUp.objects.filter(start_time__gt = now).order_by("start_time")
 
@@ -1518,7 +1528,18 @@ def upcoming_meetings(request):
 # Allow user to access meeting agenda
 @login_required
 def meeting_agenda(request, meeting_id):
+    #If user does not have the permission to read meeting information, redirect to index page
+    if "read_meeting_info" not in user_right(request.user.management_right_level):
+        request.session['nay_message'] = "You do not have the permission to check this information"
+        return HttpResponseRedirect(reverse('index'))
+
     meeting = MeetUp.objects.get(pk=meeting_id)
+
+    #Check if user has the permission to modify meeting information or not, if not, hide the form and button in html file
+    if "modify_meeting_info" not in user_right(request.user.management_right_level):
+        meeting.edit_permission = False
+    else:
+        meeting.edit_permission = True
 
     yay_message = request.session.get('yay_message', '')
     nay_message = request.session.get('nay_message', '')
@@ -1543,6 +1564,11 @@ def add_meeting_agenda(request, meeting_id):
             request.session['nay_message'] = "Meeting id does not exist"
             return HttpResponseRedirect(reverse('index'))
         
+        # If user does not have permission, redirect to index page
+        if "modify_meeting_info" not in user_right(request.user.management_right_level):
+            request.session['nay_message'] = "You do not have the permission to modify meeting information"
+            return redirect('meeting_agenda', meeting_id=meeting_id)
+
         # If the meetup already over, return error, not user end time because real meeting may extend longer than the preset end time
         if meeting.end_or_not:
             request.session['nay_message'] = "Meeting already over"
@@ -1571,18 +1597,10 @@ def add_meeting_agenda(request, meeting_id):
         request.session['yay_message'] = "Item added"
         return redirect('meeting_agenda', meeting_id=meeting.id)
 
-    # if user being redirected or clicking link
     else:
-        try:
-            meeting = MeetUp.objects.get(pk=meeting_id)
-        except MeetUp.DoesNotExist:
-            request.session['nay_message'] = "Meeting id does not exist"
-            return HttpResponseRedirect(reverse('index'))
-        
-        return render(request, "clinic/add_agenda.html", {
-            "meeting": meeting
-        })
-
+        request.session['nay_message'] = "POST method required"
+        return HttpResponseRedirect(reverse('index'))
+    
 
 # Allow user to remove item in meeting agenda
 @login_required
@@ -1741,4 +1759,6 @@ def testing_route(request, person_id):
 # merge meeting form
 # User with level 1 can access self add people list, but can't access their detail
 # Modify add contract form
-
+# Create a way to update representative for company, add it to add company route, when user add representative, find if it is possible to add person also
+# Modify UI contract detail, button not in the center
+# Meeting agenda has error in js due to some div was hidden
