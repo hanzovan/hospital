@@ -1728,6 +1728,10 @@ def end_meeting(request):
 
         return redirect('meeting_agenda', meeting_id=meeting.id)
     
+    else:
+        request.session['nay_message'] = "POST method required"
+        return HttpResponseRedirect(reverse('index'))
+    
 
 def testing_route(request, meeting_id):
     #if user submitting form
@@ -1749,11 +1753,7 @@ def testing_route(request, meeting_id):
         "meeting": meeting
     })
 
-
-# Use standard form for other route
 # Create X button for every form
-# merge meeting form
 # User with level 1 can access self add people list, but can't access their detail
-# Modify add contract form
 # Create a way to update representative for company, add it to add company route, when user add representative, find if it is possible to add person also
 # Modify UI contract detail, button not in the center
