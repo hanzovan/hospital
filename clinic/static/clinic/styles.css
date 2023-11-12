@@ -302,6 +302,58 @@ header {
   cursor: pointer;
   background-color: #2904a4; }
 
+#add-contract-form .container {
+  display: flex;
+  flex-direction: column;
+  padding: 2em;
+  width: 40vw; }
+#add-contract-form h1, #add-contract-form .form-group {
+  margin-bottom: 1.5em; }
+#add-contract-form h1 {
+  text-align: center; }
+#add-contract-form .form-group:focus-within {
+  transform: scale(1.1, 1.1);
+  transition: all .6s; }
+#add-contract-form .form-label {
+  display: block;
+  font-size: .75em;
+  color: #555;
+  opacity: 0;
+  transform: translateX(-100px);
+  transition: all .3s; }
+#add-contract-form .focused .form-label {
+  opacity: 1;
+  transform: translateX(0); }
+#add-contract-form .form-control {
+  box-shadow: none;
+  padding: .2em;
+  border-radius: .25em;
+  border-style: none none solid none;
+  border-color: #ccc;
+  font-size: 1.5em;
+  transition: all .6s; }
+#add-contract-form .form-control::placeholder {
+  color: #aaa; }
+#add-contract-form .form-control:focus {
+  box-shadow: none;
+  outline: none;
+  border-color: orange; }
+#add-contract-form .form-control:invalid:focus {
+  border-color: red; }
+#add-contract-form .form-control:valid {
+  border-color: green; }
+#add-contract-form button {
+  box-shadow: none;
+  outline: none;
+  border: none;
+  border-radius: .25em;
+  padding: .75em;
+  background-color: #4412e8;
+  color: white;
+  font-size: 1em; }
+#add-contract-form button:hover {
+  background-color: #2904a4; }
+
 #register-form .container, #login-form .container, #add-people-form .container, #add-service-form .container, #add-company-form .container, #add-message-form .container, #edit-company-form .container, #edit-person-detail-form .container, #message-form .container, #add-agenda-form .container {
   display: flex;
   flex-direction: column;

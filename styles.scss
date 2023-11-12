@@ -409,6 +409,75 @@ header {
     }
 }
 
+#add-contract-form {
+    .container {
+        display: flex;
+        flex-direction: column;
+        padding: 2em;
+        width: 40vw;
+    }
+    h1, .form-group {
+        margin-bottom: 1.5em;
+    }
+    h1 {
+        text-align: center;
+    }
+    .form-group:focus-within {
+        transform: scale(1.1, 1.1);
+        transition: all .6s;
+    }
+    .form-label {
+        display: block;
+        font-size: .75em;
+        color: $font-color;
+        opacity: 0;
+        transform: translateX(-100px);
+        transition: all .3s;
+    }
+    .focused {
+        .form-label {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+    .form-control {
+        box-shadow: none;
+        padding: .2em;
+        border-radius: .25em;
+        border-style: none none solid none;
+        border-color: #ccc;
+        font-size: 1.5em;
+        transition: all .6s;
+    }
+    .form-control::placeholder {
+        color: #aaa;
+    }
+    .form-control:focus {
+        box-shadow: none;
+        outline: none;
+        border-color: $font-hover-color;
+    }
+    .form-control:invalid:focus {
+        border-color: red;
+    }
+    .form-control:valid {
+        border-color: green;
+    }
+    button {
+        box-shadow: none;
+        outline: none;
+        border: none;
+        border-radius: .25em;
+        padding: .75em;
+        background-color: rgb(68, 18, 232);
+        color: white;
+        font-size: 1em;
+    }
+    button:hover {
+        background-color: rgb(41, 4, 164);
+    }
+}
+
 #register-form, #login-form, #add-people-form, #add-service-form, #add-company-form, #add-message-form, #edit-company-form, #edit-person-detail-form, #message-form, #add-agenda-form {
     .container {
         display: flex;

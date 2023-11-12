@@ -14,7 +14,7 @@
                 <div class="container">
                     <h1>Add Contract</h1>
                     <div class="form-group">
-                        <label for="client_id" class="form-label">Client</label>
+                        <label for="client_id" class="form-label" style="opacity: 1; transform: translateX(0);">Client</label>
                         <select name="client_id">
                             <option selected disabled>Company</option>
                             {% for company in companies %}
@@ -25,7 +25,7 @@
                         </select>
                     </div>
                     <div class="form-group">
-                        <label for="chosen_services" class="form-label">Services</label>
+                        <label for="chosen_services" class="form-label" style="opacity: 1; transform: translateX(0);">Services</label>
         
                         {% for service in services %}
 
@@ -37,22 +37,22 @@
                     </div>
                     <div class="form-group">
                         <label for="discount" class="form-label">Discount</label>
-                        <input name="discount" type="text" pattern="\d+(\.\d{2})?" title="Enter a valid discount with 2 decimal places" autocomplete="off" placeholder="10.00" required>
+                        <input name="discount" type="text" class="form-control" pattern="\d+(\.\d{2})?" title="Enter a valid discount with 2 decimal places" autocomplete="off" placeholder="10.00" required>
                     </div>
                     <div class="form-group">
                         <label for="male_headcount" class="form-label">Male Headcount</label>
-                        <input name="male_headcount" type="number" min="0" class="form-control" autocomplete="off" placeholder="100">
+                        <input name="male_headcount" type="number" min="0" class="form-control" autocomplete="off" placeholder="100" required>
                     </div>
                     <div class="form-group">
                         <label for="female_headcount" class="form-label">Female Headcount</label>
-                        <input name="female_headcount" type="number" min="0" class="form-control" autocomplete="off" placeholder="100">
+                        <input name="female_headcount" type="number" min="0" class="form-control" autocomplete="off" placeholder="100" required>
                     </div>
                     <div class="form-group">
                         <label for="initiation_date" class="form-label">Initiation Date</label>
                         <input name="initiation_date" type="date" class="form-control" autocomplete="off" required>
                     </div>
                     <div class="form-group">
-                        <label for="contract_file" class="form-label">Contract file</label>
+                        <label for="contract_file" class="form-label" style="opacity: 1; transform: translateX(0);">Contract file</label>
                         <input name="contract_file" type="file">
                     </div>
                     <button>Save</button>
