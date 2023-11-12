@@ -1645,6 +1645,11 @@ def edit_meeting(request, meeting_id):
             request.session['nay_message'] = "Meeting id not found"
             return HttpResponseRedirect(reverse('all_meetings'))
         
+        # Check user permission
+        if "modify_meeting_info" not in user_right(request.user.management_right_level):
+            request.session['nay_message'] = "You do not have permission to edit meeting information"
+            return HttpResponseRedirect(reverse('index'))
+
         # Get the variables
         client_id = request.POST.get('client_id', '')
         if not client_id:
@@ -1695,32 +1700,18 @@ def edit_meeting(request, meeting_id):
         return redirect("meeting_agenda", meeting_id=meeting_id)
     
     else:
-        try:
-            meeting = MeetUp.objects.get(pk=meeting_id)
-        except MeetUp.DoesNotExist:
-            request.session['nay_message'] = "Meeting id does not exist"
-            return HttpResponseRedirect(reverse('all_meetings'))
-        
-        # Get the companies list
-        companies = Company.objects.all()
-
-        yay_message = request.session.get('yay_message', '')
-        nay_message = request.session.get('nay_message', '')
-        request.session['yay_message'] = ''
-        request.session['nay_message'] = ''
-
-        return render(request, "clinic/edit_meeting.html", {
-            "meeting": meeting,
-            "companies": companies,
-            "yay_message": yay_message,
-            "nay_message": nay_message
-        })
+        request.session['nay_message'] = "POST method required"
+        return HttpResponseRedirect(reverse('index'))
 
 
 # Allow user to end a meeting
 @login_required
 def end_meeting(request):
     if request.method == 'POST':
+        # Check user permission
+        if "modify_meeting_info" not in user_right(request.user.management_right_level):
+            request.session['nay_message'] = "You do not have the permission to end meeting"
+            return HttpResponseRedirect(reverse('index'))
 
         meeting_id = request.POST.get('meeting_id', '')
 
@@ -1738,7 +1729,7 @@ def end_meeting(request):
         return redirect('meeting_agenda', meeting_id=meeting.id)
     
 
-def testing_route(request, person_id):
+def testing_route(request, meeting_id):
     #if user submitting form
     # if request.method == 'POST':
     #     try:
@@ -1753,9 +1744,9 @@ def testing_route(request, person_id):
     
     # else:
 
-    person = People.objects.get(pk=person_id)
+    meeting = MeetUp.objects.get(pk=meeting_id)
     return render(request, "clinic/testing.html", {
-        "person": person
+        "meeting": meeting
     })
 
 

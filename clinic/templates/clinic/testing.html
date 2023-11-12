@@ -7,20 +7,20 @@
 {% endblock %}
 {% block main %}
 
-    <!-- <div class="general">
+    <div class="general">
         <div class="form-container">
-            <form action="{% url 'message' person_id=person.id %}" method="post" id="testing-form">
+            <form action="{% url 'end_meeting' %}" method="post" id="testing-form">
                 {% csrf_token %}
                 <div class="container">
-                    <h1>Add Message</h1>
+                    <h1>Edit Meeting</h1>
                     <div class="form-group">
                         <label for="content" class="form-label">Content</label>
                         <input name="content" type="text" class="form-control">
                     </div>
-                    <button>Save Message</button>
+                    <button>End Meeting</button>
                 </div>
             </form>
         </div>
-    </div> -->
+    </div>
 
 {% endblock %}
