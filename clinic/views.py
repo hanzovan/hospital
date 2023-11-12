@@ -1457,7 +1457,7 @@ def add_meeting(request):
         newMeetUp.save()
         request.session['yay_message'] = 'Meeting added'
 
-        return HttpResponseRedirect(reverse('index'))
+        return HttpResponseRedirect(reverse('upcoming_meetings'))
 
     # If user clicked link or being redirected
     else:
@@ -1618,6 +1618,11 @@ def meeting_item_remove(request, meeting_id):
             request.session['nay_message'] = "Item not found"
             return redirect("meeting_agenda", meeting_id=meeting_id)
         
+        #Check user permission
+        if "modify_meeting_info" not in user_right(request.user.management_right_level):
+            request.session['nay_message'] = "You do not have the permission to edit meeting information"
+            return HttpResponseRedirect(reverse('index'))
+
         # Delete the item from database
         item.delete()
 
@@ -1761,4 +1766,3 @@ def testing_route(request, person_id):
 # Modify add contract form
 # Create a way to update representative for company, add it to add company route, when user add representative, find if it is possible to add person also
 # Modify UI contract detail, button not in the center
-# Meeting agenda has error in js due to some div was hidden

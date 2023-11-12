@@ -49,13 +49,17 @@
                     <tr>
                         <td>Item {{ forloop.counter }}</td>
                         <td>{{ item.item }}</td>
-                        <td>
-                            <form action="{% url 'meeting_item_remove' meeting_id=meeting.id %}" method="post" onsubmit="return confirm('Do you really want to remove this agenda item?');">
-                                {% csrf_token %}
-                                <input name="item_id" type="hidden" value="{{ item.id }}">
-                                <button class="btn btn-link no-underline"><span style="color: red;">Remove Item</span></button>
-                            </form>
-                        </td>
+
+                        <!-- If user has permission to edit meeting information -->
+                        {% if meeting.edit_permission %}
+                            <td>
+                                <form action="{% url 'meeting_item_remove' meeting_id=meeting.id %}" method="post" onsubmit="return confirm('Do you really want to remove this agenda item?');">
+                                    {% csrf_token %}
+                                    <input name="item_id" type="hidden" value="{{ item.id }}">
+                                    <button class="btn btn-link no-underline"><span style="color: red;">Remove Item</span></button>
+                                </form>
+                            </td>
+                        {% endif %}
                     </tr>
 
                 {% empty %}
@@ -75,6 +79,10 @@
             var isMeetingEnd = false;
         </script>
         {% if meeting.edit_permission %}
+            <script>
+                // Save the variable for JavaScript
+                var userHasPermission = true;
+            </script>
             <div style="display: flex; justify-content: center; align-items: center;">
                 <div>
                     <table>
@@ -166,6 +174,12 @@
                     </form>
                 </div>
             </div>
+
+        {% else %}
+            <script>
+                // Save the variable for JavaScript using
+                var userHasPermission = false;
+            </script>
         
         {% endif %}
     {% else %}

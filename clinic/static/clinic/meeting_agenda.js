@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', function() {
-    //If meeting does not end yet, manipulate the form as follow
-    if (isMeetingEnd === false) {
+    //If meeting does not end yet, and user has editing permission, manipulate the form as follow
+    if (isMeetingEnd === false && userHasPermission) {
         //Define form and button
         const addAgendaForm = document.querySelector('#add-agenda-container');
         const showAddAgendaFormBtn = document.querySelector('#show-add-meeting-agenda-form');
