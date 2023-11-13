@@ -23,11 +23,19 @@
                 </tr>
                 <tr>
                     <td>Representative</td>
-                    <td><strong>{{ company.representative }}</strong></td>
+                    <td><strong>{{ company.representative.name }}</strong></td>
                 </tr>
                 <tr>
                     <td>Address</td>
                     <td><strong>{{ company.address }}</strong></td>
+                </tr>
+                <tr>
+                    <td>Email</td>
+                    <td><strong>{{ company.email }}</strong></td>
+                </tr>
+                <tr>
+                    <td>Phone</td>
+                    <td><strong>{{ company.phone }}</strong></td>
                 </tr>
                 <tr>
                     <td>Male Headcount</td>
@@ -82,18 +90,22 @@
                     <div class="form-group">
                         <label for="industry" class="form-label">Industry</label>
                         <input type="text" name="industry" class="form-control" value="{{ company.industry }}">
-                    </div>
+                    </div>                          
                     <div class="form-group">
                         <label for="address" class="form-label">Address</label>
                         <input type="text" name="address" class="form-control" value="{{ company.address }}">
                     </div>
+                    
+                    <!-- If company did not have email yet, the value will be an empty string, else show the email -->
                     <div class="form-group">
                         <label for="email" class="form-label">Email</label>
-                        <input type="text" name="email" class="form-control" value="{{ company.email }}">
+                        <input type="text" name="email" class="form-control" value="{% if not company.email %}{% else %}{{ company.email }}{% endif %}">
                     </div>
+
+                    <!-- If company did not have phone, the value will be empty string too, else display the phone number -->
                     <div class="form-group">
                         <label for="phone" class="form-label">Phone</label>
-                        <input type="text" name="phone" class="form-control" value="{{ company.phone }}">
+                        <input type="text" name="phone" class="form-control" value="{% if not company.phone %}{% else %}{{ company.phone }}{% endif %}">
                     </div>
                     <div class="form-group">
                         <label for="male_headcount" class="form-label">Male Headcount</label>
@@ -103,6 +115,47 @@
                         <label for="female_headcount" class="form-label">Female Headcount</label>
                         <input type="number" name="female_headcount" class="form-control" min="0" value="{{ company.female_headcount }}">
                     </div>
+                    <div class="form-group">
+                        <label for="update_representative_method" class="form-label">Choose how to update representative</label>
+                        <select name="update_representative_method" class="form-control">
+                            <option disabled selected>Representative</option>
+                            <option value="create_new">Create New</option>
+                            <option value="choose_from_list">Choose From List</option>
+                        </select>
+                    </div>
+                    <div id="create-new-method">
+                        <h2>Create New</h2>
+                        <div class="form-group">
+                            <label for="new_representative_name" class="form-label">Representative Name</label>
+                            <input name="new_representative_name" type="text" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label for="new_representative_address" class="form-label">Representative Address</label>
+                            <input name="new_representative_address" type="text" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label for="new_representative_email" class="form-label">Representative Email</label>
+                            <input name="new_representative_email" type="email" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label for="new_representative_phone" class="form-label">Representative Phone</label>
+                            <input name="new_representative_phone" type="text" class="form-control">
+                        </div>
+                    </div>
+                    <div id="choose-from-list-method">
+                        <h2>Choose From List</h2>
+                        <div class="form-group">
+                            <label for="representative_id" class="form-label">Representative</label>
+                            <select name="representative_id" class="form-control">
+                                <option selected disabled>Name</option>
+                                {% for person in people %}
+    
+                                    <option value="{{ person.id }}">{{ person.name }}</option>
+    
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>              
                     <button>Save Change</button>
                 </div>
             </form>

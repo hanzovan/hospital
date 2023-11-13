@@ -682,7 +682,7 @@ def company_detail(request, company_id):
                 return redirect("edit_company", company_id=company_id)
         except ValueError:
             request.session['nay_message'] = "Headcount has to be integer"
-            return redirect("edit_company", company_id=company_id)
+            return redirect("edit_company", company_id=company_id)        
 
         # Save the new information of the company
         company.name = name
@@ -694,6 +694,58 @@ def company_detail(request, company_id):
         company.female_headcount = female_headcount
         company.modified_by = request.user
         company.save()
+
+        # Get the variables for update representatives
+        update_method = request.POST.get('update_representative_method', '')
+
+        # Decide the approach based on how user chose the method, if not choose one of the 2, representative will not be updated
+        if update_method:
+            if update_method == "create_new":
+                new_representative_name = request.POST.get('new_representative_name', '')
+                new_representative_address = request.POST.get('new_representative_address', '')
+                new_representative_email = request.POST.get('new_representative_email', '')
+                new_representative_phone = request.POST.get('new_representative_phone', '')
+
+                # Check if there is duplicate in name, email, or phone
+                name_duplicate = People.objects.filter(name=new_representative_name).exists()
+                email_duplicate = People.objects.filter(email=new_representative_email).exists()
+                phone_duplicate = People.objects.filter(phone=new_representative_phone).exists()
+                if name_duplicate or email_duplicate or phone_duplicate:
+                    request.session['nay_message'] = "Duplicate information, check name, email, and phone"
+                    return redirect('company_detail', company_id=company_id)
+
+                representative = People(
+                    name = new_representative_name,
+                    address = new_representative_address,
+                    email = new_representative_email,
+                    phone = new_representative_phone,
+                    created_by = request.user
+                )
+                representative.save()
+                company.representative = representative
+                company.save()
+            
+            elif update_method == "choose_from_list":
+                representative_id = request.POST.get('representative_id', '')
+
+                # If user somehow did not submit the id, return error
+                if not representative_id:
+                    request.session['nay_message'] = "Person id not selected"
+                    return redirect('company_detail', company_id=company_id)
+                
+                # Check if id is valid
+                try:
+                    representative = People.objects.get(pk=representative_id)
+                except People.DoesNotExist:
+                    request.session['nay_message'] = "Person not found"
+                    return redirect('company_detail', company_id=company_id)
+
+                company.representative = representative
+                company.save()
+            
+            else:
+                request.session['nay_message'] = "Invalid method"
+                return redirect('company_detail', company_id=company_id)
 
         # Inform user and redirect
         request.session['yay_message'] = "Company information modified successfully"
@@ -712,6 +764,9 @@ def company_detail(request, company_id):
             request.session['nay_message'] = "Company with that id does not exist"
             return HttpResponseRedirect(reverse('companies'))
 
+        # Get people list
+        people = People.objects.all()
+
         yay_message = request.session.get('yay_message', '')
         nay_message = request.session.get('nay_message', '')
         request.session['yay_message'] = ''
@@ -719,6 +774,7 @@ def company_detail(request, company_id):
 
         return render(request, "clinic/company_detail.html", {
             "company": company,
+            "people": people,
             "yay_message": yay_message,
             "nay_message": nay_message
         })
