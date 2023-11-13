@@ -711,7 +711,7 @@ def company_detail(request, company_id):
                 email_duplicate = People.objects.filter(email=new_representative_email).exists()
                 phone_duplicate = People.objects.filter(phone=new_representative_phone).exists()
                 if name_duplicate or email_duplicate or phone_duplicate:
-                    request.session['nay_message'] = "Duplicate information, check name, email, and phone"
+                    request.session['nay_message'] = "Update representative failed: Duplicate information, check name, email, and phone"
                     return redirect('company_detail', company_id=company_id)
 
                 representative = People(
@@ -730,22 +730,20 @@ def company_detail(request, company_id):
 
                 # If user somehow did not submit the id, return error
                 if not representative_id:
-                    request.session['nay_message'] = "Person id not selected"
+                    request.session['nay_message'] = "Update representative failed: Person id not selected"
                     return redirect('company_detail', company_id=company_id)
                 
                 # Check if id is valid
                 try:
                     representative = People.objects.get(pk=representative_id)
                 except People.DoesNotExist:
-                    request.session['nay_message'] = "Person not found"
+                    request.session['nay_message'] = "Update representative failed: Person not found"
                     return redirect('company_detail', company_id=company_id)
 
                 company.representative = representative
                 company.save()
-            
-            else:
-                request.session['nay_message'] = "Invalid method"
-                return redirect('company_detail', company_id=company_id)
+
+            #else: ignore the representative part
 
         # Inform user and redirect
         request.session['yay_message'] = "Company information modified successfully"
@@ -1814,5 +1812,5 @@ def testing_route(request, meeting_id):
         "meeting": meeting
     })
 
-# Create a way to update representative for company, add it to add company route, when user add representative, find if it is possible to add person also
+# Allow user to add representative in add company form
 # Modify all route that has redirect to be better UX

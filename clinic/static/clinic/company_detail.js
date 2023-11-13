@@ -44,6 +44,31 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     })
 
+    // Get the form representative part
+    const updateRepresentativeMethod = editFormContainer.querySelector('#update_representative_method');
+
+    // Get the first method div
+    const createNewMethod = editFormContainer.querySelector('#create-new-method');
+    // Get the 2nd method div
+    const chooseFromListMethod = editFormContainer.querySelector('#choose-from-list-method');
+    // Hide the methods by default
+    createNewMethod.style.display = 'none';
+    chooseFromListMethod.style.display = 'none';
+
+    // Show them when user choose method
+    updateRepresentativeMethod.onchange = function() {
+        if (this.value === 'create_new') {
+            createNewMethod.style.display = 'block';
+            chooseFromListMethod.style.display = 'none';
+        } else if (this.value === 'choose_from_list') {
+            chooseFromListMethod.style.display = 'block';
+            createNewMethod.style.display = 'none';
+        } else {
+            chooseFromListMethod.style.display = 'none';
+            createNewMethod.style.display = 'none';
+        }
+    }
+
     //Be default, hide the form
     editFormContainer.style.opacity = '0';
     editFormContainer.style.height = '0';

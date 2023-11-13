@@ -117,14 +117,13 @@
                     </div>
                     <div class="form-group">
                         <label for="update_representative_method" class="form-label">Choose how to update representative</label>
-                        <select name="update_representative_method" class="form-control">
-                            <option disabled selected>Representative</option>
+                        <select name="update_representative_method" class="form-control" id="update_representative_method">
+                            <option selected>{% if company.representative %}{{ company.representative.name }}{% else %}Representative{% endif %}</option>
                             <option value="create_new">Create New</option>
                             <option value="choose_from_list">Choose From List</option>
                         </select>
                     </div>
                     <div id="create-new-method">
-                        <h2>Create New</h2>
                         <div class="form-group">
                             <label for="new_representative_name" class="form-label">Representative Name</label>
                             <input name="new_representative_name" type="text" class="form-control">
@@ -143,7 +142,6 @@
                         </div>
                     </div>
                     <div id="choose-from-list-method">
-                        <h2>Choose From List</h2>
                         <div class="form-group">
                             <label for="representative_id" class="form-label">Representative</label>
                             <select name="representative_id" class="form-control">
