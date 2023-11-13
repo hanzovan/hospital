@@ -371,7 +371,12 @@ def add_people(request):
                 request.session['nay_message'] = "Company does not exist"
 
         request.session['yay_message'] = 'People saved'
-        return HttpResponseRedirect(reverse('people'))        
+
+        # If user has the permission to read people information, redirect to people page, else to the people added by me page
+        if "read_all_people_info" not in user_right(request.user.management_right_level):
+            return HttpResponseRedirect(reverse('my_people'))
+        else:
+            return HttpResponseRedirect(reverse('people'))        
 
     # If user clicked link:
     else:
@@ -494,39 +499,39 @@ def person_detail(request, person_id):
             return JsonResponse({'error': "Don't leave empty name"}, status=401)
 
     # If admin clicked link or visit the correct url
-    else:
-        # Check if current user has the right to visit page, if not redirect user to index page
-        if "read_all_people_info" not in user_right(request.user.management_right_level):
-            request.session['nay_message'] = 'You do not have the right to visit this page'
-            return HttpResponseRedirect(reverse('index'))
-        
+    else:        
         # If user is valid for the right, continue
         try:
-            person = People.objects.get(pk=person_id)
-
-            # Get the company
-            companies = person.company.all()
-
-            # Get the message from this person
-            messages = person.talks.all().order_by("-date")
-
-            # Get messages from session
-            yay_message = request.session.get('yay_message', '')
-            nay_message = request.session.get('nay_message', '')
-            request.session['yay_message'] = ''
-            request.session['nay_message'] = ''
-
-            return render(request, "clinic/person_detail.html", {
-                "person": person,
-                "messages": messages,
-                "companies": companies,
-                'yay_message': yay_message,
-                'nay_message': nay_message
-            })
+            person = People.objects.get(pk=person_id)            
         except People.DoesNotExist:
             request.session['nay_message'] = 'That person does not exist'
             return HttpResponseRedirect(reverse('people'))
         
+        # Check if current user has the right to visit page, if not redirect user to index page
+        # If user has no permission to read all people information, and user is not the user that create this person, redirect to index page
+        if "read_all_people_info" not in user_right(request.user.management_right_level) and person.created_by != request.user:
+            request.session['nay_message'] = 'You do not have the right to visit this page'
+            return HttpResponseRedirect(reverse('index'))
+        
+        # Get the company
+        companies = person.company.all()
+
+        # Get the message from this person
+        messages = person.talks.all().order_by("-date")
+
+        # Get messages from session
+        yay_message = request.session.get('yay_message', '')
+        nay_message = request.session.get('nay_message', '')
+        request.session['yay_message'] = ''
+        request.session['nay_message'] = ''
+
+        return render(request, "clinic/person_detail.html", {
+            "person": person,
+            "messages": messages,
+            "companies": companies,
+            'yay_message': yay_message,
+            'nay_message': nay_message
+        })
 
 # Allow user with appropriate right to remove person's information
 @login_required
@@ -1753,7 +1758,6 @@ def testing_route(request, meeting_id):
         "meeting": meeting
     })
 
-# Create X button for every form
-# User with level 1 can access self add people list, but can't access their detail
 # Create a way to update representative for company, add it to add company route, when user add representative, find if it is possible to add person also
 # Modify UI contract detail, button not in the center
+# Modify all route that has redirect to be better UX
