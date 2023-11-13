@@ -117,16 +117,28 @@
         </tr>
         
     </table>
-
-    <!-- Button to create a word document prefilled with contract information -->
-    <div class="general" id="generate-contract-container">
-        <a href="{% url 'generate_contract_docx' contract.id %}" class="btn btn-primary" style="margin: 1.5em 0 1.5em 0;">Generate Word Document</a>
-    </div>
-
-    <!-- Button to show the editing contract form -->
     <div class="general">
-        <button class="btn btn-primary" id="show-editing">Edit Contract</button>
-    </div>
+        <div>
+            <table>
+                <tbody>
+                    <tr>
+                        <td>
+                            <!-- Button to create a word document prefilled with contract information -->
+                            <div id="generate-contract-container">
+                                <a href="{% url 'generate_contract_docx' contract.id %}" class="btn btn-primary" style="margin: 1.5em 0 1.5em 0;">Generate Word Document</a>
+                            </div>
+                        </td>
+                        <td>
+                            <!-- Button to show the editing contract form -->
+                            <div>
+                                <button class="btn btn-info" id="show-editing">Edit Contract</button>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>    
 
     <!-- The editing form container -->
     <div class="general">

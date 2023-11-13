@@ -1759,5 +1759,4 @@ def testing_route(request, meeting_id):
     })
 
 # Create a way to update representative for company, add it to add company route, when user add representative, find if it is possible to add person also
-# Modify UI contract detail, button not in the center
 # Modify all route that has redirect to be better UX
