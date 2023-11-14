@@ -351,6 +351,14 @@ def add_people(request):
                 "nay_message": "Name required"
             })
 
+        # Check if person has duplicate information
+        name_duplicate = People.objects.filter(name=name).exists()
+        email_duplicate = People.objects.filter(email=email).exists()
+        phone_duplicate = People.objects.filter(phone=phone).exists()
+        if name_duplicate or email_duplicate or phone_duplicate:
+            request.session['nay_message'] = "Duplicate information: check name, email, phone"
+            return HttpResponseRedirect(reverse('add_people'))
+
         # If user input is okay, trying to create new people in database        
         people = People(
             name = name,
@@ -363,6 +371,7 @@ def add_people(request):
         )
         people.save()
 
+        # If user choose a company that the person related to, check if company exist, add the relationship
         if company_id:
             try:
                 company = Company.objects.get(pk=company_id)
@@ -386,8 +395,17 @@ def add_people(request):
 
         # Get the companies
         companies = Company.objects.all()
+
+        # Get message
+        yay_message = request.session.get('yay_message', '')
+        nay_message = request.session.get('nay_message', '')
+        request.session['yay_message'] = ''
+        request.session['nay_message'] = ''
+
         return render(request, "clinic/add_people.html",{
-            "companies": companies
+            "companies": companies,
+            "yay_message": yay_message,
+            "nay_message": nay_message
         })
 
 
@@ -626,6 +644,14 @@ def add_company(request):
 
                     if not representative_name:
                         request.session['nay_message'] = "New representative name missing"
+                        return HttpResponseRedirect(reverse('add_company'))
+
+                    # Check duplication
+                    name_duplicate = People.objects.filter(name=representative_name).exists()
+                    email_duplicate = People.objects.filter(email=representative_email).exists()
+                    phone_duplicate = People.objects.filter(phone=representative_phone).exists()
+                    if name_duplicate or email_duplicate or phone_duplicate:
+                        request.session['nay_message'] = "Duplicate information: Check representative's name, email, phone"
                         return HttpResponseRedirect(reverse('add_company'))
 
                     # create new person information
@@ -1872,5 +1898,5 @@ def testing_route(request, meeting_id):
         "meeting": meeting
     })
 
-# Allow user to add representative in add company form
+
 # Modify all route that has redirect to be better UX
