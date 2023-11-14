@@ -41,6 +41,44 @@
                         <label for="female_headcount" class="form-label">Female Headcount</label>
                         <input name="female_headcount" type="number" required min="0" class="form-control" autocomplete="off" placeholder="100">
                     </div>
+                    <div class="form-group">
+                        <label for="add_representative_method" class="form-label">Choose how to add representative</label>
+                        <select name="add_representative_method" class="form-control" id="add_representative_method">
+                            <option selected disabled>Representative</option>
+                            <option value="create_new">Create New</option>
+                            <option value="choose_from_list">Choose From List</option>
+                            <option>Add Later</option>
+                        </select>
+                    </div>
+                    <div id="create-new-method">
+                        <div class="form-group">
+                            <label for="new_representative_name" class="form-label">Representative Name</label>
+                            <input name="new_representative_name" type="text" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label for="new_representative_address" class="form-label">Representative Address</label>
+                            <input name="new_representative_address" type="text" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label for="new_representative_email" class="form-label">Representative Email</label>
+                            <input name="new_representative_email" type="email" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label for="new_representative_phone" class="form-label">Representative Phone</label>
+                            <input name="new_representative_phone" type="text" class="form-control">
+                        </div>
+                    </div>
+                    <div id="choose-from-list-method">
+                        <div class="form-group">
+                            <label for="representative_id" class="form-label">Representative</label>
+                            <select name="representative_id" class="form-control">
+                                <option selected disabled>Name</option>
+                                {% for person in people %}
+                                    <option value="{{ person.id }}">{{ person.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
                     <button>Save</button>
                 </div>
             </form>

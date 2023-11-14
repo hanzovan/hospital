@@ -19,4 +19,29 @@ document.addEventListener('DOMContentLoaded', function() {
             this.closest('.form-group').classList.remove('focused');
         }
     })
+
+    // Get the add representative method select
+    const addRepMethod = document.querySelector('#add_representative_method');
+
+    // Get the div of 2 methods
+    const createNewDiv = document.querySelector('#create-new-method');
+    const chooseFromListDiv = document.querySelector('#choose-from-list-method');
+
+    // By default both of the divs were hidden
+    createNewDiv.style.display = 'none';
+    chooseFromListDiv.style.display = 'none';
+
+    // When user choose a method, show the appropriate div
+    addRepMethod.onchange = function() {
+        if (this.value === 'create_new') {
+            createNewDiv.style.display = 'block';
+            chooseFromListDiv.style.display = 'none';
+        } else if (this.value === 'choose_from_list') {
+            chooseFromListDiv.style.display = 'block';
+            createNewDiv.style.display = 'none';
+        } else {
+            chooseFromListDiv.style.display = 'none';
+            createNewDiv.style.display = 'none';
+        }
+    }
 })

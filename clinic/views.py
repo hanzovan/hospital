@@ -611,16 +611,76 @@ def add_company(request):
                 female_headcount = female_headcount,
                 created_by = request.user
             )
+
+            # Get the method that user choose to add company's representative
+            representative_add_method = request.POST.get('add_representative_method', '')
+
+            # If user decide to add representative method
+            if representative_add_method:
+                # If user decide to add representative as a new person
+                if representative_add_method == 'create_new':
+                    representative_name = request.POST.get('new_representative_name', '')
+                    representative_address = request.POST.get('new_representative_address', '')
+                    representative_email = request.POST.get('new_representative_email', '')
+                    representative_phone = request.POST.get('new_representative_phone', '')
+
+                    if not representative_name:
+                        request.session['nay_message'] = "New representative name missing"
+                        return HttpResponseRedirect(reverse('add_company'))
+
+                    # create new person information
+                    representative = People(
+                        name = representative_name,
+                        address = representative_address,
+                        email = representative_email,
+                        phone = representative_phone
+                    )
+                    representative.save()
+                    new_company.representative = representative
+
+                # If user decide to add representative from people list
+                elif representative_add_method == 'choose_from_list':
+                    representative_id = request.POST.get('representative_id', '')
+
+                    if not representative_id:
+                        request.session['nay_message'] = "Representative was not chosen"
+                        return HttpResponseRedirect(reverse('add_company'))
+                    try:
+                        representative = People.objects.get(pk=representative_id)
+                    except People.DoesNotExist:
+                        request.session['nay_message'] = "Person not found"
+                        return HttpResponseRedirect(reverse('add_company'))
+                    
+                    # Save the representative to the company
+                    new_company.representative = representative
+
+                # else if other method, ignore it
+
+            # Save the company information
             new_company.save()
+
             request.session['yay_message'] = "Company added"
-            return HttpResponseRedirect(reverse('companies'))        
+            return HttpResponseRedirect(reverse('companies'))            
     
     # If user clicking link or being redirected
     else:
         if "add_company_info" not in user_right(request.user.management_right_level):
             request.session['nay_message'] = "You do not have the right to visit this part"
             return HttpResponseRedirect(reverse('index'))
-        return render(request, "clinic/add_company.html")
+        
+        # Get people list
+        people = People.objects.all()
+
+        yay_message = request.session.get('yay_messgae', '')
+        nay_message = request.session.get('nay_message', '')
+        request.session['yay_message'] = ''
+        request.session['yay_message'] = ''
+
+        return render(request, "clinic/add_company.html", {
+            "people": people,
+            "yay_message": yay_message,
+            "nay_message": nay_message
+        })
 
 
 # Allow user to add company's information
