@@ -302,7 +302,12 @@ def service_detail(request, service_id):
 # Allow user to remove service
 @login_required
 def remove_service(request):
-    if request.method == 'POST':    
+    if request.method == 'POST':
+        # Check user right
+        if 'modify_service_info' not in user_right(request.user.management_right_level):
+            request.session['nay_message'] = "You do not have the right to modify service information"
+            return HttpResponseRedirect(reverse('index'))
+
         # Get the service that needed to remove
         service_id = request.POST.get('service_id', '')
 
@@ -310,12 +315,7 @@ def remove_service(request):
             service = Service.objects.get(pk=service_id)
         except Service.DoesNotExist:
             request.session['nay_message'] = "Service with provided id does not exist"
-
-        # Check user right
-        if 'modify_service_info' not in user_right(request.user.management_right_level):
-            request.session['nay_message'] = "You do not have the right to modify service information"
-            return redirect('service_detail', service_id=service_id)
-
+        
         service.delete()
 
         request.session['yay_message'] = "Service removed"
@@ -517,16 +517,24 @@ def person_detail(request, person_id):
             return JsonResponse({'error': "Don't leave empty name"}, status=401)
 
     # If admin clicked link or visit the correct url
-    else:        
+    else:
+        # If user doesn't even have the right to read self add people, they should be redirected to index page
+        if "read_self_add_people_info" not in user_right(request.user.management_right_level):
+            return HttpResponseRedirect(reverse('index'))        
+
         # If user is valid for the right, continue
         try:
             person = People.objects.get(pk=person_id)            
         except People.DoesNotExist:
             request.session['nay_message'] = 'That person does not exist'
-            return HttpResponseRedirect(reverse('people'))
+
+            # Redirect base on user permission if person not found
+            if "read_all_people_info" in user_right(request.user.management_right_level):
+                return HttpResponseRedirect(reverse('people'))
+            else:
+                return HttpResponseRedirect(reverse('my_people'))
         
-        # Check if current user has the right to visit page, if not redirect user to index page
-        # If user has no permission to read all people information, and user is not the user that create this person, redirect to index page
+        # If person found, check if that person was added by that user, if not user need to have permission to read all people info or will being redirected to index page
         if "read_all_people_info" not in user_right(request.user.management_right_level) and person.created_by != request.user:
             request.session['nay_message'] = 'You do not have the right to visit this page'
             return HttpResponseRedirect(reverse('index'))
@@ -551,10 +559,16 @@ def person_detail(request, person_id):
             'nay_message': nay_message
         })
 
+
 # Allow user with appropriate right to remove person's information
 @login_required
 def remove_person(request):
     if request.method == 'POST':
+        # Check if user have the appropriate right
+        if 'modify_people_info' not in user_right(request.user.management_right_level):
+            request.session['nay_message'] = "You do not have the right to do this"
+            return HttpResponseRedirect(reverse('index'))
+
         # Define variable
         person_id = request.POST.get('person_id', '')
         try:
@@ -562,19 +576,14 @@ def remove_person(request):
         except People.DoesNotExist:
             request.session['nay_message'] = "People with that id does not exist"
             return HttpResponseRedirect(reverse('people'))
-
-        # Check if user have the appropriate right
-        if 'modify_people_info' not in user_right(request.user.management_right_level):
-            request.session['nay_message'] = "You do not have the right to do this"
-            return HttpResponseRedirect(reverse('people'))
         
         # If user is legit, continue
         person.delete()
         request.session['yay_message'] = "Person information deleted successfully"
-        return HttpResponseRedirect(reverse('people'))
+        return HttpResponseRedirect(reverse('index'))
     
     else:
-        request.session['nay_message'] = "POST method request"
+        request.session['nay_message'] = "POST method required"
         return HttpResponseRedirect(reverse('index'))
 
 
@@ -597,10 +606,20 @@ def add_company(request):
         male_headcount = request.POST['male_headcount']
         female_headcount = request.POST['female_headcount']
 
+        # Required user to fill information
         if not name or not industry or not address or not male_headcount or not female_headcount or not email or not phone:
             return render(request, "clinic/add_company.html", {
                 "nay_message": "All fields required"
             })
+        
+        # Check duplicate name, email, phone
+        duplicate_name = Company.objects.filter(name=name).exists()
+        duplicate_email = Company.objects.filter(email=email).exists()
+        duplicate_phone = Company.objects.filter(phone=phone).exists()
+
+        if duplicate_name or duplicate_email or duplicate_phone:
+            request.session['nay_message'] = "Duplicate informations, check name, email, or phone"
+            return HttpResponseRedirect(reverse('add_company'))
         
         try:
             if int(male_headcount) < 0 or int(female_headcount) < 0:
@@ -612,81 +631,75 @@ def add_company(request):
             request.session['nay_message'] = "Headcount has to be integer"
             return redirect("add_company")
         
-        # Save the company
-        try:
-            company = Company.objects.get(name=name)
-            return render(request, "clinic/add_company.html", {
-                "nay_message": "Company name already exist"
-            })
-        except Company.DoesNotExist:
-            new_company = Company(
-                name = name,
-                industry = industry,
-                address = address,
-                email = email,
-                phone = phone,
-                male_headcount = male_headcount,
-                female_headcount = female_headcount,
-                created_by = request.user
-            )
+        # Save the company        
+        new_company = Company(
+            name = name,
+            industry = industry,
+            address = address,
+            email = email,
+            phone = phone,
+            male_headcount = male_headcount,
+            female_headcount = female_headcount,
+            created_by = request.user
+        )
 
-            # Get the method that user choose to add company's representative
-            representative_add_method = request.POST.get('add_representative_method', '')
+        # Get the method that user choose to add company's representative
+        representative_add_method = request.POST.get('add_representative_method', '')
 
-            # If user decide to add representative method
-            if representative_add_method:
-                # If user decide to add representative as a new person
-                if representative_add_method == 'create_new':
-                    representative_name = request.POST.get('new_representative_name', '')
-                    representative_address = request.POST.get('new_representative_address', '')
-                    representative_email = request.POST.get('new_representative_email', '')
-                    representative_phone = request.POST.get('new_representative_phone', '')
+        # If user decide to add representative method
+        if representative_add_method:
+            # If user decide to add representative as a new person
+            if representative_add_method == 'create_new':
+                representative_name = request.POST.get('new_representative_name', '')
+                representative_address = request.POST.get('new_representative_address', '')
+                representative_email = request.POST.get('new_representative_email', '')
+                representative_phone = request.POST.get('new_representative_phone', '')
 
-                    if not representative_name:
-                        request.session['nay_message'] = "New representative name missing"
-                        return HttpResponseRedirect(reverse('add_company'))
+                if not representative_name:
+                    request.session['nay_message'] = "New representative name missing"
+                    return HttpResponseRedirect(reverse('add_company'))
 
-                    # Check duplication
-                    name_duplicate = People.objects.filter(name=representative_name).exists()
-                    email_duplicate = People.objects.filter(email=representative_email).exists()
-                    phone_duplicate = People.objects.filter(phone=representative_phone).exists()
-                    if name_duplicate or email_duplicate or phone_duplicate:
-                        request.session['nay_message'] = "Duplicate information: Check representative's name, email, phone"
-                        return HttpResponseRedirect(reverse('add_company'))
+                # Check duplication
+                name_duplicate = People.objects.filter(name=representative_name).exists()
+                email_duplicate = People.objects.filter(email=representative_email).exists()
+                phone_duplicate = People.objects.filter(phone=representative_phone).exists()
+                if name_duplicate or email_duplicate or phone_duplicate:
+                    request.session['nay_message'] = "Duplicate information: Check representative's name, email, phone"
+                    return HttpResponseRedirect(reverse('add_company'))
 
-                    # create new person information
-                    representative = People(
-                        name = representative_name,
-                        address = representative_address,
-                        email = representative_email,
-                        phone = representative_phone
-                    )
-                    representative.save()
-                    new_company.representative = representative
+                # create new person information
+                representative = People(
+                    name = representative_name,
+                    address = representative_address,
+                    email = representative_email,
+                    phone = representative_phone
+                )
+                representative.save()
+                new_company.representative = representative
 
-                # If user decide to add representative from people list
-                elif representative_add_method == 'choose_from_list':
-                    representative_id = request.POST.get('representative_id', '')
+            # If user decide to add representative from people list
+            elif representative_add_method == 'choose_from_list':
+                representative_id = request.POST.get('representative_id', '')
 
-                    if not representative_id:
-                        request.session['nay_message'] = "Representative was not chosen"
-                        return HttpResponseRedirect(reverse('add_company'))
-                    try:
-                        representative = People.objects.get(pk=representative_id)
-                    except People.DoesNotExist:
-                        request.session['nay_message'] = "Person not found"
-                        return HttpResponseRedirect(reverse('add_company'))
-                    
-                    # Save the representative to the company
-                    new_company.representative = representative
+                if not representative_id:
+                    request.session['nay_message'] = "Representative was not chosen"
+                    return HttpResponseRedirect(reverse('add_company'))
+                try:
+                    representative = People.objects.get(pk=representative_id)
+                except People.DoesNotExist:
+                    request.session['nay_message'] = "Person not found"
+                    return HttpResponseRedirect(reverse('add_company'))
+                
+                # Save the representative to the company
+                new_company.representative = representative
 
-                # else if other method, ignore it
+            # else if other method, ignore it
 
-            # Save the company information
-            new_company.save()
+        # Save the company information
+        new_company.save()
 
-            request.session['yay_message'] = "Company added"
-            return HttpResponseRedirect(reverse('companies'))            
+        request.session['yay_message'] = "Company added"
+        return HttpResponseRedirect(reverse('companies'))            
     
     # If user clicking link or being redirected
     else:
@@ -741,12 +754,22 @@ def company_detail(request, company_id):
             company = Company.objects.get(pk=company_id)
         except Company.DoesNotExist:
             request.session['nay_message'] = "Company not found"
-            return HttpResponseRedirect(reverse('companies'))
+
+            # If user does not have permission to read all companies information, redirect to index page, else redirect to company page
+            if "read_company_info" not in user_right(request.user.management_right_level):
+                return HttpResponseRedirect(reverse('index'))
+            else:
+                return HttpResponseRedirect(reverse('companies'))
 
         # If the id is valid, then company exist, check the user right
         if "modify_company_info" not in user_right(request.user.management_right_level):
             request.session['nay_message'] = "You do not have the right to modify company's information"
-            return redirect("company_detail", company_id=company_id)
+
+            # If user has permission to check person detail, redirect to that page, else to the index page
+            if "read_company_info" not in user_right(request.user.management_right_level):
+                return HttpResponseRedirect(reverse('index'))
+            else:
+                return redirect("company_detail", company_id=company_id)
         
         # Get the variables
         name = request.POST.get('name', '')
@@ -759,16 +782,16 @@ def company_detail(request, company_id):
 
         if not name or not industry or not address or not email or not phone or not male_headcount or not female_headcount:
             request.session['nay_message'] = "Please fill all fields"
-            return redirect("edit_company", company_id=company_id)
+            return redirect("company_detail", company_id=company_id)
 
         try:
             # Check that if headcount is negative or not
             if int(male_headcount) < 0 or int(female_headcount) < 0:
                 request.session['nay_message'] = "Headcount has to be equal or greater than 0"
-                return redirect("edit_company", company_id=company_id)
+                return redirect("company_detail", company_id=company_id)
         except ValueError:
             request.session['nay_message'] = "Headcount has to be integer"
-            return redirect("edit_company", company_id=company_id)        
+            return redirect("company_detail", company_id=company_id)        
 
         # Save the new information of the company
         company.name = name
@@ -873,12 +896,22 @@ def remove_company(request):
             company = Company.objects.get(pk=company_id)
         except Company.DoesNotExist:
             request.session['nay_message'] = "Company with that id does not exist"
-            return HttpResponseRedirect(reverse('companies'))
+
+            # If user has permission to read companies info
+            if "read_company_info" in user_right(request.user.management_right_level):                
+                return HttpResponseRedirect(reverse('companies'))
+            else:
+                return HttpResponseRedirect(reverse('index'))
 
         # Check user right
         if 'modify_company_info' not in user_right(request.user.management_right_level):
             request.session['nay_message'] = "You do not have the right to modify company information"
-            return redirect('company_detail', company_id=company_id)
+
+            # If user has permission to read company info
+            if "read_company_info" in user_right(request.user.management_right_level):
+                return redirect('company_detail', company_id=company_id)
+            else:
+                return HttpResponseRedirect(reverse('index'))
 
         # Remove company
         company.delete()
@@ -889,25 +922,44 @@ def remove_company(request):
     
     else:
         request.session['nay_message'] = "POST method required"
-        return HttpResponseRedirect(reverse('companies'))
+        return HttpResponseRedirect(reverse('index'))
+
 
 # Allow add message from person_detail page
 def message(request, person_id):
     if request.method == 'POST':
-        #Get content from the form input
-        content = request.POST['content']
-
         #Check if person with that id exist or not, if not redirect user to index page
         try:
             person = People.objects.get(pk=person_id)
         except People.DoesNotExist:
             request.session['nay_message'] = "Person not found"
-            return HttpResponseRedirect(reverse('index'))
-        
+
+            # Check user permission and redirect depend on that
+            if "read_all_people_info" in user_right(request.user.management_right_level):
+                return HttpResponseRedirect(reverse('people'))
+            elif "read_self_add_people_info" in user_right(request.user.management_right_level):
+                return HttpResponseRedirect(reverse('my_people'))
+            else:
+                return HttpResponseRedirect(reverse('index'))
+
         #Check user right
         if "add_people_info" not in user_right(request.user.management_right_level):
             request.session['nay_message'] = "You do not have the right to add message"
-            return HttpResponseRedirect(reverse('index'))
+
+            # Check user permission and redirect
+            if "read_all_people_info" in user_right(request.user.management_right_level):
+                return HttpResponseRedirect(reverse('people'))
+            elif "read_self_add_people_info" in user_right(request.user.management_right_level):
+                return HttpResponseRedirect(reverse('my_people'))
+            else:
+                return HttpResponseRedirect(reverse('index'))
+
+        #Get content from the form input
+        content = request.POST.get('content', '')
+
+        if not content:
+            request.session['nay_message'] = "Message's content was empty, no message saved"
+            return redirect('person_detail', person_id=person.id)
 
         message = ContactDiary(
             name = person,
@@ -931,15 +983,25 @@ def add_message_from_all_people_page(request, person_id):
             person = People.objects.get(pk=person_id)
         except People.DoesNotExist:
             request.session['nay_message'] = "Person does not exist"
-            return redirect("add_message_from_all_people_page", person_id=person_id)
+
+            # Redirect user base on user permission
+            if "read_all_people_info" in user_right(request.user.management_right_level):
+                return HttpResponseRedirect(reverse('people'))
+            elif "read_self_add_people_info" in user_right(request.user.management_right_level):
+                return HttpResponseRedirect(reverse('my_people'))
+            else:
+                return HttpResponseRedirect(reverse('index'))
         
         #Check if user has the right, if not raise error and show the form again
         if "add_people_info" not in user_right(request.user.management_right_level):
             request.session['nay_message'] = "You do not have the right to add message"
-            return redirect("add_message_from_all_people_page", person_id=person_id)
+            return HttpResponseRedirect(reverse('index'))
 
         content = request.POST.get('content', '')
-        
+        if not content:
+            request.session['nay_message'] = "Please fill the message's content"
+            return redirect("add_message_from_all_people_page", person_id=person_id)
+
         # save the new message
         new_message = ContactDiary(
             name = person,
@@ -947,21 +1009,34 @@ def add_message_from_all_people_page(request, person_id):
         )
         new_message.save()
         request.session['yay_message'] = "Message saved"
-        return HttpResponseRedirect(reverse('people'))
+
+        # Redirect base on user permission
+        if "read_all_people_info" in user_right(request.user.management_right_level):
+            return HttpResponseRedirect(reverse('people'))
+        else:
+            return HttpResponseRedirect(reverse('my_people'))
     
     # If user clicked link
     else:
-        # Check if person exist
-        try:            
-            person = People.objects.get(pk=person_id)
-        except People.DoesNotExist:
-            request.session['nay_message'] = "Person not found"
-            return redirect("add_message_from_all_people_page", person_id=person_id)
         # Check if user has the right, if not redirect user to index route
         if "add_people_info" not in user_right(request.user.management_right_level):
             request.session['nay_message'] = "You do not have the right to add message"
             return HttpResponseRedirect(reverse('index'))
 
+        # Check if person exist
+        try:            
+            person = People.objects.get(pk=person_id)
+        except People.DoesNotExist:
+            request.session['nay_message'] = "Person not found"
+
+            # Redirect base on user permission
+            if "read_all_people_info" in user_right(request.user.management_right_level):
+                return HttpResponseRedirect(reverse('people'))
+            elif "read_self_add_people_info" in user_right(request.user.management_right_level):
+                return HttpResponseRedirect(reverse('my_people'))
+            else:
+                return HttpResponseRedirect(reverse('index'))            
+        
         # Show message
         yay_message = request.session.get('yay_message', '')
         nay_message = request.session.get('nay_message', '')
@@ -980,6 +1055,11 @@ def add_message_from_all_people_page(request, person_id):
 def add_contract(request):
     # If user submitting form
     if request.method == 'POST':
+        # Check if user has the right to modify contract info
+        if "modify_contract_info" not in user_right(request.user.management_right_level):
+            request.session['nay_message'] = "You do not have the right to add contract"
+            return HttpResponseRedirect(reverse('index'))
+
         # Get the client id
         client_id = request.POST.get('client_id', '')
 
@@ -992,23 +1072,13 @@ def add_contract(request):
             client = Company.objects.get(pk=client_id)
         except Company.DoesNotExist:
             request.session['nay_message'] = "Company does not exist"
-            companies = Company.objects.all()
-            services = Service.objects.all()
-            return render(request, "clinic/add_contract.html", {
-                "services": services,
-                "companies": companies
-            })
-        
+            return HttpResponseRedirect(reverse('add_contract'))
+
         # Company has to provide representative before creating contract
         if not client.representative:
             request.session['nay_message'] = "Company has to update representative before creating contract"
             return HttpResponseRedirect(reverse('add_contract'))
         
-        # Check if user has the right to modify contract info
-        if "modify_contract_info" not in user_right(request.user.management_right_level):
-            request.session['nay_message'] = "You do not have the right to add contract"
-            return HttpResponseRedirect(reverse('index'))
-
         # Get service id
         service_ids = request.POST.getlist('chosen_services')
 
@@ -1030,20 +1100,10 @@ def add_contract(request):
             female_number = int(female_headcount)
             if male_number < 0 or female_number < 0:
                 request.session['nay_message'] = "headcount has to be positive integer, not negative"
-                companies = Company.objects.all()
-                services = Service.objects.all()
-                return render(request, "clinic/add_contract.html", {
-                    "services": services,
-                    "companies": companies
-                })
+                return HttpResponseRedirect(reverse('add_contract'))
         except ValueError:
             request.session['nay_message'] = 'headcount has to be positive integer, not a float'
-            companies = Company.objects.all()
-            services = Service.objects.all()
-            return render(request, "clinic/add_contract.html", {
-                "services": services,
-                "companies": companies
-            })
+            return HttpResponseRedirect(reverse('add_contract'))
         
         # Get the total value
         total_value = 0
@@ -1062,7 +1122,10 @@ def add_contract(request):
         # Get the discount
         discount = request.POST.get('discount')
         if discount:
-            discount = round(float(discount), 2)        
+            discount = round(float(discount), 2)
+            if discount < 0:
+                request.session['nay_message'] = "Discount has to be equal or greater than 0"
+                return HttpResponseRedirect(reverse('add_contract'))        
 
         # Get the total revenue
         revenue = round(float(total_value*(100 - discount)/100))
@@ -1092,14 +1155,19 @@ def add_contract(request):
 
         request.session['yay_message'] = "Contract added"
 
-        return HttpResponseRedirect(reverse('index'))
+        return HttpResponseRedirect(reverse('all_contracts'))
     
     # If user clicked link or being redirect
     else:
-        #Check user right
+        # Check user right
         if "modify_contract_info" not in user_right(request.user.management_right_level):
             request.session['nay_message'] = "You do not have the right to add contract"
-            return HttpResponseRedirect(reverse('index'))
+
+            # Redirect base on the user permission
+            if "read_contract_info" in user_right(request.user.management_right_level):
+                return HttpResponseRedirect(reverse('all_contracts'))
+            else:
+                return HttpResponseRedirect(reverse('index'))
         
         companies = Company.objects.all()
         services = Service.objects.all()
@@ -1125,7 +1193,7 @@ def all_contracts(request):
 
     contracts = Contract.objects.filter(archived=False).order_by('initiation_date')
 
-    # Get today
+    # Get the current date
     today = date.today()
 
     # Add a field to each contract to confirm if the initiation date is near within 10 days
@@ -1151,16 +1219,19 @@ def all_contracts(request):
 # Allow user to access contract detail, and archive the contract
 @login_required
 def contract_detail(request, contract_id):
-    try:
-        contract = Contract.objects.get(pk=contract_id)
-    except Contract.DoesNotExist:
-        request.session['nay_message'] = "Invalid contract ID"
-        return HttpResponseRedirect(reverse('all_contracts'))
-
     # Check user right, if not redirect to index
     if "read_contract_info" not in user_right(request.user.management_right_level):
         request.session['nay_message'] = "You do not have the right to access this page"
         return HttpResponseRedirect(reverse('index'))
+
+    # If user has permission, check contract id
+    try:
+        contract = Contract.objects.get(pk=contract_id)
+    except Contract.DoesNotExist:
+        request.session['nay_message'] = "Invalid contract ID"
+
+        # Redirect to all contracts page        
+        return HttpResponseRedirect(reverse('all_contracts'))
 
     # List of companies for editing
     companies = Company.objects.all()
@@ -1195,7 +1266,12 @@ def edit_contract(request):
         # Check if user has the permission to edit contract information
         if "modify_contract_info" not in user_right(request.user.management_right_level):
             request.session['nay_message'] = "You do not have the permission to modify this information"
-            return HttpResponseRedirect(reverse('all_contracts'))
+
+            # Redirect base on user permission
+            if "read_contract_info" in user_right(request.user.management_right_level):
+                return HttpResponseRedirect(reverse('all_contracts'))
+            else:
+                return HttpResponseRedirect(reverse('index'))
 
         # Get variables from POST
         contract_id = request.POST.get('contract_id', '')
@@ -1215,11 +1291,7 @@ def edit_contract(request):
             contract = Contract.objects.get(pk=contract_id)
         except Contract.DoesNotExist:
             request.session['nay_message'] = "Contract does not exist"
-
-        # Check user right
-        if "modify_contract_info" not in user_right(request.user.management_right_level):
-            request.session['nay_message'] = "You do not have the permission to modify contract information"
-            return redirect("contract_detail", contract_id=contract_id)
+            return HttpResponseRedirect(reverse('all_contracts'))
 
         # Check client id
         if not client_id:
@@ -1346,7 +1418,11 @@ def edit_contract(request):
 @login_required
 def archive_contract(request):
     if request.method == 'POST':
-        contract_id = request.POST.get('contract_id')
+        # Check if user has the permission to archive contract
+        if "modify_contract_info" not in user_right(request.user.management_right_level):
+            request.session['nay_message'] = "You do not have the permission to modify contract information"
+            return HttpResponseRedirect(reverse('all_contracts'))
+        contract_id = request.POST.get('contract_id', '')
         if contract_id:
             # Check if that id match with any contract
             try:
@@ -1354,11 +1430,6 @@ def archive_contract(request):
             except Contract.DoesNotExist:
                 request.session['nay_message'] = "Contract with that id does not exist"
                 return HttpResponseRedirect(reverse('all_contracts'))
-
-            # Check if user has the permission to modify contract information
-            if "modify_contract_info" not in user_right(request.user.management_right_level):
-                request.session['nay_message'] = "You do not have the right to archive contract"
-                return redirect('contract_detail', contract_id = contract_id)
 
             # If requirements met, archive the contract
             contract.archived = True
@@ -1368,8 +1439,10 @@ def archive_contract(request):
 
             # Inform successfully
             request.session['yay_message'] = "Contract archived successfully"
+            return redirect('contract_detail', contract_id=contract_id)
 
-        return redirect('contract_detail', contract_id = contract_id)
+        else:
+            return HttpResponseRedirect(reverse('all_contracts'))
     
     else:
         request.session['nay_message'] = "POST method required"
@@ -1572,7 +1645,12 @@ def add_meeting(request):
             request.session['nay_message'] = 'You have to choose a client'
             return HttpResponseRedirect(reverse('add_meeting'))
 
-        client = Company.objects.get(pk=client_id)
+        # Check if client exist
+        try:
+            client = Company.objects.get(pk=client_id)
+        except Company.DoesNotExist:
+            request.session['nay_message'] = "Client does not exist"
+            return HttpResponseRedirect(reverse('add_meeting'))
 
         # Transform start and end time from string to datetime
         start_datetime = datetime.strptime(start_time, '%Y-%m-%dT%H:%M')
@@ -1627,7 +1705,7 @@ def add_meeting(request):
 # Allow user to tract all the meeting
 @login_required
 def all_meetings(request):
-    #Check if user has permission to read meeting information
+    # Check if user has permission to read meeting information
     if "read_meeting_info" not in user_right(request.user.management_right_level):
         request.session['nay_message'] = "You do not have the permission to read this information"
         return HttpResponseRedirect(reverse('index'))
@@ -1673,14 +1751,14 @@ def upcoming_meetings(request):
 # Allow user to access meeting agenda
 @login_required
 def meeting_agenda(request, meeting_id):
-    #If user does not have the permission to read meeting information, redirect to index page
+    # If user does not have the permission to read meeting information, redirect to index page
     if "read_meeting_info" not in user_right(request.user.management_right_level):
         request.session['nay_message'] = "You do not have the permission to check this information"
         return HttpResponseRedirect(reverse('index'))
 
     meeting = MeetUp.objects.get(pk=meeting_id)
 
-    #Check if user has the permission to modify meeting information or not, if not, hide the form and button in html file
+    # Check if user has the permission to modify meeting information or not, if not, hide the form and button in html file
     if "modify_meeting_info" not in user_right(request.user.management_right_level):
         meeting.edit_permission = False
     else:
@@ -1703,17 +1781,17 @@ def meeting_agenda(request, meeting_id):
 def add_meeting_agenda(request, meeting_id):
     # if user submited form
     if request.method == 'POST':
+        # Check user permission
+        if "modify_meeting_info" not in user_right(request.user.management_right_level):
+            request.session['nay_message'] = "You do not have permission to do this"
+            return HttpResponseRedirect(reverse('index'))
+
         try:
             meeting = MeetUp.objects.get(pk=meeting_id)
         except MeetUp.DoesNotExist:
             request.session['nay_message'] = "Meeting id does not exist"
-            return HttpResponseRedirect(reverse('index'))
+            return HttpResponseRedirect(reverse('upcoming_meetings'))
         
-        # If user does not have permission, redirect to index page
-        if "modify_meeting_info" not in user_right(request.user.management_right_level):
-            request.session['nay_message'] = "You do not have the permission to modify meeting information"
-            return redirect('meeting_agenda', meeting_id=meeting_id)
-
         # If the meetup already over, return error, not user end time because real meeting may extend longer than the preset end time
         if meeting.end_or_not:
             request.session['nay_message'] = "Meeting already over"
@@ -1752,6 +1830,11 @@ def add_meeting_agenda(request, meeting_id):
 def meeting_item_remove(request, meeting_id):
     # If user submitted form
     if request.method == 'POST':
+        #Check user permission
+        if "modify_meeting_info" not in user_right(request.user.management_right_level):
+            request.session['nay_message'] = "You do not have the permission to edit meeting information"
+            return HttpResponseRedirect(reverse('index'))
+        
         # Get the item's id
         item_id = request.POST.get('item_id', '')
         if not item_id:
@@ -1762,11 +1845,6 @@ def meeting_item_remove(request, meeting_id):
         except MeetingAgendaItem.DoesNotExist:
             request.session['nay_message'] = "Item not found"
             return redirect("meeting_agenda", meeting_id=meeting_id)
-        
-        #Check user permission
-        if "modify_meeting_info" not in user_right(request.user.management_right_level):
-            request.session['nay_message'] = "You do not have the permission to edit meeting information"
-            return HttpResponseRedirect(reverse('index'))
 
         # Delete the item from database
         item.delete()
@@ -1784,17 +1862,17 @@ def meeting_item_remove(request, meeting_id):
 @login_required
 def edit_meeting(request, meeting_id):
     if request.method == 'POST':
+        # Check user permission
+        if "modify_meeting_info" not in user_right(request.user.management_right_level):
+            request.session['nay_message'] = "You do not have permission to edit meeting information"
+            return HttpResponseRedirect(reverse('index'))
+
         try:
             meeting = MeetUp.objects.get(pk=meeting_id)
         except MeetUp.DoesNotExist:
             request.session['nay_message'] = "Meeting id not found"
             return HttpResponseRedirect(reverse('all_meetings'))
         
-        # Check user permission
-        if "modify_meeting_info" not in user_right(request.user.management_right_level):
-            request.session['nay_message'] = "You do not have permission to edit meeting information"
-            return HttpResponseRedirect(reverse('index'))
-
         # Get the variables
         client_id = request.POST.get('client_id', '')
         if not client_id:
@@ -1869,7 +1947,7 @@ def end_meeting(request):
             meeting.end_or_not = True
 
         meeting.save()
-        request.session['yay_message'] = "Meeting ended"
+        request.session['yay_message'] = "Meeting set to ended"
 
         return redirect('meeting_agenda', meeting_id=meeting.id)
     
@@ -1877,26 +1955,3 @@ def end_meeting(request):
         request.session['nay_message'] = "POST method required"
         return HttpResponseRedirect(reverse('index'))
     
-
-def testing_route(request, meeting_id):
-    #if user submitting form
-    # if request.method == 'POST':
-    #     try:
-    #         person = People.objects.get(pk=person_id)
-    #     except People.DoesNotExist:
-    #         request.session['nay_message'] = "Person does not exist"
-    #         return HttpResponseRedirect(reverse('index'))
-
-    #     content = request.POST.get('content')
-
-    #     return HttpResponse(content)
-    
-    # else:
-
-    meeting = MeetUp.objects.get(pk=meeting_id)
-    return render(request, "clinic/testing.html", {
-        "meeting": meeting
-    })
-
-
-# Modify all route that has redirect to be better UX
