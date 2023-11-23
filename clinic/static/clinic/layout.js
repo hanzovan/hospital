@@ -301,9 +301,16 @@ document.addEventListener('DOMContentLoaded', function() {
                 reading.style.display = 'none';
             }
         })
+    }
 
-
-
-
+    // MOBILE RESPONSIVE PART
+    let mobileMenu = document.querySelector('#myLinks');
+    let hamburgerBtn = document.querySelector('#hamburger-btn');
+    hamburgerBtn.onclick = function() {
+        if (mobileMenu.style.maxHeight === "0px" || mobileMenu.style.maxHeight === "") {
+            mobileMenu.style.maxHeight = "300px";
+        } else {
+            mobileMenu.style.maxHeight = "0px";
+        }
     }
 })

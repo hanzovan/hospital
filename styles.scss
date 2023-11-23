@@ -582,3 +582,51 @@ td {
 .number-column {
     text-align: end;
 }
+
+// MOBILE RESPONSIVE PART
+@media screen and (max-width: 767px) {
+    #pc-nav {
+        display: none;
+    }
+}
+@media screen and (min-width: 768px) {
+    .mobile-nav {
+        display: none;
+    }
+}
+
+
+  
+.topnav {
+    overflow: hidden;
+    background-color: #333;
+    position: relative;
+}
+
+#myLinks {
+    display: block;
+    max-height: 0px;
+    overflow: hidden;
+    transition: max-height .6s; /* Adjust the duration and easing as needed */
+}
+
+.topnav a {
+    color: white;
+    padding: 14px 16px;
+    text-decoration: none;
+    font-size: 17px;
+    display: block;
+}
+
+.topnav a.icon {
+    background: black;
+    display: block;
+    position: absolute;
+    right: 0;
+    top: 0;
+}
+
+.topnav a:hover {
+    background-color: #ddd;
+    color: black;
+}
