@@ -304,7 +304,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // MOBILE RESPONSIVE PART
-    let mobileMenu = document.querySelector('#myLinks');
+    let mobileMenu = document.querySelector('#mobile-menu');
     let hamburgerBtn = document.querySelector('#hamburger-btn');
     hamburgerBtn.onclick = function() {
         if (mobileMenu.style.maxHeight === "0px" || mobileMenu.style.maxHeight === "") {
