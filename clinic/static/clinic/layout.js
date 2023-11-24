@@ -337,7 +337,12 @@ document.addEventListener('DOMContentLoaded', function() {
     let hamburgerBtn = document.querySelector('#hamburger-btn');
     hamburgerBtn.onclick = function() {
         if (mobileMenu.style.maxHeight === "0px" || mobileMenu.style.maxHeight === "") {
+            // Remove eventlistener if there was any, because it will trigger before the menu appear and cause it to close right after appear
+            document.removeEventListener('click', clickOutsideMobileMenu);
             mobileMenu.style.maxHeight = "800px";
+            setTimeout(function() {
+                document.addEventListener('click', clickOutsideMobileMenu);
+            }, 50);
         } else {
             mobileMenu.style.maxHeight = "0px";
         }
@@ -348,7 +353,12 @@ document.addEventListener('DOMContentLoaded', function() {
     let profileBtn = document.querySelector('#profile-btn');
     profileBtn.onclick = function() {
         if (profileMenu.style.maxHeight === "0px" || profileMenu.style.maxHeight === "") {
+            // Remove previous eventlistener
+            document.removeEventListener('click', clickOutsideProfileMenu);
             profileMenu.style.maxHeight = "300px";
+            setTimeout(function() {
+                document.addEventListener('click', clickOutsideProfileMenu);
+            }, 50);
         } else {
             profileMenu.style.maxHeight = "0px";
         }
@@ -359,7 +369,12 @@ document.addEventListener('DOMContentLoaded', function() {
     let listsBtn = document.querySelector('#lists-btn');
     listsBtn.onclick = function() {
         if (listsMenu.style.maxHeight === '0px' || listsMenu.style.maxHeight === "") {
+            // Remove previous eventlistener
+            document.removeEventListener('click', clickOutsideListsMenu);
             listsMenu.style.maxHeight = "300px";
+            setTimeout(function() {
+                document.addEventListener('click', clickOutsideListsMenu);
+            }, 50);
         } else {
             listsMenu.style.maxHeight = "0px";
         }
@@ -370,10 +385,35 @@ document.addEventListener('DOMContentLoaded', function() {
     let addBtn = document.querySelector('#add-btn');
     addBtn.onclick = function() {
         if (addMenu.style.maxHeight === "0px" || addMenu.style.maxHeight === "") {
+            // Remove previous eventlistener
+            document.removeEventListener('click', clickOutsideAddMenu);
             addMenu.style.maxHeight = "300px";
+            setTimeout(function() {
+                document.addEventListener('click', clickOutsideAddMenu);
+            }, 50);
         } else {
             addMenu.style.maxHeight = "0px";
         }
     }
 
+        // Define a function that hide menu when user click outside
+    function clickOutside(event, targetMenu) {
+        if (!targetMenu.contains(event.target)) {
+            targetMenu.style.maxHeight = "0px";
+        }
+    }
+
+        // Define event delegation, without this, the event can't be remove correctly
+    const clickOutsideMobileMenu = (event) => {
+        clickOutside(event, mobileMenu);
+    }
+    const clickOutsideProfileMenu = (event) => {
+        clickOutside(event, profileMenu);
+    }
+    const clickOutsideListsMenu = (event) => {
+        clickOutside(event, listsMenu);
+    }
+    const clickOutsideAddMenu = (event) => {
+        clickOutside(event, addMenu);
+    }
 })
