@@ -85,7 +85,10 @@
                 <div class="topnav">
                     <a href="{% url 'index' %}" class="active">Clinic</a>
                     <div id="mobile-menu">
-                        <a href="javascript:void(0);">{{ user.username }}</a>
+                        <a href="javascript:void(0);" id="profile-btn">{{ user.username }}</a>
+                        <div id="profile-menu">
+                            <a href="{% url 'logout' %}">Log out</a>
+                        </div>
                         <a href="#news">News</a>
                         <a href="#contact">Contact</a>
                         <a href="#about">About</a>

@@ -183,6 +183,32 @@ document.addEventListener('DOMContentLoaded', function() {
                 // Insert to the first row inside of the menu
                 const menu = document.querySelector('#user-dropdown-menu');
                 menu.insertBefore(i, menu.firstChild);
+
+                // For mobile navbar
+                let jm = document.createElement('a');
+                jm.style.cursor = 'pointer';
+                jm.style.color = 'white';
+                jm.style.padding = '14px 16px';
+                jm.style.textDecoration = 'none';
+                jm.style.fontSize = '17px';
+                jm.style.display = 'block';
+
+                    // add hover effect
+                jm.addEventListener('mouseover', function() {
+                    jm.style.backgroundColor = '#ddd';
+                    jm.style.color = 'black';
+                })
+                jm.addEventListener('mouseout', function() {
+                    jm.style.backgroundColor = '';
+                    jm.style.color = 'white';
+                })
+
+                jm.onclick = function() {
+                    window.location.href = '/authorize';
+                }
+                jm.innerHTML = 'Manage users';
+                const profileMenu = document.querySelector('#profile-menu');
+                profileMenu.insertBefore(jm, profileMenu.firstChild);
             }
         })
         .catch(error => {
