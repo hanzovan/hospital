@@ -89,16 +89,18 @@
                         <div id="profile-menu">
                             <a class="sub-menu" href="{% url 'logout' %}">Log out</a>
                         </div>
-                        <a href="javascript:void(0);" id="lists-btn">Lists</a>
-                        <div id="lists-menu">
-                            <a class="sub-menu" href="{% url 'my_people' %}">People added by me</a>
-                            <a class="sub-menu" href="{% url 'people' %}">People</a>
-                            <a class="sub-menu" href="{% url 'companies' %}">Companies</a>
-                            <a class="sub-menu" href="{% url 'all_contracts' %}">Active Contracts</a>
-                            <a class="sub-menu" href="{% url 'all_archived_contracts' %}">Archived Contracts</a>
-                            <a class="sub-menu" href="{% url 'all_meetings' %}">All Meetings</a>
-                            <a class="sub-menu" href="{% url 'upcoming_meetings' %}">Upcoming Meetings</a>
-                        </div>
+                        <div id="mobile-reading-items">
+                            <a href="javascript:void(0);" id="lists-btn">Lists</a>
+                            <div id="lists-menu">
+                                <a id="mobile-my-people-list-item" class="sub-menu" href="{% url 'my_people' %}">People added by me</a>
+                                <a id="mobile-people-list-item" class="sub-menu" href="{% url 'people' %}">People</a>
+                                <a id="mobile-companies-list-item" class="sub-menu" href="{% url 'companies' %}">Companies</a>
+                                <a id="mobile-active-contracts-list-item" class="sub-menu" href="{% url 'all_contracts' %}">Active Contracts</a>
+                                <a id="mobile-archived-contracts-list-item" class="sub-menu" href="{% url 'all_archived_contracts' %}">Archived Contracts</a>
+                                <a id="mobile-all-meetings-list-item" class="sub-menu" href="{% url 'all_meetings' %}">All Meetings</a>
+                                <a id="mobile-upcoming-meetings-list-item" class="sub-menu" href="{% url 'upcoming_meetings' %}">Upcoming Meetings</a>
+                            </div>
+                        </div>                        
                         <div id="mobile-adding-items">
                             <a href="javascript:void(0);" id="add-btn">Add</a>
                             <div id="add-menu">

@@ -56,7 +56,7 @@ document.addEventListener('DOMContentLoaded', function() {
             if (listsMenu.style.maxHeight === '0px' || listsMenu.style.maxHeight === "") {
                 // Remove previous eventlistener
                 document.removeEventListener('click', clickOutsideListsMenu);
-                listsMenu.style.maxHeight = "300px";
+                listsMenu.style.maxHeight = "500px";
                 setTimeout(function() {
                     document.addEventListener('click', clickOutsideListsMenu);
                 }, 50);
@@ -72,7 +72,7 @@ document.addEventListener('DOMContentLoaded', function() {
             if (addMenu.style.maxHeight === "0px" || addMenu.style.maxHeight === "") {
                 // Remove previous eventlistener
                 document.removeEventListener('click', clickOutsideAddMenu);
-                addMenu.style.maxHeight = "300px";
+                addMenu.style.maxHeight = "500px";
                 setTimeout(function() {
                     document.addEventListener('click', clickOutsideAddMenu);
                 }, 50);
@@ -368,49 +368,99 @@ document.addEventListener('DOMContentLoaded', function() {
             console.log(error);
         })
 
+        const readMeetingsRight = fetch('/check_right', {
+            method: 'POST',
+            body: JSON.stringify({
+                'right': "read_meeting_info"
+            })
+        })
+        .then(response => response.json())
+        .then(data => data.check_result)
+        .catch(error => {
+            console.log(error);
+        })
+
         //Get the items from reading menu
         const reading = document.querySelector('#reading-items');
+        const mobileReading = document.querySelector('#mobile-reading-items');
+
         const myPeopleItem = document.querySelector('#my-people-list-item');
+        const mobileMyPeopleItem = document.querySelector('#mobile-my-people-list-item');
+
         const allPeopleItem = document.querySelector('#all-people-list-item');
+        const mobileAllPeopleItem = document.querySelector('#mobile-people-list-item');
+
         const companiesListItem = document.querySelector('#all-companies-list-item');
+        const mobileCompaniesListItem = document.querySelector('#mobile-companies-list-item');
+
         const activeContractsListItem = document.querySelector('#active-contracts-list-item');
+        const mobileActiveContractsListItem = document.querySelector('#mobile-active-contracts-list-item');
+
         const archivedContractsListItem = document.querySelector('#archived-contracts-list-item');
+        const mobileArchivedContractsListItem = document.querySelector('#mobile-archived-contracts-list-item');
+
         const allMeetingsListItem = document.querySelector('#all-meetings-list-item');
+        const mobileAllMeetingsListItem = document.querySelector('#mobile-all-meetings-list-item');
+
         const upcomingMeetingsListItem = document.querySelector('#upcoming-meetings-list-item');
+        const mobileUpcomingMeetingsListItem = document.querySelector('#mobile-upcoming-meetings-list-item');
 
         //Important-S: wait for all promises to resolve, then count
-        Promise.all([readMyPeopleRight, readPeopleRight, readCompaniesRight, readContractsRight])
+        Promise.all([readMyPeopleRight, readPeopleRight, readCompaniesRight, readContractsRight, readMeetingsRight])
         .then(results => {
-            const [readMyPeopleResult, readPeopleResult, readCompaniesResult, readContractsResult] = results;
+            const [readMyPeopleResult, readPeopleResult, readCompaniesResult, readContractsResult, readMeetingsResult] = results;
 
             //If user has right to read their own people info
             if (readMyPeopleResult) {
                 myPeopleItem.style.display = 'block';
+                mobileMyPeopleItem.style.display = 'block';
             } else {
                 myPeopleItem.style.display = 'none';
+                mobileMyPeopleItem.style.display = 'none';
             }
 
             //Similarly for the right to read all people info
             if (readPeopleResult) {
                 allPeopleItem.style.display = 'block';
+                mobileAllPeopleItem.style.display = 'block';
             } else {
                 allPeopleItem.style.display = 'none';
+                mobileAllPeopleItem.style.display = 'none';
             }
 
             //The same goes with the right to read companies info
             if (readCompaniesResult) {
                 companiesListItem.style.display = 'block';
+                mobileCompaniesListItem.style.display = 'block';
             } else {
                 companiesListItem.style.display = 'none';
+                mobileCompaniesListItem.style.display = 'none';
             }
 
             //And the right to read contract info
             if (readContractsResult) {
                 activeContractsListItem.style.display = 'block';
                 archivedContractsListItem.style.display = 'block';
+                mobileActiveContractsListItem.style.display = 'block';
+                mobileArchivedContractsListItem.style.display = 'block';
             } else {
                 activeContractsListItem.style.display = 'none';
                 archivedContractsListItem.style.display = 'none';
+                mobileActiveContractsListItem.style.display = 'none';
+                mobileArchivedContractsListItem.style.display = 'none';
+            }
+
+            // Right to read meetings
+            if (readMeetingsResult) {
+                allMeetingsListItem.style.display = 'block';
+                mobileAllMeetingsListItem.style.display = 'block';
+                upcomingMeetingsListItem.style.display = 'block';
+                mobileUpcomingMeetingsListItem.style.display = 'block';
+            } else {
+                allMeetingsListItem.style.display = 'none';
+                mobileAllMeetingsListItem.style.display = 'none';
+                upcomingMeetingsListItem.style.display = 'none';
+                mobileUpcomingMeetingsListItem.style.display = 'none';
             }
         })
         //Then count the visible list items, if there is none, hide the entire menu
@@ -429,6 +479,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
             if (readLiNum === 0) {
                 reading.style.display = 'none';
+                mobileReading.style.display = 'none';
             }
         })
     }    
