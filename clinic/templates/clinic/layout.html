@@ -99,14 +99,16 @@
                             <a class="sub-menu" href="{% url 'all_meetings' %}">All Meetings</a>
                             <a class="sub-menu" href="{% url 'upcoming_meetings' %}">Upcoming Meetings</a>
                         </div>
-                        <a href="javascript:void(0);" id="add-btn">Add</a>
-                        <div id="add-menu">
-                            <a class="sub-menu" href="{% url 'add_service' %}">Add Service</a>
-                            <a class="sub-menu" href="{% url 'add_people' %}">Add People</a>
-                            <a class="sub-menu" href="{% url 'add_company' %}">Add Company</a>
-                            <a class="sub-menu" href="{% url 'add_contract' %}">Add Contract</a>
-                            <a class="sub-menu" href="{% url 'add_meeting' %}">Add Meeting</a>
-                        </div>
+                        <div id="mobile-adding-items">
+                            <a href="javascript:void(0);" id="add-btn">Add</a>
+                            <div id="add-menu">
+                                <a id="mobile-add-service-list-item" class="sub-menu" href="{% url 'add_service' %}">Add Service</a>
+                                <a id="mobile-add-people-list-item" class="sub-menu" href="{% url 'add_people' %}">Add People</a>
+                                <a id="mobile-add-company-list-item" class="sub-menu" href="{% url 'add_company' %}">Add Company</a>
+                                <a id="mobile-add-contract-list-item" class="sub-menu" href="{% url 'add_contract' %}">Add Contract</a>
+                                <a id="mobile-add-meeting-list-item" class="sub-menu" href="{% url 'add_meeting' %}">Add Meeting</a>
+                            </div>
+                        </div>                        
                     </div>
                     <a href="javascript:void(0);" class="icon" id="hamburger-btn">
                         <i class="fa fa-bars"></i>

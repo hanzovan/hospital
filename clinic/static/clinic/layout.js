@@ -14,8 +14,94 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
     
-    // only check if user logged in
+    // only if user logged in, do this
     if (isAuthenticated) {
+        // MOBILE RESPONSIVE PART FOR NAVBAR
+            // When user click the hamburger button, show the general menu
+        let mobileMenu = document.querySelector('#mobile-menu');
+        let hamburgerBtn = document.querySelector('#hamburger-btn');
+        hamburgerBtn.onclick = function() {
+            if (mobileMenu.style.maxHeight === "0px" || mobileMenu.style.maxHeight === "") {
+                // Remove eventlistener if there was any, because it will trigger before the menu appear and cause it to close right after appear
+                document.removeEventListener('click', clickOutsideMobileMenu);
+                mobileMenu.style.maxHeight = "800px";
+                setTimeout(function() {
+                    document.addEventListener('click', clickOutsideMobileMenu);
+                }, 50);
+            } else {
+                mobileMenu.style.maxHeight = "0px";
+            }
+        }
+
+            // When user click username or profile inside the general menu, show the profile menu
+        let profileMenu = document.querySelector('#profile-menu');
+        let profileBtn = document.querySelector('#profile-btn');
+        profileBtn.onclick = function() {
+            if (profileMenu.style.maxHeight === "0px" || profileMenu.style.maxHeight === "") {
+                // Remove previous eventlistener
+                document.removeEventListener('click', clickOutsideProfileMenu);
+                profileMenu.style.maxHeight = "300px";
+                setTimeout(function() {
+                    document.addEventListener('click', clickOutsideProfileMenu);
+                }, 50);
+            } else {
+                profileMenu.style.maxHeight = "0px";
+            }
+        }
+
+            // When user click lists button, show the Lists menu
+        let listsMenu = document.querySelector('#lists-menu');
+        let listsBtn = document.querySelector('#lists-btn');
+        listsBtn.onclick = function() {
+            if (listsMenu.style.maxHeight === '0px' || listsMenu.style.maxHeight === "") {
+                // Remove previous eventlistener
+                document.removeEventListener('click', clickOutsideListsMenu);
+                listsMenu.style.maxHeight = "300px";
+                setTimeout(function() {
+                    document.addEventListener('click', clickOutsideListsMenu);
+                }, 50);
+            } else {
+                listsMenu.style.maxHeight = "0px";
+            }
+        }
+
+            // When user click Add button, show the Add menu
+        let addMenu = document.querySelector('#add-menu');
+        let addBtn = document.querySelector('#add-btn');
+        addBtn.onclick = function() {
+            if (addMenu.style.maxHeight === "0px" || addMenu.style.maxHeight === "") {
+                // Remove previous eventlistener
+                document.removeEventListener('click', clickOutsideAddMenu);
+                addMenu.style.maxHeight = "300px";
+                setTimeout(function() {
+                    document.addEventListener('click', clickOutsideAddMenu);
+                }, 50);
+            } else {
+                addMenu.style.maxHeight = "0px";
+            }
+        }
+
+            // Define a function that hide menu when user click outside
+        function clickOutside(event, targetMenu) {
+            if (!targetMenu.contains(event.target)) {
+                targetMenu.style.maxHeight = "0px";
+            }
+        }
+
+            // Define event delegation, without this, the event can't be remove correctly
+        const clickOutsideMobileMenu = (event) => {
+            clickOutside(event, mobileMenu);
+        }
+        const clickOutsideProfileMenu = (event) => {
+            clickOutside(event, profileMenu);
+        }
+        const clickOutsideListsMenu = (event) => {
+            clickOutside(event, listsMenu);
+        }
+        const clickOutsideAddMenu = (event) => {
+            clickOutside(event, addMenu);
+        }
+
         // CHECK RIGHTS FOR ADD PEOPLE, ADD SERVICE, ADD COMPANY, ADD CONTRACT, WHEN ALL WERE CHECKED, COUNT THE RIGHTS, THEN IF THE RIGHT = 0, HIDE THE 'ADD' BUTTON ON NAVIGATION BAR
         const checkAddPeopleRight = fetch('/check_right', {
             method: 'POST',
@@ -79,21 +165,27 @@ document.addEventListener('DOMContentLoaded', function() {
     
         // Get the adding list item
         const adding = document.querySelector('#adding-items');
+        const mobileAdding = document.querySelector('#mobile-adding-items');
     
         // Get the adding people item
         const addPpListItem = document.querySelector('#add-people-list-item');
+        const mobileAddPpListItem = document.querySelector('#mobile-add-people-list-item');
     
         // Get the adding service item
         const addSvListItem = document.querySelector('#add-service-list-item');
+        const mobileAddSvListItem = document.querySelector('#mobile-add-service-list-item');
 
         // Get the adding company item
         const addCoListItem = document.querySelector('#add-company-list-item');
+        const mobileAddCoListItem = document.querySelector('#mobile-add-company-list-item');
     
         // Get the adding contract item
         const addContractListItem = document.querySelector('#add-contract-list-item');
+        const mobileAddContractListItem = document.querySelector('#mobile-add-contract-list-item');
 
         // Get the adding meeting item
         const addMeetingListItem = document.querySelector('#add-meeting-list-item');
+        const mobileAddMeetingListItem = document.querySelector('#mobile-add-meeting-list-item');
 
         // Important-S: Wait for all promise to resolve, then count
         Promise.all([checkAddPeopleRight, checkAddServiceRight, checkAddCompanyRight, checkAddContractRight, checkAddMeetingRight])
@@ -105,34 +197,44 @@ document.addEventListener('DOMContentLoaded', function() {
             // Decide to show or hide list item depending on whether user have right to add people or not
             if (addPeopleResult) {
                 addPpListItem.style.display = 'block';
+                mobileAddPpListItem.style.display = 'block';
             } else {
                 addPpListItem.style.display = 'none';
+                mobileAddPpListItem.style.display = 'none';
             }
             
             // Similarly, decide for right to add service
             if (addServiceResult) {
                 addSvListItem.style.display = 'block';
+                mobileAddSvListItem.style.display = 'block';
             } else {
                 addSvListItem.style.display = 'none';
+                mobileAddSvListItem.style.display = 'none';
             }
 
             // Similarly, decide for right to add company
             if (addCompanyResult) {
                 addCoListItem.style.display = 'block';
+                mobileAddCoListItem.style.display = 'block';
             } else {
                 addCoListItem.style.display = 'none';
+                mobileAddCoListItem.style.display = 'none';
             }
             // The same with add contract
             if (addContractResult) {
                 addContractListItem.style.display = 'block';
+                mobileAddContractListItem.style.display = 'block';
             } else {
                 addContractListItem.style.display = 'none';
+                mobileAddContractListItem.style.display = 'none';
             }
             // Decide for add meeting button
             if (addMeetingResult) {
                 addMeetingListItem.style.display = 'block';
+                mobileAddMeetingListItem.style.display = 'block';
             } else {
                 addMeetingListItem.style.display = 'none';
+                mobileAddMeetingListItem.style.display = 'none';
             }
         })
     
@@ -150,9 +252,10 @@ document.addEventListener('DOMContentLoaded', function() {
             // Get the count
             const liNum = visibleLi.length;
     
-            // If the count was 0, hide the whole button in navigation bar
+            // If the count was 0, hide the whole button in navigation bar, the same for mobile navbar
             if (liNum === 0) {
                 adding.style.display = 'none';
+                mobileAdding.style.display = 'none';
             }
         })
 
@@ -328,92 +431,5 @@ document.addEventListener('DOMContentLoaded', function() {
                 reading.style.display = 'none';
             }
         })
-    }
-
-    // MOBILE RESPONSIVE PART
-
-        // When user click the hamburger button, show the general menu
-    let mobileMenu = document.querySelector('#mobile-menu');
-    let hamburgerBtn = document.querySelector('#hamburger-btn');
-    hamburgerBtn.onclick = function() {
-        if (mobileMenu.style.maxHeight === "0px" || mobileMenu.style.maxHeight === "") {
-            // Remove eventlistener if there was any, because it will trigger before the menu appear and cause it to close right after appear
-            document.removeEventListener('click', clickOutsideMobileMenu);
-            mobileMenu.style.maxHeight = "800px";
-            setTimeout(function() {
-                document.addEventListener('click', clickOutsideMobileMenu);
-            }, 50);
-        } else {
-            mobileMenu.style.maxHeight = "0px";
-        }
-    }
-
-        // When user click username or profile inside the general menu, show the profile menu
-    let profileMenu = document.querySelector('#profile-menu');
-    let profileBtn = document.querySelector('#profile-btn');
-    profileBtn.onclick = function() {
-        if (profileMenu.style.maxHeight === "0px" || profileMenu.style.maxHeight === "") {
-            // Remove previous eventlistener
-            document.removeEventListener('click', clickOutsideProfileMenu);
-            profileMenu.style.maxHeight = "300px";
-            setTimeout(function() {
-                document.addEventListener('click', clickOutsideProfileMenu);
-            }, 50);
-        } else {
-            profileMenu.style.maxHeight = "0px";
-        }
-    }
-
-        // When user click lists button, show the Lists menu
-    let listsMenu = document.querySelector('#lists-menu');
-    let listsBtn = document.querySelector('#lists-btn');
-    listsBtn.onclick = function() {
-        if (listsMenu.style.maxHeight === '0px' || listsMenu.style.maxHeight === "") {
-            // Remove previous eventlistener
-            document.removeEventListener('click', clickOutsideListsMenu);
-            listsMenu.style.maxHeight = "300px";
-            setTimeout(function() {
-                document.addEventListener('click', clickOutsideListsMenu);
-            }, 50);
-        } else {
-            listsMenu.style.maxHeight = "0px";
-        }
-    }
-
-        // When user click Add button, show the Add menu
-    let addMenu = document.querySelector('#add-menu');
-    let addBtn = document.querySelector('#add-btn');
-    addBtn.onclick = function() {
-        if (addMenu.style.maxHeight === "0px" || addMenu.style.maxHeight === "") {
-            // Remove previous eventlistener
-            document.removeEventListener('click', clickOutsideAddMenu);
-            addMenu.style.maxHeight = "300px";
-            setTimeout(function() {
-                document.addEventListener('click', clickOutsideAddMenu);
-            }, 50);
-        } else {
-            addMenu.style.maxHeight = "0px";
-        }
-    }
-
-        // Define a function that hide menu when user click outside
-    function clickOutside(event, targetMenu) {
-        if (!targetMenu.contains(event.target)) {
-            targetMenu.style.maxHeight = "0px";
-        }
-    }
-
-        // Define event delegation, without this, the event can't be remove correctly
-    const clickOutsideMobileMenu = (event) => {
-        clickOutside(event, mobileMenu);
-    }
-    const clickOutsideProfileMenu = (event) => {
-        clickOutside(event, profileMenu);
-    }
-    const clickOutsideListsMenu = (event) => {
-        clickOutside(event, listsMenu);
-    }
-    const clickOutsideAddMenu = (event) => {
-        clickOutside(event, addMenu);
-    }
+    }    
 })
