@@ -186,6 +186,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
                 // For mobile navbar
                 let jm = document.createElement('a');
+                jm.className = 'sub-menu';
                 jm.style.cursor = 'pointer';
                 jm.style.color = 'white';
                 jm.style.padding = '14px 16px';
@@ -330,13 +331,49 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // MOBILE RESPONSIVE PART
+
+        // When user click the hamburger button, show the general menu
     let mobileMenu = document.querySelector('#mobile-menu');
     let hamburgerBtn = document.querySelector('#hamburger-btn');
     hamburgerBtn.onclick = function() {
         if (mobileMenu.style.maxHeight === "0px" || mobileMenu.style.maxHeight === "") {
-            mobileMenu.style.maxHeight = "300px";
+            mobileMenu.style.maxHeight = "800px";
         } else {
             mobileMenu.style.maxHeight = "0px";
         }
     }
+
+        // When user click username or profile inside the general menu, show the profile menu
+    let profileMenu = document.querySelector('#profile-menu');
+    let profileBtn = document.querySelector('#profile-btn');
+    profileBtn.onclick = function() {
+        if (profileMenu.style.maxHeight === "0px" || profileMenu.style.maxHeight === "") {
+            profileMenu.style.maxHeight = "300px";
+        } else {
+            profileMenu.style.maxHeight = "0px";
+        }
+    }
+
+        // When user click lists button, show the Lists menu
+    let listsMenu = document.querySelector('#lists-menu');
+    let listsBtn = document.querySelector('#lists-btn');
+    listsBtn.onclick = function() {
+        if (listsMenu.style.maxHeight === '0px' || listsMenu.style.maxHeight === "") {
+            listsMenu.style.maxHeight = "300px";
+        } else {
+            listsMenu.style.maxHeight = "0px";
+        }
+    }
+
+        // When user click Add button, show the Add menu
+    let addMenu = document.querySelector('#add-menu');
+    let addBtn = document.querySelector('#add-btn');
+    addBtn.onclick = function() {
+        if (addMenu.style.maxHeight === "0px" || addMenu.style.maxHeight === "") {
+            addMenu.style.maxHeight = "300px";
+        } else {
+            addMenu.style.maxHeight = "0px";
+        }
+    }
+
 })

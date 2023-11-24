@@ -470,4 +470,13 @@ td {
   background-color: #ddd;
   color: black; }
 
+.sub-menu {
+  margin-left: 1.5em; }
+
+#profile-menu, #lists-menu, #add-menu {
+  display: block;
+  max-height: 0px;
+  overflow: hidden;
+  transition: max-height 0.6s; }
+
 /*# sourceMappingURL=styles.css.map */

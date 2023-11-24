@@ -43,8 +43,8 @@
                                     <li id="my-people-list-item"><a class="dropdown-item" href="{% url 'my_people' %}">People added by me</a></li>                                                                
                                     <li id="all-people-list-item"><a class="dropdown-item" href="{% url 'people' %}">People</a></li>
                                     <li id="all-companies-list-item"><a class="dropdown-item" href="{% url 'companies' %}">Companies</a></li>
-                                    <li id="active-contracts-list-item"><a class="dropdown-item" href="{% url 'all_contracts' %}">All Active Contracts</a></li>
-                                    <li id="archived-contracts-list-item"><a class="dropdown-item" href="{% url 'all_archived_contracts' %}">All Archived Contracts</a></li>
+                                    <li id="active-contracts-list-item"><a class="dropdown-item" href="{% url 'all_contracts' %}">Active Contracts</a></li>
+                                    <li id="archived-contracts-list-item"><a class="dropdown-item" href="{% url 'all_archived_contracts' %}">Archived Contracts</a></li>
                                     <li id="all-meetings-list-item"><a class="dropdown-item" href="{% url 'all_meetings' %}">All Meetings</a></li>
                                     <li id="upcoming-meetings-list-item"><a class="dropdown-item" href="{% url 'upcoming_meetings' %}">Upcoming Meetings</a></li>
                                 </ul>
@@ -87,9 +87,29 @@
                     <div id="mobile-menu">
                         <a href="javascript:void(0);" id="profile-btn">{{ user.username }}</a>
                         <div id="profile-menu">
-                            <a href="{% url 'logout' %}">Log out</a>
+                            <a class="sub-menu" href="{% url 'logout' %}">Log out</a>
                         </div>
-                        <a href="#news">News</a>
+                        <a href="javascript:void(0);" id="lists-btn">Lists</a>
+                        <div id="lists-menu">
+                            <a class="sub-menu" href="{% url 'my_people' %}">People added by me</a>
+                            <a class="sub-menu" href="{% url 'people' %}">People</a>
+                            <a class="sub-menu" href="{% url 'companies' %}">Companies</a>
+                            <a class="sub-menu" href="{% url 'all_contracts' %}">Active Contracts</a>
+                            <a class="sub-menu" href="{% url 'all_archived_contracts' %}">Archived Contracts</a>
+                            <a class="sub-menu" href="{% url 'all_meetings' %}">All Meetings</a>
+                            <a class="sub-menu" href="{% url 'upcoming_meetings' %}">Upcoming Meetings</a>
+                        </div>
+                        <a href="javascript:void(0);" id="add-btn">Add</a>
+                        <div id="add-menu">
+                            <a class="sub-menu" href="{% url 'add_service' %}">Add Service</a>
+                            <a class="sub-menu" href="{% url 'add_people' %}">Add People</a>
+                            <a class="sub-menu" href="{% url 'add_company' %}">Add Company</a>
+                            <a class="sub-menu" href="{% url 'add_contract' %}">Add Contract</a>
+                            <a class="sub-menu" href="{% url 'add_meeting' %}">Add Meeting</a>
+                        </div>
+
+
+
                         <a href="#contact">Contact</a>
                         <a href="#about">About</a>
                     </div>
