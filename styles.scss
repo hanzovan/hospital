@@ -172,6 +172,9 @@ header {
         display: flex;
         flex-direction: column;
         width: 30vw;
+        @media screen and (max-width: 767px) {
+            width: 100vw;
+        }
         padding: 2em;
     }
     h1, p {
@@ -246,6 +249,9 @@ header {
         display: flex;
         flex-direction: column;
         width: 30vw;
+        @media screen and (max-width: 767px) {
+            width: 100vw;
+        }
         padding: 2em;
     }
     h1, p {
@@ -309,6 +315,9 @@ header {
         display: flex;
         flex-direction: column;
         width: 30vw;
+        @media screen and (max-width: 767px) {
+            width: 100vw;
+        }
         padding: 2em;
     }
     h1 {
@@ -341,6 +350,10 @@ header {
         display: flex;
         flex-direction: column;
         width: 30vw;
+        @media screen and (max-width: 767px) {
+            width: 100vw;
+        }
+
         padding: 2em;
     }
     h1 {
@@ -415,6 +428,9 @@ header {
         flex-direction: column;
         padding: 2em;
         width: 40vw;
+        @media screen and (max-width: 767px) {
+            width: 100vw;
+        }
     }
     h1, .form-group {
         margin-bottom: 1.5em;
@@ -483,6 +499,9 @@ header {
         display: flex;
         flex-direction: column;
         width: 30vw;
+        @media screen and (max-width: 767px) {
+            width: 100vw;
+        }
         padding: 2em;
     }
     h1, p {

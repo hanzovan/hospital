@@ -130,6 +130,9 @@ header {
   flex-direction: column;
   width: 30vw;
   padding: 2em; }
+  @media screen and (max-width: 767px) {
+    #add-meeting-form .container {
+      width: 100vw; } }
 #add-meeting-form h1, #add-meeting-form p {
   text-align: center;
   margin-bottom: 1.5em; }
@@ -181,6 +184,9 @@ header {
   flex-direction: column;
   width: 30vw;
   padding: 2em; }
+  @media screen and (max-width: 767px) {
+    #edit-contract-form .container {
+      width: 100vw; } }
 #edit-contract-form h1, #edit-contract-form p {
   text-align: center;
   margin-bottom: 1.5em; }
@@ -229,6 +235,9 @@ header {
   flex-direction: column;
   width: 30vw;
   padding: 2em; }
+  @media screen and (max-width: 767px) {
+    #edit-meeting-form .container {
+      width: 100vw; } }
 #edit-meeting-form h1 {
   text-align: center;
   margin-bottom: 1.5em; }
@@ -253,6 +262,9 @@ header {
   flex-direction: column;
   width: 30vw;
   padding: 2em; }
+  @media screen and (max-width: 767px) {
+    #edit-service-form .container {
+      width: 100vw; } }
 #edit-service-form h1 {
   text-align: center; }
 #edit-service-form h1, #edit-service-form .form-group {
@@ -307,6 +319,9 @@ header {
   flex-direction: column;
   padding: 2em;
   width: 40vw; }
+  @media screen and (max-width: 767px) {
+    #add-contract-form .container {
+      width: 100vw; } }
 #add-contract-form h1, #add-contract-form .form-group {
   margin-bottom: 1.5em; }
 #add-contract-form h1 {
@@ -359,6 +374,9 @@ header {
   flex-direction: column;
   width: 30vw;
   padding: 2em; }
+  @media screen and (max-width: 767px) {
+    #register-form .container, #login-form .container, #add-people-form .container, #add-service-form .container, #add-company-form .container, #add-message-form .container, #edit-company-form .container, #edit-person-detail-form .container, #message-form .container, #add-agenda-form .container {
+      width: 100vw; } }
 #register-form h1, #register-form p, #login-form h1, #login-form p, #add-people-form h1, #add-people-form p, #add-service-form h1, #add-service-form p, #add-company-form h1, #add-company-form p, #add-message-form h1, #add-message-form p, #edit-company-form h1, #edit-company-form p, #edit-person-detail-form h1, #edit-person-detail-form p, #message-form h1, #message-form p, #add-agenda-form h1, #add-agenda-form p {
   text-align: center;
   margin-bottom: 1.5em; }
