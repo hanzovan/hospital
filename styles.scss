@@ -596,6 +596,11 @@ td {
     #pc-nav {
         display: none;
     }
+
+    // Hide table's columns to reduce width
+    .hide-for-mobile {
+        display: none;
+    }
 }
 @media screen and (min-width: 768px) {
     .mobile-nav {

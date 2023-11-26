@@ -445,6 +445,9 @@ td {
 
 @media screen and (max-width: 767px) {
   #pc-nav {
+    display: none; }
+
+  .hide-for-mobile {
     display: none; } }
 @media screen and (min-width: 768px) {
   .mobile-nav {
