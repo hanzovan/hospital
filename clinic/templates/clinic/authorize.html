@@ -9,39 +9,45 @@
 
     <h1 class="text-center">
         All users
-    </h1>
-    <div class="container">
-        {% for data_user in data_users %}
+    </h1>    
+    <div class="container-fluid">
+        <table class="table table-hover">
+            <thead class="table-dark">
+                <tr>
+                    <th style="text-align: start;">Username</th>
+                    <th style="text-align: center">Current Management Level</th>
+                    <th style="text-align: center;">New Level</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for user in data_users %}
 
-            <div class="user-info" id="user{{ data_user.id }}">
-                <div class="field-name">
-                    <ul class="no-bullet">
-                        <li><i class="i-left">Username</i></li>
-                        <li><i class="i-left">Current Management level</i></li>
-                        <li><i class="i-left">Set a new level</i></li>
-                    </ul>
-                </div>
-                <div class="field-value">
-                    <ul class="no-bullet">
-                        <li><strong>{{ data_user.username }}</strong></li>
-                        <li><strong class="current-level">{{ data_user.management_right_level }}</strong></li>
-                        <li>
+                    <tr class="user-info" id="user{{ user.id }}">
+                        <td>
+                            <strong>{{ user.username }}</strong>
+                        </td>
+                        <td style="text-align: center;">
+                            <strong class="current-level">{{ user.management_right_level }}</strong>
+                        </td>
+                        <td style="text-align: center;">
                             <select class="level">
-                                <option selected value="{{ data_user.management_right_level }}">{{ data_user.management_right_level }}</option>
+                                <option selected value="{{ user.management_right_level }}">{{ user.management_right_level }}</option>
                                 {% for level in levels %}
 
-                                    {% if level != data_user.management_right_level %}
+                                    {% if level != user.management_right_level %}
+
                                         <option value="{{ level }}">{{ level }}</option>
+
                                     {% endif %}
 
                                 {% endfor %}
                             </select>
-                        </li>
-                    </ul>
-                </div>
-            </div>
+                        </td>
+                    </tr>
 
-        {% endfor %}
+                {% endfor %}
+            </tbody>
+        </table>
     </div>
 
 {% endblock %}

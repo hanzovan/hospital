@@ -76,15 +76,6 @@ header {
   padding-left: 5px;
   width: 400px; }
 
-.user-info {
-  display: grid;
-  grid-template-columns: 40% auto;
-  margin-top: 25px;
-  margin-left: 100px;
-  padding-top: 25px;
-  border: 1px solid grey;
-  background-color: white; }
-
 .person-detail-link {
   text-decoration: none; }
 
