@@ -565,6 +565,9 @@ header {
 }
 .person-info-table {
     width: 40%;
+    @media screen and (max-width: 767px) {
+        width: 100%;
+    }
     background-color: transparent !important;
 }
 .message-table {
