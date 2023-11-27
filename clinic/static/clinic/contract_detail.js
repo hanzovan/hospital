@@ -37,11 +37,19 @@ document.addEventListener('DOMContentLoaded', function() {
     .then(data => {
         const result = data.check_result;
         if (result) {
-            showEditingBtn.style.display = 'block';
-            archiveForm.style.display = 'block';
+            if (showEditingBtn) {
+                showEditingBtn.style.display = 'block';
+            }
+            if (archiveForm) {
+                archiveForm.style.display = 'block';
+            }                     
         } else {
-            showEditingBtn.style.display = 'none';
-            archiveForm.style.display = 'none';
+            if (showEditingBtn) {
+                showEditingBtn.style.display = 'none';
+            }
+            if (archiveForm) {
+                archiveForm.style.display = 'none';
+            }            
         }
     })
     .catch(error => {
@@ -52,17 +60,19 @@ document.addEventListener('DOMContentLoaded', function() {
     closeEditing(editForm);
 
     // When user click the showEditing button, the form should appear, clicking it again should hide it again
-    showEditingBtn.onclick = function() {
-        //Remove eventlistener first to avoid dupplicate
-        document.removeEventListener('click', clickOutsideForm);        
-        editForm.style.display = 'block';
-        setTimeout(function() {
-            editForm.style.opacity = '1';
-            editForm.style.height = '100%';
-            editForm.style.transform = 'translateY(-500px)';
-            document.addEventListener('click', clickOutsideForm);
-        }, 50);        
-    }
+    if (showEditingBtn) {
+        showEditingBtn.onclick = function() {
+            //Remove eventlistener first to avoid dupplicate
+            document.removeEventListener('click', clickOutsideForm);        
+            editForm.style.display = 'block';
+            setTimeout(function() {
+                editForm.style.opacity = '1';
+                editForm.style.height = '100%';
+                editForm.style.transform = 'translateY(-500px)';
+                document.addEventListener('click', clickOutsideForm);
+            }, 50);        
+        }
+    }    
     
     hideEditingBtn.onclick = function() {
         closeEditing(editForm);

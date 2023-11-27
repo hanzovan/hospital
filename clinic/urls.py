@@ -42,7 +42,8 @@ urlpatterns = [
     path('add_meeting_agenda/<int:meeting_id>', views.add_meeting_agenda, name="add_meeting_agenda"),
     path('edit_meeting/<int:meeting_id>', views.edit_meeting, name="edit_meeting"),
     path('meeting_item_remove/<int:meeting_id>', views.meeting_item_remove, name="meeting_item_remove"),
-    path('end_meeting', views.end_meeting, name="end_meeting")
+    path('end_meeting', views.end_meeting, name="end_meeting"),
+    path('testing/<int:testing_id>', views.testing, name="testing")
 ]
 
 # Serve media files during development

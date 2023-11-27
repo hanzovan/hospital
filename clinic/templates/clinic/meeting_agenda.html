@@ -50,8 +50,8 @@
                         <td>Item {{ forloop.counter }}</td>
                         <td>{{ item.item }}</td>
 
-                        <!-- If user has permission to edit meeting information -->
-                        {% if meeting.edit_permission %}
+                        <!-- If user has permission to edit meeting information AND meeting does not ended yet -->
+                        {% if meeting.edit_permission and not meeting.end_or_not %}
                             <td>
                                 <form action="{% url 'meeting_item_remove' meeting_id=meeting.id %}" method="post" onsubmit="return confirm('Do you really want to remove this agenda item?');">
                                     {% csrf_token %}

@@ -117,6 +117,7 @@
         </tr>
         
     </table>
+    
     <div class="general">
         <div>
             <table>
@@ -128,12 +129,16 @@
                                 <a href="{% url 'generate_contract_docx' contract.id %}" class="btn btn-primary" style="margin: 1.5em 0 1.5em 0;">Generate Word Document</a>
                             </div>
                         </td>
-                        <td>
-                            <!-- Button to show the editing contract form -->
-                            <div>
-                                <button class="btn btn-info" id="show-editing">Edit Contract</button>
-                            </div>
-                        </td>
+
+                        {% if not contract.archived %}
+                            <td>
+                                <!-- Button to show the editing contract form -->
+                                <div>
+                                    <button class="btn btn-info" id="show-editing">Edit Contract</button>
+                                </div>
+                            </td>
+                        {% endif %}
+                        
                     </tr>
                 </tbody>
             </table>

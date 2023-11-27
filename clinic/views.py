@@ -1293,6 +1293,11 @@ def edit_contract(request):
             request.session['nay_message'] = "Contract does not exist"
             return HttpResponseRedirect(reverse('all_contracts'))
 
+        # Check if contract was archived
+        if contract.archived:
+            request.session['nay_message'] = "Archived contracts can't be edited"
+            return redirect("contract_detail", contract_id=contract_id)
+
         # Check client id
         if not client_id:
             request.session['nay_message'] = "Please choose a client"
@@ -1835,6 +1840,18 @@ def meeting_item_remove(request, meeting_id):
             request.session['nay_message'] = "You do not have the permission to edit meeting information"
             return HttpResponseRedirect(reverse('index'))
         
+        # Check if meeting exist
+        try:
+            meeting = MeetUp.objects.get(pk=meeting_id)
+        except MeetUp.DoesNotExist:
+            request.session['nay_message'] = "Meeting id does not exist"
+            return HttpResponseRedirect(reverse('index'))
+        
+        # Check if meeting was ended
+        if meeting.end_or_not:
+            request.session['nay_message'] = "Can't remove item from ended meeting"
+            return redirect("meeting_agenda", meeting_id=meeting_id)
+
         # Get the item's id
         item_id = request.POST.get('item_id', '')
         if not item_id:
@@ -1873,6 +1890,11 @@ def edit_meeting(request, meeting_id):
             request.session['nay_message'] = "Meeting id not found"
             return HttpResponseRedirect(reverse('all_meetings'))
         
+        # If meeting was ended, return error
+        if meeting.end_or_not:
+            request.session['nay_message'] = "Ended meeting can't be edited"
+            return redirect("meeting_agenda", meeting_id=meeting_id)
+
         # Get the variables
         client_id = request.POST.get('client_id', '')
         if not client_id:
@@ -1945,6 +1967,9 @@ def end_meeting(request):
 
         if not meeting.end_or_not:
             meeting.end_or_not = True
+        else:
+            request.session['nay_message'] = "Meeting was ended already"
+            return redirect('meeting_agenda', meeting_id=meeting.id)
 
         meeting.save()
         request.session['yay_message'] = "Meeting set to ended"
@@ -1955,3 +1980,21 @@ def end_meeting(request):
         request.session['nay_message'] = "POST method required"
         return HttpResponseRedirect(reverse('index'))
     
+
+# Testing if meeting was ended and contract was archived
+@login_required
+def testing(request, testing_id):
+    if request.method == 'POST':
+
+        return HttpResponse('constructing')
+    
+    else:
+        meeting = MeetUp.objects.get(pk=testing_id)
+        return render(request, "clinic/testing.html", {
+            "meeting": meeting
+        })
+    
+
+# Add checking contract was archived for relevant route
+
+# Remove buttono in case contract was archived

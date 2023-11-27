@@ -15,7 +15,7 @@
                     <th>Name</th>
                     <th>Company</th>
                     <th>Latest Message</th>
-                    <th>Sent At</th>
+                    <th class="hide-for-mobile">Sent At</th>
                     <th>New Message</th>
                 </tr>
             </thead>
@@ -44,7 +44,7 @@
                         <td>
                             {{ person.latest_message.content }}
                         </td>
-                        <td>
+                        <td class="hide-for-mobile">
                             {{ person.latest_message.date }}
                         </td>
                         <td style="text-align: center;">
