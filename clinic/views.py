@@ -1980,21 +1980,3 @@ def end_meeting(request):
         request.session['nay_message'] = "POST method required"
         return HttpResponseRedirect(reverse('index'))
     
-
-# Testing if meeting was ended and contract was archived
-@login_required
-def testing(request, testing_id):
-    if request.method == 'POST':
-
-        return HttpResponse('constructing')
-    
-    else:
-        meeting = MeetUp.objects.get(pk=testing_id)
-        return render(request, "clinic/testing.html", {
-            "meeting": meeting
-        })
-    
-
-# Add checking contract was archived for relevant route
-
-# Remove buttono in case contract was archived
