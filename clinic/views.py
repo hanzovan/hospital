@@ -1966,6 +1966,21 @@ def end_meeting(request):
             request.session['nay_message'] = "Meeting id does not exist"
 
         if not meeting.end_or_not:
+            # Get the meeting's agenda
+            meeting_items = meeting.agenda.all()
+
+            # Get the agenda results from POST
+            for item in meeting_items:
+                result = request.POST.get(f"item_result_{ item.id }")
+                if not result:
+                    request.session['nay_message'] = f"Result of this item was missing: {item.item}"
+                    return redirect("meeting_agenda", meeting_id=meeting_id)
+                item.result = result
+            
+            # If all the results were provided, save all of them
+            for item in meeting_items:
+                item.save()
+
             meeting.end_or_not = True
         else:
             request.session['nay_message'] = "Meeting was ended already"

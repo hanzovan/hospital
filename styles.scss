@@ -156,7 +156,7 @@ header {
     transform: translateY(0);
 }
 
-#add-meeting-form {
+#add-meeting-form, #end-meeting-form {
     .container {
         display: flex;
         flex-direction: column;

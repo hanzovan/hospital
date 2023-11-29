@@ -43,12 +43,36 @@
     <h2 class="text-center page-title">Agenda</h2>
     <div class="container-fluid">
         <table class="table table-hover">
+            <thead>
+                <tr>
+                    <td></td>
+                    <td><strong>Item's Content</strong></td>
+                    {% if not meeting.end_or_not %}
+
+                        <td>Remove Item</td>
+
+                    {% else %}
+
+                        <td><strong>Results</strong></td>
+
+                    {% endif %}
+                </tr>
+            </thead>
             <tbody>
                 {% for item in meeting.agenda.all.values %}
 
                     <tr>
                         <td>Item {{ forloop.counter }}</td>
                         <td>{{ item.item }}</td>
+                        
+                        <!-- If meeting was ended, show result -->
+                        {% if meeting.end_or_not %}
+
+                            <td>
+                                {{ item.result }}
+                            </td>
+
+                        {% endif %}
 
                         <!-- If user has permission to edit meeting information AND meeting does not ended yet -->
                         {% if meeting.edit_permission and not meeting.end_or_not %}
@@ -95,11 +119,7 @@
 
                                 <!-- the form that allow user to end the meeting -->
                                 <td>
-                                    <form action="{% url 'end_meeting' %}" method="post" id="end-meeting-form" onsubmit="return confirm('Are you really want to end this meeting?');">
-                                        {% csrf_token %}
-                                        <input name="meeting_id" type="hidden" value="{{ meeting.id }}">
-                                        <button class="btn btn-danger">End Meeting</button>
-                                    </form>
+                                    <button class="btn btn-danger" id="show-end-meeting-form">End Meeting</button>
                                 </td>
 
                                 <!-- button to show the form that allow user to editing the meeting schedule -->
@@ -133,6 +153,30 @@
                             <p><i>If it has more than 5 items, you can add more later</i></p>
                             
                             <button>Save</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- the form that allow user to end the meeting -->
+            <div class="general">
+                <div class="form-container" id="end-meeting-form-container">
+                    <button class="closing-btn" id="hide-end-meeting-form">X</button>
+                    <form action="{% url 'end_meeting' %}" method="post" id="end-meeting-form" onsubmit="return confirm('Are you really want to end this meeting?');">
+                        {% csrf_token %}
+                        <input name="meeting_id" type="hidden" value="{{ meeting.id }}">
+                        <div class="container">
+                            <h1>Meeting Result</h1>
+                            <p>Please fill agenda's item result to end the meeting</p>
+                            {% for item in meeting.agenda.all.values %}
+
+                                <div class="form-group">
+                                    <label class="form-label" for="item_result_{{ item.id }}">Item {{ forloop.counter }}: {{ item.item }}</label>
+                                    <textarea class="form-control" type="text" name="item_result_{{ item.id }}" autocomplete="off" required></textarea>
+                                </div>
+
+                            {% endfor %}
+                            <button>Save Results And End Meeting</button>
                         </div>
                     </form>
                 </div>

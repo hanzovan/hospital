@@ -8,6 +8,9 @@ document.addEventListener('DOMContentLoaded', function() {
         const editMeetingForm = document.querySelector('#edit-meeting-form-container');
         const showEditMeetingBtn = document.querySelector('#show-edit-meeting-form');
         const hideEditMeetingBtn = document.querySelector('#hide-edit-meeting-form');
+        const endMeetingForm = document.querySelector('#end-meeting-form-container');
+        const showEndMeetingFormBtn = document.querySelector('#show-end-meeting-form');
+        const hideEndMeetingFormBtn = document.querySelector('#hide-end-meeting-form');
         
         //By default, the form was hidden
         function closingDiv(targetDiv) {
@@ -20,7 +23,8 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         
         closingDiv(addAgendaForm);
-        closingDiv(editMeetingForm);        
+        closingDiv(editMeetingForm);
+        closingDiv(endMeetingForm);        
 
         showAddAgendaFormBtn.onclick = function() {
             //Remove eventlistener
@@ -46,12 +50,27 @@ document.addEventListener('DOMContentLoaded', function() {
                 document.addEventListener('click', clickOutsideEditMeetingForm);
             }, 50);
         }
+        showEndMeetingFormBtn.onclick = function() {
+            // Remove old eventlistener
+            document.removeEventListener('click', clickOutsideEndMeetingForm);
+
+            endMeetingForm.style.display = 'block';
+            setTimeout(function() {
+                endMeetingForm.style.opacity = '1';
+                endMeetingForm.style.height = '100%';
+                endMeetingForm.style.transform = 'translateY(-500px)';
+                document.addEventListener('click', clickOutsideEndMeetingForm);
+            }, 50);
+        }
 
         hideAddAgendaFormBtn.onclick = function() {
             closingDiv(addAgendaForm);
         }
         hideEditMeetingBtn.onclick = function() {
             closingDiv(editMeetingForm);
+        }
+        hideEndMeetingFormBtn.onclick = function() {
+            closingDiv(endMeetingForm);
         }
 
         //Define function that hide the form when user click outside
@@ -66,6 +85,9 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         const clickOutsideEditMeetingForm = (event) => {
             clickOutside(event, editMeetingForm);
+        }
+        const clickOutsideEndMeetingForm = (event) => {
+            clickOutside(event, endMeetingForm);
         }
 
         //Add effect to label of add agenda form

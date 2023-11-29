@@ -116,28 +116,28 @@ header {
 #edit-contract-form-container {
   transform: translateY(0); }
 
-#add-meeting-form .container {
+#add-meeting-form .container, #end-meeting-form .container {
   display: flex;
   flex-direction: column;
   width: 30vw;
   padding: 2em; }
   @media screen and (max-width: 767px) {
-    #add-meeting-form .container {
+    #add-meeting-form .container, #end-meeting-form .container {
       width: 100vw; } }
-#add-meeting-form h1, #add-meeting-form p {
+#add-meeting-form h1, #add-meeting-form p, #end-meeting-form h1, #end-meeting-form p {
   text-align: center;
   margin-bottom: 1.5em; }
-#add-meeting-form .form-group {
+#add-meeting-form .form-group, #end-meeting-form .form-group {
   margin-bottom: 1.5em; }
-#add-meeting-form .form-group:focus-within {
+#add-meeting-form .form-group:focus-within, #end-meeting-form .form-group:focus-within {
   transform: scale(1.1, 1.1);
   transition: all .6s; }
-#add-meeting-form .form-label {
+#add-meeting-form .form-label, #end-meeting-form .form-label {
   display: block;
   font-size: .75em;
   color: #555;
   opacity: 1; }
-#add-meeting-form .form-control {
+#add-meeting-form .form-control, #end-meeting-form .form-control {
   box-shadow: none;
   border-radius: .25em;
   border-style: none none solid none;
@@ -145,19 +145,19 @@ header {
   padding: .2em;
   font-size: 1.5em;
   transition: all .6s; }
-#add-meeting-form .form-control::placeholder {
+#add-meeting-form .form-control::placeholder, #end-meeting-form .form-control::placeholder {
   color: #aaa; }
-#add-meeting-form .form-control:focus {
+#add-meeting-form .form-control:focus, #end-meeting-form .form-control:focus {
   box-shadow: none;
   outline: none;
   border-color: orange; }
-#add-meeting-form .form-control:invalid:focus {
+#add-meeting-form .form-control:invalid:focus, #end-meeting-form .form-control:invalid:focus {
   border-color: red; }
-#add-meeting-form .form-control:valid {
+#add-meeting-form .form-control:valid, #end-meeting-form .form-control:valid {
   border-color: green; }
-#add-meeting-form textarea {
+#add-meeting-form textarea, #end-meeting-form textarea {
   resize: none; }
-#add-meeting-form button {
+#add-meeting-form button, #end-meeting-form button {
   box-shadow: none;
   outline: none;
   border: none;
@@ -166,7 +166,7 @@ header {
   background-color: #4412e8;
   font-size: 1em;
   color: white; }
-#add-meeting-form button:hover {
+#add-meeting-form button:hover, #end-meeting-form button:hover {
   cursor: pointer;
   background-color: #2904a4; }
 
