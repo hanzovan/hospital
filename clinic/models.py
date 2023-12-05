@@ -7,13 +7,12 @@ from decimal import Decimal
 class User(AbstractUser):
     class Level(models.IntegerChoices):
 
-        # Level 1: add people, check people they added, check all services
+        GUEST = 0
+        
         LOW = 1
 
-        # Level 2: add, modified all people, check all people, services
         MIDDLE = 2
 
-        # Level 3: add, modified all people, services, check all people, authorize admins
         TOP = 3
     management_right_level = models.IntegerField(choices=Level.choices, blank=True, null=True)
 
@@ -105,13 +104,3 @@ class Contract(models.Model):
 
     def __str__(self):
         return f"{self.client} signed a contract in {self.created}"
-
-
-class ContractPrice(models.Model):
-    contract = models.ForeignKey(Contract, on_delete=models.CASCADE, related_name='services_price')
-    service = models.ForeignKey(Service, on_delete=models.CASCADE, related_name='contract_price')
-    male_price = models.IntegerField(blank=True, null=True)
-    female_price = models.IntegerField(blank=True, null=True)
-
-    def __str__(self):
-        return f"{self.contract} use {self.service} with the price {self.male_price} for male and {self.female_price} for female"

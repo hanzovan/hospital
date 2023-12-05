@@ -19,7 +19,7 @@ from docx.enum.table import WD_ALIGN_VERTICAL
 # for thousand separator
 import locale
 
-from .models import User, People, ContactDiary, Company, Service, Contract, ContractPrice, MeetUp, MeetingAgendaItem
+from .models import User, People, ContactDiary, Company, Service, Contract, MeetUp, MeetingAgendaItem
 from .helpers import strong_password, user_right, days_between
 
 
