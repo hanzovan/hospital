@@ -112,7 +112,7 @@ This JavaScript file controls the display of specific parts in 'layout.html':
 - Checking permissions: Multiple HTTP requests are sent to the server to check user permissions, deciding which parts and buttons will be displayed on the navigation bar.
 - The mobile navigation bar, manually written to handle user interaction and navigation behavior.
 
-#### 2.4 Other JavaScript file
+#### 2.4 Other JavaScript files
 Each file manipulates the associated template version, affecting form behavior, hiding or showing forms based on user interactions or empty spaces. Some files check user permissions via HTTP requests or retrieve values from templates. Others check instance field values to determine the visibility of certain parts of the web, such as 'meeting_agenda.js'.
 
 ### 3. models.py
@@ -172,38 +172,83 @@ These routes allow users to create accounts, log in, log out, verify user manage
 - **login_view(request)**: Allows users to log in to their account.
 - **logout_view(request)**: Allows users to log out
 - **check_right(request)**: Allows the user interface to sent an HTTP request to the server to check user permissions.
-- **authorize(request)**: Allows a top-level admin to modify other users' management right levels.
+- **authorize(request)**: Empowers a top-level administrator to adjust the management right levels of other users. The server receives requests through JavaScript utilizing the '**fetch**' method, ensuring a seamless process without the need to reload the entire page.
 
 #### 7.2 Functioning routes
 These routes enable various functionalities:
 
 - **index**: Allows users to access the list of services (test or examination) from the database.
-- **add_service(request)**: Allows users to add an instance of a service to the database.
-- **service_detail(request, service_id)**: allow user to access specific service instance with more details. Allowing user to modify the detail as long as the user has permission.
-- **remove_service(request)**: allow user to remove instance of service
-- **add_people(request)**: allow user to add contact to the database
-- **my_people(request)**: allow user to access the list of all people that were created by the current user.
-- **people(request)**: allow user to access the list of all people created by all users.
-- **person_detail(request, persion_id)**: allow user to access details of person's instance, modifying details of that person, access all messages of the person. Also allow user to add more message from a person in the list by clicking link.
-- **remove_person(request)**: allow user to remove an instance of person or contact.
-- **add_company(request)**: allow user to add instance of company to the database, including all the details. User can also choose to add representative for the company later or choose representative from the available list, or add a new person themself, which will then be also added to the contact list the same time with company.
-- **companies(request)**: allow user to access the list of the companies
-- **company_detail(request, company_id)**: allow user to access details about a specific company, modify its information, allowing user to update representative information by 2 methods: creating a brand new person, or choosing from an available list of people.
-- **remove_company(request)**: allow user to remove an instance of company
-- **message(request, person_id)**: allow user to add message related to a person
-- **add_message_from_all_people_page(request, person_id)**: allow user to add message after clicking a link from people route
-- **add_contract(request)**: allow user to add contract to database, the contract includes all the services that the clients chose and all other important information such as, quantity of staff that use the services, discount, price after discount, scanned file.
-- **all_contracts(request)**: allow user to access information of all active contracts.
-- **all_archived_contract(request)**: allow user to access information of all archived contracts.
-- **contract_detail(request, contract_id)**: allow user to access details of a contract.
-- **edit_contract(request)**: allow user to edit contract information.
-- **generate_contract_docx(request, contract_id)**: allow user to compose the contract with crucial information of the contract already gathered by the code.
-- **add_meeting(request)**: allow user to add a meeting information.
-- **all_meetings(request)**: allow user to access the list of all meetings.
-- **upcoming_meetings(request)**: allow user to access the list of all upcoming meetings, which was not overdue.
-- **meeting_agenda(request, meeting_id)**: allow user to access all meeting agenda information.
-- **add_meeting_agenda(request, meeting_id)**: allow user to add meeting agenda item into the meeting.
-- **meeting_item_remove(request, meeting_id)**: allow user to remove item from meeting's agenda.
-- **edit_meeting(request, meeting_id)**: allow user to adjust meeting's schedule.
-- **end_meeting(request)**: allow user to change the status of the meeting to "**ended**"
 
+- **add_service(request)**: Empowers users to seamlessly add a new service instance to the database. The process involves specifying essential details such as service name, male price, female price, benefit, and description. Upon meeting all specified criteria, the system generates an instance, attributing the current user as the creator.
+
+- **service_detail(request, service_id)**: Empowers users to delve into specific service instances, providing an exhaustive overview. Users can intricately modify service details within their designated permissions. Notably, the modification of servive details in this route involves extracting variables from the user interface, facilitated by JavaScript that records the form and utilizes the '**fetch**' method to transmit an HTTP request to the server. Following the satisfaction of all requirements, the service instance undergoes modification, with the current user recorded as the modifier. The server communicates the result through JsonResponse, subsequently promting the user interface to dynamically adjust the displayed information without reloading the entire page.
+
+- **remove_service(request)**: Empowers users to efficiently eliminate service instances from the system, ensuring a streamlined process.
+
+- **add_people(request)**: Facilitates the addition of contacts to the database.
+
+- **my_people(request)**: Provides users with access to a curated list of individuals exclusively created by the current user.
+
+- **people(request)**: Allows users to peruse a comprehensive list of individuals crafted by all users, fostering a collective overview.
+
+- **person_detail(request, person_id)**: Empowers users to delve into the details of a person's instance, modify individual particulars without reload the page, and access a complete message history. Users can seamlessly append additional messages by following a provided link.
+
+- **remove_person(request)**: Enables users to remove instances of individuals or contacts from the database.
+
+- **add_company(request)**: Streamlines the addition of company instances to the database, providing users with flexible options for incorporating representatives. Users can opt to add a new representative or select from an available list, simultaneously updating the contact list.
+
+- **companies(request)**: Grants users access to an organized list of companies, promoting efficient navigation or information retrieval.
+
+- **company_detail(request, company_id)**: Allows users to meticulously review specific company details, facilitating modifications and updates to representative information. Users can choose between creating a new person instance or selecting from an available list.
+
+- **remove_company(request)**: Empowers users to methodically remove instances of companies, promoting efficient data management.
+
+- **message(request, person_id)**: Facilitates the addition of messages related to a specific person, enhancing communication and information tracking.
+
+- **add_message_from_all_people_page(request, person_id)**: Empowers users to seamlessly append messages by navigating from the people route, streamlining communication processes.
+
+- **add_contract(request)**: Facilitates the addition of contracts to the database, encompassing client-chosen services and essential details. Users can efficiently manage contracts, including quantity, discount, and scanned files.
+
+- **all_contracts(request)**: Provides users with comprehensive access to information pertaining to all active contracts, ensuring efficient contract management.
+
+- **all_archived_contract(request)**: Grants users access to detailed information regarding all archived contracts, promoting a holistic overview.
+
+- **contract_detail(request, contract_id)**: Empowers users to delve into the details of a specific contract, ensuring comprehensive contract management.
+
+- **edit_contract(request)**: Allows users to judiciously edit contract information, ensuring accurate and up-to-date records.
+
+- **generate_contract_docx(request, contract_id)**: Facilitates the composition of contracts with essential information already gathered by the code, streamlining documentation processes.
+
+- **add_meeting(request)**: Enables users to efficiently add meeting information, promoting effective scheduling and collaboration.
+
+- **all_meetings(request)**: Grants users access to a comprehensive list of all meetings, ensuring transparency and coordination.
+
+- **upcoming_meetings(request)**: Allows users to efficiently access a list of all upcoming meetings, facilitating proactive planning.
+
+- **meeting_agenda(request, meeting_id)**: Empowers users to access detailed information about meeting agendas, ensuring effective preparation and participation.
+
+- **add_meeting_agenda(request, meeting_id)**: Facilitates the seamless addition of meeting agenda items, ensuring comprehensive meeting documentation.
+
+- **meeting_item_remove(request, meeting_id)**: Empower users to judiciously remove items from meeting agendas, streamlining meeting management.
+
+- **edit_meeting(request, meeting_id)**: Allows users to efficiently adjust meeting schedules, ensuring flexibility and coordination.
+
+- **end_meeting(request)**: Empowers users to formally conclude meetings, updating the status to "**ended**" and promoting effective meeting closure.
+
+# How to Run the Application
+To launch the web application, start by downloading the entire project folder. Navigate to the project directory in the terminal and execute the following command:
+
+<br><br>
+
+**python3 manage.py runserver**
+
+<br><br>
+The web application will be locally served, and the URL will be provided in the terminal window.
+
+# Additional Information
+Throughout the documentation process, I identified opportunities for enhancing the user interface, including:
+- Implementing a search functionality for improved information retrieval.
+- Enabling users to reset their passwords by sending a reset link to their default email.
+- Enhancing the user experience on narrower devices, such as mobile phones, by incorporating features like sortable tables or frozen panes, akin to Microsoft Excel.
+<br><br>
+While there are numerous areas for improvement, I have chosen to submit the application in its current state to meet project deadlines. Future endeavous will focus on refining my skills and incorporating innovative ideas into upcoming projects.
