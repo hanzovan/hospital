@@ -14,18 +14,6 @@
                     <h1>Add people</h1>
                     <p>Please fill person's information</p>
                     <div class="form-group">
-                        <label for="company" class="form-label">Company</label>
-                        <select name="company">
-                            <option selected disabled>Choose company</option>
-                            {% for company in companies %}
-
-                                <option value="{{ company.id }}">{{ company.name }}</option>
-
-                            {% endfor %}
-                            <option value="">None of the above</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
                         <label for="name" class="form-label">Name</label>
                         <input type="text" class="form-control" name="name" id="name" autocomplete="off" tabindex="1" placeholder="Anthony" required>
                     </div>                    

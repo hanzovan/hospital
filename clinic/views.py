@@ -339,7 +339,6 @@ def add_people(request):
 
         # Handle user input
         name = request.POST['name']
-        company_id = request.POST.get('company', '')
         position = request.POST.get('position', '')
         address = request.POST.get('address', '')
         email = request.POST.get('email', '')
@@ -370,14 +369,6 @@ def add_people(request):
             created_by = request.user
         )
         people.save()
-
-        # If user choose a company that the person related to, check if company exist, add the relationship
-        if company_id:
-            try:
-                company = Company.objects.get(pk=company_id)
-                people.company.add(company)
-            except Company.DoesNotExist:
-                request.session['nay_message'] = "Company does not exist"
 
         request.session['yay_message'] = 'People saved'
 
@@ -430,11 +421,11 @@ def my_people(request):
         person.latest_message = person.talks.order_by("-date").first()
 
         # Get the list of companies
-        related_companies = person.company.all()
-        representing_companies = person.companies.all()
+        # related_companies = person.company.all()
+        # representing_companies = person.companies.all()
 
-        unique_companies = list(set(related_companies).union(set(representing_companies)))
-        person.unique_companies = unique_companies
+        # unique_companies = list(set(related_companies).union(set(representing_companies)))
+        # person.unique_companies = unique_companies
 
     return render(request, "clinic/my_people.html", {
         "people": people,
@@ -463,12 +454,16 @@ def people(request):
         # Get latest message of the person
         person.latest_message = person.talks.order_by("-date").first()
 
-        # Get the list of unique companies that related to person
-        related_companies = person.company.all()
-        representing_companies = person.companies.all()
+        # These lines are use to create a temporary field (not the normal field in models.py) for person instance, that including all unique company that related to the person, it was created by compare 2 sets, then choose the unique instance
+        # People used to have a field named company that related with people by ManyToMany relationship
 
-        unique_companies = list(set(related_companies).union(set(representing_companies)))
-        person.unique_companies = unique_companies
+        # related_companies = person.company.all()
+
+        # Get the list of company that choose this person as the representative
+        # representing_companies = person.companies.all()
+
+        # unique_companies = list(set(related_companies).union(set(representing_companies)))
+        # person.unique_companies = unique_companies
 
     return render(request, "clinic/people.html", {
         "people": people,
@@ -539,9 +534,6 @@ def person_detail(request, person_id):
             request.session['nay_message'] = 'You do not have the right to visit this page'
             return HttpResponseRedirect(reverse('index'))
         
-        # Get the company
-        companies = person.company.all()
-
         # Get the message from this person
         messages = person.talks.all().order_by("-date")
 
@@ -554,7 +546,6 @@ def person_detail(request, person_id):
         return render(request, "clinic/person_detail.html", {
             "person": person,
             "messages": messages,
-            "companies": companies,
             'yay_message': yay_message,
             'nay_message': nay_message
         })

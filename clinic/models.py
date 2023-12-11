@@ -35,7 +35,10 @@ class Company(models.Model):
 
 class People(models.Model):
     name = models.CharField(max_length=255)
-    company = models.ManyToManyField(Company,related_name="contact")
+
+    # I decided to eliminate this field so that person have only one way relationship with company through representative
+    # company = models.ManyToManyField(Company,related_name="contact")
+
     position = models.TextField(blank=True)
     address = models.TextField(blank=True, null=True)
     email = models.CharField(max_length=255)

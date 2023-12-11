@@ -27,7 +27,7 @@
                             <a class="no-underline" href="{% url 'person_detail' person_id=person.id %}">{{ person.name }}</a>
                         </td>                        
                         <td>
-                            {% for company in person.unique_companies %}
+                            {% for company in person.companies.all %}
 
                                 {% if not forloop.last %}
 
