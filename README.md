@@ -2,7 +2,7 @@
 
 # Distinctiveness and Complexity
 ## A. Distinctiveness
-Developed using the Django framework, this web application caters to various to various hierarchical levels within a hospitals sales department. It aims to streamline client information management, covering company details, representatives, workforce statistics, historical contracts, meeting agreements, and client communications. The application focuses on minimizing paperwork, enhancing data management efficiency, and ensuring meticulous preparation for client interactions.
+Developed using the Django framework, this web application caters to various hierarchical levels within a hospitals sales department. It aims to streamline client information management, covering company details, representatives, workforce statistics, historical contracts, meeting agreements, and client communications. The application focuses on minimizing paperwork, enhancing data management efficiency, and ensuring meticulous preparation for client interactions.
 <br><br>
 Unlike projects such as Pizza (online orders) or Network (user interaction), the Hospital application stands out with a comprehensive suite of features tailored to healthcare's intricate data structures. Its complexity lies in the hierarchical user roles, offering nuanced permissions for different responsibilities, ensuring data security and user-specific functionality.
 <br><br>
