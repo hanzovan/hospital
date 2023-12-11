@@ -35,6 +35,7 @@ document.addEventListener('DOMContentLoaded', function() {
     editForm.onsubmit = function() {
         // Get the value from the form
         const new_name = document.querySelector('#name').value;
+        const new_company_id = document.querySelector('#company_id').value;
         const new_position = document.querySelector('#position').value;
         const new_address = document.querySelector('#address').value;
         const new_email = document.querySelector('#email').value;
@@ -46,6 +47,7 @@ document.addEventListener('DOMContentLoaded', function() {
             method: 'POST',
             body: JSON.stringify({
                 'new_name': new_name,
+                'new_company_id': new_company_id,
                 'new_position': new_position,
                 'new_address': new_address,
                 'new_email': new_email,
