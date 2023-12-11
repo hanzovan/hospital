@@ -57,7 +57,7 @@ The responsive design ensures optimal usability across varying screen widths, pr
 The application follows the standard Django framework project structure, featuring a single application folder named '**clinic**'. Within this folder, essential files like '**views.py**', '**models.py**', and '**admin.py**' are complemented by custom additions such as '**helpers.py**' and '**urls.py**'. Additionally, two crucial directories, '**static**' and '**templates**', house CSS and JavaScript files, and HTML templates, respectively.
 <br><br>
 
-In the project root, I've created the '**media**' folder to store scanned contract files, the '**readme.md**' file, and the '**readme_images**' folder for images displayed in this '**readme.md**'. The '**styles.scss**' file is employed for styling the web application. In the '**hospital**' project folder, modifications were made to '**settings.py**' and '**urls.py**' for configuration.
+In the project root, the '**media**' folder was created to store scanned contract files, the '**readme.md**' file, and the '**readme_images**' folder for images displayed in this '**readme.md**'. The '**styles.scss**' file is employed for styling the web application. In the '**hospital**' project folder, modifications were made to '**settings.py**' and '**urls.py**' for configuration.
 
 ## A. style.scss
 This SASS file organizes and creates the '**styles.css**' file stored in the '**static**' folder within the '**clinic**' application. It plays a crucial role in styling the user interface, encompassing both PC and mobile-responsive components, as well as configuring various forms.
@@ -119,7 +119,7 @@ Each file manipulates the associated template version, affecting form behavior, 
 Houses all the models utilized in the application.
 
 #### 3.1 User
-In addition to the default fields of AbstractUser, I added 'management_right_level', including four choices to define user permissions, ranging from 0-3.
+In addition to the default fields of AbstractUser, '**management_right_level**' field was added, including four choices to define user permissions, ranging from 0-3.
 
 #### 3.2 Company
 Includes company information such as name, industry, contact details, workforce statistics, and the user who created and modified the instance.
