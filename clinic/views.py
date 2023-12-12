@@ -571,7 +571,7 @@ def remove_person(request):
         # If user is legit, continue
         person.delete()
         request.session['yay_message'] = "Person information deleted successfully"
-        return HttpResponseRedirect(reverse('index'))
+        return HttpResponseRedirect(reverse('people'))
     
     else:
         request.session['nay_message'] = "POST method required"
@@ -1916,14 +1916,16 @@ def edit_meeting(request, meeting_id):
             request.session['nay_message'] = "End time have to come after Start time"
             return redirect("edit_meeting", meeting_id=meeting_id)
         
-        # Check if meeting overlap each other
+        # Check if meeting overlap each other, exclude itself (that's mean the meeting A overlap itself is okay)
         overlapping_meetings = MeetUp.objects.filter(
             start_time__lt = end_time,
             end_time__gt = start_time
-        )
+        ).exclude(id=meeting_id)
+
+        # if exist a meeting that overlap (but not itself), return error
         if overlapping_meetings.exists():
             request.session['nay_message'] = "Modified meeting overlapped other meeting"
-            return redirect("edit_meeting", meeting_id=meeting_id)
+            return redirect("meeting_agenda", meeting_id=meeting_id)
         
         # Save meeting
         meeting.client = client
@@ -1936,7 +1938,7 @@ def edit_meeting(request, meeting_id):
         return redirect("meeting_agenda", meeting_id=meeting_id)
     
     else:
-        request.session['nay_message'] = "POST method required"
+        request.session['nay_message'] = "POST method is required by the system"
         return HttpResponseRedirect(reverse('index'))
 
 
