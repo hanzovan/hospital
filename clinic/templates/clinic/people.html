@@ -31,11 +31,11 @@
 
                                 {% if not forloop.last %}
 
-                                    {{ company.name }},
+                                    <a class="no-underline" href="{% url 'company_detail' company_id=company.id %}">{{ company.name }}</a>,
 
                                 {% else %}
 
-                                    {{ company.name }}
+                                    <a class="no-underline" href="{% url 'company_detail' company_id=company.id %}">{{ company.name }}</a>
 
                                 {% endif %}
 
