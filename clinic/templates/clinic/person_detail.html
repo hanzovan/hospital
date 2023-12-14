@@ -18,15 +18,9 @@
                         <strong>
                             {% for company in person.companies.all.values %}
 
-                                {% if not forloop.last %}
-
-                                    {{ company.name }},
-
-                                {% else %}
-
-                                    {{ company.name }}
-
-                                {% endif %}
+                                <a class="no-underline" href="{% url 'company_detail' company_id=company.id %}">
+                                    {{ company.name }}{% if not forloop.last %}, {% else %}{% endif %}
+                                </a>
 
                             {% empty %}
 

@@ -18,22 +18,18 @@
         </tr>
         <tr>
             <th>Client</th>
-            <td>{{ contract.client.name }}</td>
+            <td><a class="no-underline" href="{% url 'company_detail' company_id=contract.client.id %}">{{ contract.client.name }}</a></td>
         </tr>
         <tr>
             <th>Services</th>
             <td>
+                <!-- For every service chosen in contract, show its clickable name -->
                 {% for service in contract.services.all.values %}
 
-                    {% if not forloop.last %}
-
-                        {{ service.name }},
-
-                    {% else %}
-
-                        {{ service.name }}
-
-                    {% endif %}
+                    <a class="no-underline" href="{% url 'service_detail' service_id=service.id %}">
+                        <!-- If not the last of the list, add comma and a space, else leave empty -->
+                        {{ service.name }}{% if not forloop.last %}, {% else %}{% endif %}
+                    </a>
 
                 {% endfor %}
             </td>

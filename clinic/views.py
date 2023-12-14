@@ -663,7 +663,8 @@ def add_company(request):
                     name = representative_name,
                     address = representative_address,
                     email = representative_email,
-                    phone = representative_phone
+                    phone = representative_phone,
+                    created_by = request.user
                 )
                 representative.save()
                 new_company.representative = representative

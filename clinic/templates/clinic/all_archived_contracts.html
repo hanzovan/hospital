@@ -16,9 +16,6 @@
                         #
                     </th>
                     <th>
-                        ID
-                    </th>
-                    <th>
                         Company
                     </th>
                     <th>
@@ -42,9 +39,6 @@
                         <a class="no-underline" href="{% url 'contract_detail' contract_id=contract.id %}">
                             {{ forloop.counter }}
                         </a>
-                    </td>
-                    <td class="text-end">
-                        {{ contract.id }}
                     </td>
                     <td>
                         {{ contract.client.name }}

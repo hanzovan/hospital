@@ -23,7 +23,7 @@
                 </tr>
                 <tr>
                     <td>Representative</td>
-                    <td><strong>{{ company.representative.name }}</strong></td>
+                    <td><strong><a class="no-underline" href="{% url 'person_detail' person_id=company.representative.id %}">{{ company.representative.name }}</a></strong></td>
                 </tr>
                 <tr>
                     <td>Address</td>
@@ -158,6 +158,56 @@
                 </div>
             </form>
         </div>
+    </div>
+    <div class="container-fluid">
+        <table class="table table-borderless table-hover align-middle caption-top">
+            <caption>Meetings with this company</caption>
+            <thead class="table-dark">
+                <tr>
+                    <th width="40%">Schedule</th>
+                    <th width="60%">Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for meeting in company.meetings.all.values %}
+
+                    <tr>
+                        <td><a class="no-underline" href="{% url 'meeting_agenda' meeting_id=meeting.id %}">{{ meeting.start_time }}</a></td>
+                        <td>{% if not meeting.end_or_not %}<span style="color: green;">Active</span>{% else %}<span style="color: red;">Ended</span>{% endif %}</td>
+                    </tr>
+
+                {% empty %}
+
+                    No meeting
+
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <div class="container-fluid">
+        <table class="table table-borderless table-hover align-middle caption-top">
+            <caption>Contracts</caption>
+            <thead class="table-dark">
+                <tr>
+                    <th width="40%">Initiation date</th>
+                    <th width="60%">Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for contract in company.contracts.all.values %}
+
+                    <tr>
+                        <td><a class="no-underline" href="{% url 'contract_detail' contract_id=contract.id %}">{{ contract.initiation_date }}</a></td>
+                        <td>{% if contract.archived %}<span style="color:red;">Archived</span>{% else %}<span style="color: green;">Active</span>{% endif %}</td>
+                    </tr>
+
+                {% empty %}
+
+                    No contract
+
+                {% endfor %}
+            </tbody>
+        </table>
     </div>
 
 {% endblock %}
