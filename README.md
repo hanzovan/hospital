@@ -62,13 +62,16 @@ In the project root, the '**media**' folder was created to store scanned contrac
 ## A. style.scss
 This SASS file organizes and creates the '**styles.css**' file stored in the '**static**' folder within the '**clinic**' application. It plays a crucial role in styling the user interface, encompassing both PC and mobile-responsive components, as well as configuring various forms.
 
-## B. /readme_images/
+## B. requirements.txt
+Contains all necessary packages to run the web application.
+
+## C. /readme_images/
 This directory houses all screen captures and images displayed in this README.md file.
 
-## C. /media/uploaded_files
+## D. /media/uploaded_files
 The storage location for all saved media files, primarily catering to scanned contracts uploaded by users.
 
-## D. /hospital/
+## E. /hospital/
 The default folder created upon project initiation, containing configuration files where adjustments to '**settings.py**' and '**urls.py**' were made.
 
 ### 1. settings.py
@@ -82,7 +85,7 @@ The default folder created upon project initiation, containing configuration fil
 ### 2. urls.py
 Defined the path for the web application to display the '**clinic**' app.
 
-## E. /clinic/
+## F. /clinic/
 This directory encompasses all files and folders related to the app.
 
 ### 1. /templates/
