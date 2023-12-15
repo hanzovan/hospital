@@ -1891,31 +1891,31 @@ def edit_meeting(request, meeting_id):
         client_id = request.POST.get('client_id', '')
         if not client_id:
             request.session['nay_message'] = "Client id missng"
-            return redirect("edit_meeting", meeting_id=meeting_id)
+            return redirect("meeting_agenda", meeting_id=meeting_id)
         try:
             client = Company.objects.get(pk=client_id)
         except Company.DoesNotExist:
             request.session['nay_message'] = "Client does not exist"
-            return redirect("edit_meeting", meeting_id=meeting_id)
+            return redirect("meeting_agenda", meeting_id=meeting_id)
         
         start_time = request.POST.get('start_time', '')
         end_time = request.POST.get('end_time', '')
 
         if not start_time or not end_time:
             request.session['nay_message'] = "Start and end time required"
-            return redirect("edit_meeting", meeting_id=meeting_id)
+            return redirect("meeting_agenda", meeting_id=meeting_id)
         
         try:
             start_time = datetime.strptime(start_time, '%Y-%m-%dT%H:%M')
             end_time = datetime.strptime(end_time, '%Y-%m-%dT%H:%M')
         except ValueError:
             request.session['nay_message'] = "Invalid time format"
-            return redirect("edit_meeting", meeting_id=meeting_id)
+            return redirect("meeting_agenda", meeting_id=meeting_id)
         
         # Check if end time come before start time
         if start_time >= end_time:
             request.session['nay_message'] = "End time have to come after Start time"
-            return redirect("edit_meeting", meeting_id=meeting_id)
+            return redirect("meeting_agenda", meeting_id=meeting_id)
         
         # Check if meeting overlap each other, exclude itself (that's mean the meeting A overlap itself is okay)
         overlapping_meetings = MeetUp.objects.filter(
