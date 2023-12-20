@@ -1,0 +1,95 @@
+{% extends "clinic/layout.html" %}
+{% load static %}
+{% block title %}
+
+    search_result
+
+{% endblock %}
+{% block main %}
+
+    <h1 class="text-center">Search results for "{{ search_value }}" on "{{ search_field }}"</h1>
+    <div class="container-fluid">
+        <table class="table table-borderless table-hover align-middle">
+            <thead class="table-dark">
+                <tr>
+                    <th>#</th>
+                    <th>Results</th>
+                    <th>Details</th>
+                </tr>
+            </thead>
+            <tbody>
+
+                {% for item in match %}
+                    <!-- <tr>
+                        <td>{{ forloop.counter }}</td>
+
+                        {% if search_field == 'service' %}
+
+                            <td><a class="no-underline" href="{% url 'service_detail' service_id=item.id %}">{{ item.name }}</a></td>
+
+                        {% elif search_field == 'people' %}
+
+                            <td><a class="no-underline" href="{% url 'person_detail' person_id=item.id %}">{{ item.name }}</a></td>
+
+                        {% endif %}                       
+                        
+                    </tr> -->
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td>
+                            <a class="no-underline" href="
+                            {% if search_field == 'service' %}
+
+                                {% url 'service_detail' service_id=item.id %}
+
+                            {% elif search_field == 'people' %}
+
+                                {% url 'person_detail' person_id=item.id %}
+
+                            {% elif search_field == 'companies' %}
+
+                                {% url 'company_detail' company_id=item.id %}
+
+                            {% elif search_field == 'meetings' %}
+
+                                {% url 'meeting_agenda' meeting_id=item.id %}
+
+                            {% elif search_field == 'contracts' %}
+
+                                {% url 'contract_detail' contract_id=item.id %}
+
+                            {% endif %}
+                            ">
+                            {% if search_field == 'meetings' or search_field == 'contracts' %}
+
+                                {{ item.client.name }}
+
+                            {% else %}
+                                {{ item.name }}
+                            {% endif %}                            
+                            </a>
+                        </td>
+                        <td>
+                            {% if item.created %}
+
+                                {{ item.created }}
+
+                            {% else %}
+
+                                N/A
+
+                            {% endif %}                            
+                        </td>
+                    </tr>
+                {% empty %}
+
+                    <tr>
+                        <td colspan="3">No Result</td>
+                    </tr>
+                
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+{% endblock %}

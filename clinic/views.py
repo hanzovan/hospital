@@ -1989,3 +1989,95 @@ def end_meeting(request):
         request.session['nay_message'] = "POST method required"
         return HttpResponseRedirect(reverse('index'))
     
+
+# Allow user to search in service page, people page, contract page, meeting page
+@login_required
+def search(request):
+    # If user submit form
+    if request.method == 'POST':
+        # Get the variable
+        search_field = request.POST.get('search-field')
+        search_value = request.POST.get('search-value')
+        
+        # If user want to search service
+        if search_field == 'service':                
+            services = Service.objects.all()
+            match = []
+            for service in services:
+                if search_value.lower() in service.name.lower():
+                    match.append(service)
+
+            return render(request, "clinic/search_result.html", {
+                "match": match,
+                "search_field": search_field,
+                "search_value": search_value
+            })
+
+        elif search_field == 'people':
+            people = People.objects.all()
+            match = []
+            for person in people:
+                if search_value.lower() in person.name.lower():
+                    match.append(person)
+
+            return render(request, "clinic/search_result.html", {
+                "match": match,
+                "search_field": search_field,
+                "search_value": search_value
+            })
+
+        elif search_field == 'companies':
+            companies = Company.objects.all()
+            match = []
+            for company in companies:
+                if search_value.lower() in company.name.lower():
+                    match.append(company)
+
+            return render(request, "clinic/search_result.html", {
+                "match": match,
+                "search_field": search_field,
+                "search_value": search_value
+            })
+
+        elif search_field == 'meetings':
+            meetings = MeetUp.objects.all()
+            match = []
+            for meeting in meetings:
+                if search_value.lower() in meeting.client.name.lower():
+                    match.append(meeting)
+
+            return render(request, "clinic/search_result.html", {
+                "match": match,
+                "search_field": search_field,
+                "search_value": search_value
+            })
+
+        elif search_field == 'contracts':
+            contracts = Contract.objects.all()
+            match = []
+            for contract in contracts:
+                if search_value.lower() in contract.client.name.lower():
+                    match.append(contract)
+
+            return render(request, "clinic/search_result.html", {
+                "match": match,
+                "search_field": search_field,
+                "search_value": search_value
+            })            
+
+        return HttpResponse('On constructing')
+    # If user clicked link or being redirected
+    else:
+        yay_message = request.session.get('yay_message', '')
+        nay_message = request.session.get('nay_message', '')
+        request.session['yay_message'] = ''
+        request.session['nay_message'] = ''
+
+        return render(request, "clinic/search.html", {
+            "yay_message": yay_message,
+            "nay_message": nay_message
+        })
+
+
+
+# Allow user to get profit summarize in a period

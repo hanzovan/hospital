@@ -1,0 +1,42 @@
+{% extends "clinic/layout.html" %}
+{% load static %}
+{% block title %}
+
+    search
+
+{% endblock %}
+{% block main %}
+
+    <div class="general">
+        <div class="form-container">
+            <form action="{% url 'search' %}" method="post" id="search-form">
+                {% csrf_token %}
+                <div class="container">
+                    <h1>Search</h1>
+                    <p>Kindly fill all these fields</p>
+                    <div class="form-group">                        
+                        <select name="search-field" class="form-control">
+                            <option selected disabled value="">Search Field</option>
+                            <option value="service">Service</option>
+                            <option value="people">People</option>
+                            <option value="companies">Companies</option>
+                            <option value="meetings">Meetings</option>
+                            <option value="contracts">Contracts</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="search-value" class="form-label">Search Value</label>
+                        <input name="search-value" type="text" class="form-control">
+                    </div>
+                    <button>Search</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+{% endblock %}
+{% block script %}
+
+    <script src="{% static 'clinic/search.js' %}"></script>
+
+{% endblock %}
