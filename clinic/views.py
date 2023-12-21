@@ -2065,7 +2065,9 @@ def search(request):
                 "search_value": search_value
             })            
 
-        return HttpResponse('On constructing')
+        else:
+            request.session['nay_message'] = "Invalid credentials"
+            return HttpResponseRedirect(reverse('search'))
     # If user clicked link or being redirected
     else:
         yay_message = request.session.get('yay_message', '')
@@ -2078,6 +2080,3 @@ def search(request):
             "nay_message": nay_message
         })
 
-
-
-# Allow user to get profit summarize in a period
