@@ -248,6 +248,9 @@ To launch the web application, start by downloading the entire project folder. N
 <br><br>
 The web application will be locally served, and the URL will be provided in the terminal window.
 
+# Application demo video
+https://youtu.be/mFG9SW1upXc
+
 # Additional Information
 Throughout the documentation process, I identified opportunities for enhancing the user interface, including:
 - Implementing a search functionality for improved information retrieval.
